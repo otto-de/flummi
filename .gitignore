@@ -1,0 +1,7 @@
+elasticsearch-http-client.iml
+elasticsearch-http-client.ipr
+elasticsearch-http-client.iws
+build
+out
+.gradle
+

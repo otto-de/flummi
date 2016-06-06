@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+BASE_DIR="$( dirname "${0}" )"
+export JAVA_OPTS="-Xms64m -Xmx256m -XX:+UseG1GC"
+
+if [ -z "$1" ]; then
+    ${BASE_DIR}/gradlew clean check
+else
+    ${BASE_DIR}/gradlew $*
+fi
+
+RETURN_VALUE_OF_BUILD=$?
+
+if [ "$RETURN_VALUE_OF_BUILD" -ne 0 ]; then
+    echo -e '\E[30;41m'
+    cat $BASE_DIR/buildflags/failed.txt
+    echo -e '\E[0m'
+    exit 1
+else
+    echo -e '\E[30;42m'
+    cat $BASE_DIR/buildflags/passed.txt
+    echo -e '\E[0m'
+    exit 0
+fi

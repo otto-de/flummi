@@ -1,0 +1,9 @@
+def taskNames = gradle.startParameter.taskNames
+project.afterEvaluate {
+    taskAliases.each { key, value ->
+        def index = taskNames.indexOf(key)
+        if (index != -1) {
+            taskNames[index..index] = value.split() as List
+        }
+    }
+}
