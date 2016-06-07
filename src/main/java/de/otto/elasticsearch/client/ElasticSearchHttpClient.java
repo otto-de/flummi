@@ -305,9 +305,9 @@ public class ElasticSearchHttpClient {
         return new BulkRequestBuilder(asyncHttpClient, hosts, hostIndexOfNextRequest);
     }
 
-    public GetRequestBuilder prepareGet(String indexName, String documentType, String productId) {
+    public GetRequestBuilder prepareGet(String indexName, String documentType, String id) {
         nextHost();
-        return new GetRequestBuilder(asyncHttpClient, hosts, hostIndexOfNextRequest, indexName, documentType, productId);
+        return new GetRequestBuilder(asyncHttpClient, hosts, hostIndexOfNextRequest, indexName, documentType, id);
     }
 
     public DeleteIndexRequestBuilder prepareDeleteByName(String indexName) {

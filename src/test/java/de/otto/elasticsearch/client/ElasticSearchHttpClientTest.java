@@ -402,7 +402,7 @@ public class ElasticSearchHttpClientTest {
         final Response response = mock(Response.class);
         when(listenableFuture.get()).thenReturn(response);
         when(response.getStatusCode()).thenReturn(200);
-        when(response.getResponseBody()).thenReturn("{}");
+        when(response.getResponseBody()).thenReturn("{\"_id\":\"46711\"}");
         final GetRequestBuilder getRequestBuilder = client.prepareGet("someIndexName", "someDocumentType", "someProductId");
 
         //When

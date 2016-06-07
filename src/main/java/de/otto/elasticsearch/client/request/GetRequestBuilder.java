@@ -23,18 +23,18 @@ public class GetRequestBuilder implements RequestBuilder<GetResponse> {
     private final int hostIndexOfNextRequest;
     private final String indexName;
     private final String documentType;
-    private final String productId;
+    private final String id;
     private final Gson gson;
 
     public static final Logger LOG = getLogger(GetRequestBuilder.class);
 
-    public GetRequestBuilder(AsyncHttpClient client, ImmutableList<String> hosts, int hostIndexOfNextRequest, String indexName, String documentType, String productId) {
+    public GetRequestBuilder(AsyncHttpClient client, ImmutableList<String> hosts, int hostIndexOfNextRequest, String indexName, String documentType, String id) {
         this.client = client;
         this.hosts = hosts;
         this.hostIndexOfNextRequest = hostIndexOfNextRequest;
         this.indexName = indexName;
         this.documentType = documentType;
-        this.productId = productId;
+        this.id = id;
         this.gson = new Gson();
     }
 
@@ -42,20 +42,20 @@ public class GetRequestBuilder implements RequestBuilder<GetResponse> {
     public GetResponse execute() {
         for (int i = hostIndexOfNextRequest, count = 0; count < hosts.size(); i = (i + 1) % hosts.size()) {
             try {
-                String url = RequestBuilderUtil.buildUrl(hosts.get(i), indexName, documentType, URLEncoder.encode(productId, "UTF-8"));
+                String url = RequestBuilderUtil.buildUrl(hosts.get(i), indexName, documentType, URLEncoder.encode(id, "UTF-8"));
                 Response response = client.prepareGet(url).execute().get();
                 if (response.getStatusCode() >= 300 && 404 != response.getStatusCode()) {
                     throw toHttpServerErrorException(response);
                 }
 
                 if (404 == response.getStatusCode()) {
-                    return new GetResponse(false, null);
+                    return new GetResponse(false, null, id);
                 }
                 String jsonString = response.getResponseBody();
                 JsonObject responseObject = gson.fromJson(jsonString, JsonObject.class);
                 return new GetResponse(true, responseObject != null && responseObject.get("_source") != null
                         ? responseObject.get("_source").getAsJsonObject()
-                        : null);
+                        : null, responseObject.get("_id").getAsString());
 
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
