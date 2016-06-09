@@ -21,7 +21,8 @@ public class NestedAggregationBuilderTest {
     @Test
     public void shouldAddPathToQuery() throws Exception {
         //given/when
-        NestedAggregationBuilder nestedAggregationBuilder = new NestedAggregationBuilder().path("categories").subAggregation("assortment_buckets", new TermsBuilder().field("assortment"));
+        NestedAggregationBuilder nestedAggregationBuilder = new NestedAggregationBuilder("nestedAggBuilder").path("categories").subAggregation(
+                new TermsBuilder("assortment_buckets").field("assortment"));
 
         //then
         String expected = "{\n" +
@@ -44,13 +45,13 @@ public class NestedAggregationBuilderTest {
     @Test
     public void shouldBuildReverseNestedAggregationForSaleProperty() throws Exception {
         //given/when
-        ReverseNestedTermBuilder nestedAggregationBuilder = new ReverseNestedTermBuilder()
-                .withTermsBuilder(new TermsBuilder().field("variations.sale"))
+        ReverseNestedTermBuilder nestedAggregationBuilder = new ReverseNestedTermBuilder("is_sale")
+                .withTermsBuilder(new TermsBuilder("termsBuilder").field("variations.sale"))
                 .withReverseNestedFieldName("is_sale_per_product");
 
-        NestedAggregationBuilder reverseNestedSaleAggregation = new NestedAggregationBuilder()
+        NestedAggregationBuilder reverseNestedSaleAggregation = new NestedAggregationBuilder("nestedAggBuilder")
                 .path("variations")
-                .subAggregation("is_sale", nestedAggregationBuilder);
+                .subAggregation(nestedAggregationBuilder);
 
         //then
         String expected = "{\n" +
@@ -79,7 +80,7 @@ public class NestedAggregationBuilderTest {
     public void shouldThrowExceptionIfPathIsMissing() throws Exception {
         //given/when
         try {
-            new NestedAggregationBuilder().subAggregation("assortment_buckets", new TermsBuilder().field("assortment")).build();
+            new NestedAggregationBuilder("bla").subAggregation(new TermsBuilder("assortment_buckets").field("assortment")).build();
         } catch (RuntimeException e) {
             assertThat(e.getMessage(), is("missing property 'path'"));
         }
@@ -90,7 +91,7 @@ public class NestedAggregationBuilderTest {
     public void shouldThrowExceptionIfPathIsEmpty() throws Exception {
         //given/when
         try {
-            new NestedAggregationBuilder().path("").subAggregation("assortment_buckets", new TermsBuilder().field("assortment")).build();
+            new NestedAggregationBuilder("bla").path("").subAggregation(new TermsBuilder("assortment_buckets").field("assortment")).build();
         } catch (RuntimeException e) {
             assertThat(e.getMessage(), is("missing property 'path'"));
         }
@@ -101,7 +102,7 @@ public class NestedAggregationBuilderTest {
     public void shouldThrowExceptionIfSubAggregationIsMissing() throws Exception {
         //given/when
         try {
-            new NestedAggregationBuilder().path("categories").build();
+            new NestedAggregationBuilder("bla").path("categories").build();
         } catch (RuntimeException e) {
             assertThat(e.getMessage(), is("property 'termsAggregation' is missing"));
         }
@@ -111,7 +112,7 @@ public class NestedAggregationBuilderTest {
     @Test
     public void shouldParseResponseWithNestedTermsQuery() {
         // given
-        NestedAggregationBuilder nestedAggregationBuilder = new NestedAggregationBuilder().path("somePath").subAggregation("someName", new TermsBuilder().field("someField"));
+        NestedAggregationBuilder nestedAggregationBuilder = new NestedAggregationBuilder("bla").path("somePath").subAggregation(new TermsBuilder("someName").field("someField"));
         JsonObject response = object("someName", object("buckets", array(object("key", "someKey", "doc_count", "1"))));
 
         // when
@@ -128,7 +129,7 @@ public class NestedAggregationBuilderTest {
     @Test
     public void shouldParseResponseWithReverseNestedTermsQuery() {
         // given
-        NestedAggregationBuilder nestedAggregationBuilder = new NestedAggregationBuilder().path("somePath").subAggregation("someName", new ReverseNestedTermBuilder().withTermsBuilder(new TermsBuilder().field("someField")).withReverseNestedFieldName("fieldPerProduct"));
+        NestedAggregationBuilder nestedAggregationBuilder = new NestedAggregationBuilder("bla").path("somePath").subAggregation(new ReverseNestedTermBuilder("someName").withTermsBuilder(new TermsBuilder("someName").field("someField")).withReverseNestedFieldName("fieldPerProduct"));
         JsonObject response = object("someName", object("buckets", array(object("key", new JsonPrimitive("someKey"), "fieldPerProduct", object("doc_count", new JsonPrimitive(2))))));
 
         // when

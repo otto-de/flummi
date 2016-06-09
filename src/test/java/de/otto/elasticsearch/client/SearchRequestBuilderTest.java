@@ -182,7 +182,7 @@ public class SearchRequestBuilderTest {
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", EMPTY_SEARCH_RESPONSE)));
 
         // when
-        SearchResponse response = searchRequestBuilder.setQuery(createSampleQuery()).addAggregation("Katzenklo", new TermsBuilder()
+        SearchResponse response = searchRequestBuilder.setQuery(createSampleQuery()).addAggregation(new TermsBuilder("Katzenklo")
                 .field("someField"))
                 .execute();
 
@@ -203,9 +203,9 @@ public class SearchRequestBuilderTest {
 
         // when
         SearchResponse response = searchRequestBuilder.setQuery(createSampleQuery())
-                .addAggregation("Katzenklo", new NestedAggregationBuilder()
+                .addAggregation(new NestedAggregationBuilder("Katzenklo")
                         .path("somePath")
-                        .subAggregation("someAggregation", new TermsBuilder().field("someField"))
+                        .subAggregation(new TermsBuilder("someAggregation").field("someField"))
                 )
                 .execute();
 

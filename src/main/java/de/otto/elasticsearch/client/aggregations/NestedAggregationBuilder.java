@@ -8,23 +8,18 @@ import de.otto.elasticsearch.client.util.StringUtils;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NestedAggregationBuilder implements AggregationBuilder {
+public class NestedAggregationBuilder extends AggregationBuilder<NestedAggregationBuilder> {
     private String path;
-    private Map<String, AggregationBuilder> subAggregations;
+
+    public NestedAggregationBuilder(String name) {
+        super(name);
+    }
 
     public NestedAggregationBuilder path(String path) {
         this.path = path;
         return this;
     }
 
-    public NestedAggregationBuilder subAggregation(String name, AggregationBuilder subAggregation) {
-        if (subAggregations == null) {
-            subAggregations = new HashMap<>();
-        }
-        subAggregations.put(name, subAggregation);
-
-        return this;
-    }
 
     @Override
     public JsonObject build() {
@@ -39,20 +34,21 @@ public class NestedAggregationBuilder implements AggregationBuilder {
         JsonObject nestedObject = new JsonObject();
         jsonObject.add("nested", nestedObject);
         nestedObject.add("path", new JsonPrimitive(path));
-        JsonObject subAggregations = new JsonObject();
+        JsonObject aggsJson = new JsonObject();
 
-        this.subAggregations.entrySet().stream().forEach(a ->
-                subAggregations.add(a.getKey(), a.getValue().build()));
-        jsonObject.add("aggregations", subAggregations);
+        subAggregations.stream().forEach(a -> aggsJson.add(a.getName(), a.build()));
+        jsonObject.add("aggregations", aggsJson);
         return jsonObject;
     }
 
     @Override
     public Aggregation parseResponse(JsonObject jsonObject) {
+
         Map<String, Aggregation> aggregations = new HashMap<>();
+
         if (subAggregations != null) {
-            subAggregations.entrySet().stream().forEach(t ->
-                    aggregations.put(t.getKey(), t.getValue().parseResponse(jsonObject.get(t.getKey()).getAsJsonObject())));
+            subAggregations.stream().forEach(t ->
+                    aggregations.put(t.getName(), t.parseResponse(jsonObject.get(t.getName()).getAsJsonObject())));
         }
 
         return new Aggregation(aggregations);

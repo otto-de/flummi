@@ -19,7 +19,7 @@ public class TermsBuilderTest {
     public void shouldAddFieldToTermsQuery() throws Exception {
         // given
         // when
-        TermsBuilder termsBuilder = new TermsBuilder().field("someField");
+        TermsBuilder termsBuilder = new TermsBuilder("bla").field("someField");
         //then
         assertThat(termsBuilder.build(), is(object("terms", object("field", new JsonPrimitive("someField")))));
     }
@@ -28,7 +28,7 @@ public class TermsBuilderTest {
     public void shouldAddSizeToTermsQuery() throws Exception {
         // given
         // when
-        TermsBuilder termsBuilder = new TermsBuilder().field("someField").size(5);
+        TermsBuilder termsBuilder = new TermsBuilder("bla").field("someField").size(5);
         //then
         JsonObject termsObject = new JsonObject();
         termsObject.add("field", new JsonPrimitive("someField"));
@@ -40,7 +40,7 @@ public class TermsBuilderTest {
     public void shouldAddOneOrderToTermsQuery() throws Exception {
         // given
         // when
-        TermsBuilder termsBuilder = new TermsBuilder().field("someField").order("someOtherField", SortOrder.ASC);
+        TermsBuilder termsBuilder = new TermsBuilder("bla").field("someField").order("someOtherField", SortOrder.ASC);
         //then
         JsonObject termsObject = new JsonObject();
         termsObject.add("field", new JsonPrimitive("someField"));
@@ -54,7 +54,7 @@ public class TermsBuilderTest {
     public void shouldAddTwoOrderToTermsQuery() throws Exception {
         // given
         // when
-        TermsBuilder termsBuilder = new TermsBuilder().field("someField").order("someOtherField", SortOrder.ASC).order("someOtherOtherField", SortOrder.DESC);
+        TermsBuilder termsBuilder = new TermsBuilder("bla").field("someField").order("someOtherField", SortOrder.ASC).order("someOtherOtherField", SortOrder.DESC);
         //then
         JsonObject termsObject = new JsonObject();
         termsObject.add("field", new JsonPrimitive("someField"));
@@ -70,7 +70,7 @@ public class TermsBuilderTest {
         // given
         // when
         try {
-            new TermsBuilder().build();
+            new TermsBuilder("bla").build();
         }catch (RuntimeException e) {
             assertThat(e.getMessage(), is("missing property 'field'"));
         }
@@ -82,7 +82,7 @@ public class TermsBuilderTest {
         // given
         // when
         try {
-            new TermsBuilder().field("").build();
+            new TermsBuilder("bla").field("").build();
         }catch (RuntimeException e) {
             assertThat(e.getMessage(), is("missing property 'field'"));
         }
@@ -92,7 +92,7 @@ public class TermsBuilderTest {
     @Test
     public void shouldParseResponse() {
         // given
-        TermsBuilder termsBuilder = new TermsBuilder().field("someField");
+        TermsBuilder termsBuilder = new TermsBuilder("bla").field("someField");
         JsonObject response = object("buckets", array(object("key", "someKey", "doc_count", "1")));
 
         // when
@@ -108,7 +108,7 @@ public class TermsBuilderTest {
     @Test
     public void shouldParseResponseWithMultipleBuckets() {
         // given
-        TermsBuilder termsBuilder = new TermsBuilder().field("someField");
+        TermsBuilder termsBuilder = new TermsBuilder("bla").field("someField");
         JsonObject response = object("buckets", array(object("key", "someKey", "doc_count", "1"), object("key", "someKey2", "doc_count", "3")));
 
         // when
@@ -126,7 +126,7 @@ public class TermsBuilderTest {
     @Test
     public void shouldParseResponseWithEmptyBuckets() {
         // given
-        TermsBuilder termsBuilder = new TermsBuilder().field("someField");
+        TermsBuilder termsBuilder = new TermsBuilder("bla").field("someField");
         JsonObject response = object("buckets", array());
 
         // when

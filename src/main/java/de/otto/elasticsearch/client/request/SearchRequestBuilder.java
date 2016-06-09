@@ -41,7 +41,7 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
     private JsonArray sorts;
     private JsonArray fields;
     private QueryBuilder postFilter;
-    private Map<String, AggregationBuilder> aggregations;
+    private List<AggregationBuilder> aggregations;
 
     public static final Logger LOG = getLogger(SearchRequestBuilder.class);
 
@@ -63,11 +63,11 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
         return this;
     }
 
-    public SearchRequestBuilder addAggregation(String name, AggregationBuilder aggregationBuilder) {
+    public SearchRequestBuilder addAggregation(AggregationBuilder aggregationBuilder) {
         if (aggregations == null) {
-            aggregations = new HashMap<>();
+            aggregations = new ArrayList<>();
         }
-        aggregations.put(name, aggregationBuilder);
+        aggregations.add(aggregationBuilder);
         return this;
     }
 
@@ -132,10 +132,9 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
                 }
                 if (aggregations != null) {
                     JsonObject jsonObject = new JsonObject();
-                    aggregations.entrySet()
-                            .stream()
+                    aggregations.stream()
                             .forEach(a ->
-                                    jsonObject.add(a.getKey(), a.getValue().build()));
+                                    jsonObject.add(a.getName(), a.build()));
                     body.add("aggregations", jsonObject);
                 }
                 AsyncHttpClient.BoundRequestBuilder boundRequestBuilder = asyncHttpClient
@@ -173,11 +172,11 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
                 if (aggregationsJsonElement != null) {
                     final JsonObject aggregationsJsonObject = aggregationsJsonElement.getAsJsonObject();
 
-                    aggregations.entrySet().stream().forEach(a -> {
-                        JsonElement aggreagationElement = aggregationsJsonObject.get(a.getKey());
+                    aggregations.stream().forEach(a -> {
+                        JsonElement aggreagationElement = aggregationsJsonObject.get(a.getName());
                         if (aggreagationElement != null) {
-                            Aggregation aggregation = a.getValue().parseResponse(aggreagationElement.getAsJsonObject());
-                            responseAggregations.put(a.getKey(), aggregation);
+                            Aggregation aggregation = a.parseResponse(aggreagationElement.getAsJsonObject());
+                            responseAggregations.put(a.getName(), aggregation);
                         }
                     });
                 }

@@ -12,11 +12,12 @@ import java.util.ArrayList;
 import static de.otto.elasticsearch.client.request.GsonHelper.object;
 
 
-public class ReverseNestedTermBuilder implements AggregationBuilder {
+public class ReverseNestedTermBuilder extends AggregationBuilder<ReverseNestedTermBuilder> {
     private TermsBuilder termsBuilder;
     private String fieldName;
 
-    public ReverseNestedTermBuilder() {
+    public ReverseNestedTermBuilder(String name) {
+        super(name);
     }
 
     public ReverseNestedTermBuilder withTermsBuilder(TermsBuilder termsBuilder) {

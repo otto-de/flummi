@@ -13,10 +13,14 @@ import javafx.util.Pair;
 
 import java.util.ArrayList;
 
-public class TermsBuilder implements AggregationBuilder {
+public class TermsBuilder extends AggregationBuilder<TermsBuilder> {
     private String fieldName;
     private Integer size;
     private ArrayList<Pair<String, SortOrder>> orders;
+
+    public TermsBuilder(String name) {
+        super(name);
+    }
 
     public TermsBuilder field(String fieldName) {
         this.fieldName = fieldName;
