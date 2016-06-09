@@ -43,7 +43,6 @@ public class NestedAggregationBuilder extends AggregationBuilder<NestedAggregati
 
     @Override
     public Aggregation parseResponse(JsonObject jsonObject) {
-
         Map<String, Aggregation> aggregations = new HashMap<>();
 
         if (subAggregations != null) {

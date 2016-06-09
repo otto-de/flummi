@@ -4,6 +4,9 @@ import com.google.gson.JsonObject;
 import de.otto.elasticsearch.client.query.QueryBuilder;
 import de.otto.elasticsearch.client.response.Aggregation;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static de.otto.elasticsearch.client.request.GsonHelper.object;
 
 public class FilterAggregationBuilder extends AggregationBuilder<FilterAggregationBuilder> {
@@ -33,6 +36,13 @@ public class FilterAggregationBuilder extends AggregationBuilder<FilterAggregati
 
     @Override
     public Aggregation parseResponse(JsonObject jsonObject) {
-        return null;
+        Map<String, Aggregation> aggregations = new HashMap<>();
+
+        if (subAggregations != null) {
+            subAggregations.stream().forEach(t ->
+                    aggregations.put(t.getName(), t.parseResponse(jsonObject.get(t.getName()).getAsJsonObject())));
+        }
+
+        return new Aggregation(aggregations);
     }
 }
