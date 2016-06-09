@@ -45,7 +45,7 @@ public class QueryBuildersTest {
     @Test
     public void shouldCreateNestedQuery() {
         LocalDate now = LocalDate.now();
-        JsonObject jsonObject = QueryBuilders.nestedFilter("somePath", QueryBuilders.prefixFilter("someName", "somePrefix"));
+        JsonObject jsonObject = QueryBuilders.nestedQuery("somePath", QueryBuilders.prefixFilter("someName", "somePrefix")).build();
         JsonObject nestedObject = new JsonObject();
         nestedObject.add("path", new JsonPrimitive("somePath"));
         nestedObject.add("filter", object("prefix", object("someName", "somePrefix")));
@@ -54,7 +54,7 @@ public class QueryBuildersTest {
 
     @Test
     public void shouldCreatePrefixFilter() throws Exception {
-        JsonObject jsonObject = QueryBuilders.prefixFilter("someName", "somePrefix");
+        JsonObject jsonObject = QueryBuilders.prefixFilter("someName", "somePrefix").build();
         assertThat(jsonObject, is(object("prefix", object("someName", "somePrefix"))));
     }
 

@@ -39,29 +39,33 @@ public class QueryBuilders {
         return new TermQueryBuilder(name, value);
     }
 
+    public static BoolQueryBuilder bool() {
+        return new BoolQueryBuilder();
+    }
+
     public static QueryBuilder notQuery(QueryBuilder nestedFilter) {
         return () -> object("not", nestedFilter.build());
     }
 
-    public static JsonObject nestedFilter(String path, QueryBuilder queryBuilder) {
-        return nestedFilter(path, queryBuilder.build());
+    public static QueryBuilder nestedQuery(String path, QueryBuilder queryBuilder) {
+        return () -> {
+            JsonObject jsonObject = new JsonObject();
+            JsonObject nested = new JsonObject();
+            nested.add("filter", queryBuilder.build());
+            nested.add("path", new JsonPrimitive(path));
+            jsonObject.add("nested", nested);
+            return jsonObject;
+        };
     }
 
-    public static JsonObject nestedFilter(String path, JsonObject filter) {
-        JsonObject jsonObject = new JsonObject();
-        JsonObject nested = new JsonObject();
-        nested.add("filter", filter);
-        nested.add("path", new JsonPrimitive(path));
-        jsonObject.add("nested", nested);
-        return jsonObject;
-    }
-
-    public static JsonObject prefixFilter(String name, String prefix) {
-        JsonObject jsonObject = new JsonObject();
-        JsonObject value = new JsonObject();
-        value.add(name, new JsonPrimitive(prefix));
-        jsonObject.add("prefix", value);
-        return jsonObject;
+    public static QueryBuilder prefixFilter(String name, String prefix) {
+        return () -> {
+            JsonObject jsonObject = new JsonObject();
+            JsonObject value = new JsonObject();
+            value.add(name, new JsonPrimitive(prefix));
+            jsonObject.add("prefix", value);
+            return jsonObject;
+        };
     }
 
     public static JsonObject existsFilter(String fieldName) {
