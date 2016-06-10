@@ -94,7 +94,13 @@ public class MultiGetRequestBuilder implements RequestBuilder<MultiGetResponse> 
                 List<MultiGetResponseDocument> documents = new ArrayList<>();
                 for (JsonElement doc : docs) {
                     JsonObject jsonDoc = doc.getAsJsonObject();
-                    documents.add(new MultiGetResponseDocument(jsonDoc.get("_id").getAsString(), jsonDoc.get("found").getAsBoolean(), jsonDoc.get("_source").getAsJsonObject()));
+                    String id = jsonDoc.get("_id").getAsString();
+                    JsonObject source = new JsonObject();
+                    boolean found = jsonDoc.get("found").getAsBoolean();
+                    if (found) {
+                        source = jsonDoc.get("_source").getAsJsonObject();
+                    }
+                    documents.add(new MultiGetResponseDocument(id, found, source));
                 }
 
                 return new MultiGetResponse(documents, tookInMillis);

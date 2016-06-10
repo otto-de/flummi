@@ -1,6 +1,7 @@
 package de.otto.elasticsearch.client.request;
 
 import com.google.common.collect.ImmutableList;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.ning.http.client.AsyncHttpClient;
 import de.otto.elasticsearch.client.CompletedFuture;
@@ -70,7 +71,17 @@ public class MultiGetRequestBuilderTest {
             "  ]\n" +
             "}";
 
-
+    public static final String NOT_FOUND_RESPONSE = "{\n" +
+            "  \"docs\": [\n" +
+            "    {\n" +
+            "      \"_index\": \"dynppoc_variations_1465472184\",\n" +
+            "      \"_type\": \"variation\",\n" +
+            "      \"_id\": \"V1\",\n" +
+            "      \"_version\": 1,\n" +
+            "      \"found\": false\n" +
+            "    }\n" +
+            "  ]\n" +
+            "}";
 
     @BeforeMethod
     public void setUp() throws Exception {
@@ -147,6 +158,25 @@ public class MultiGetRequestBuilderTest {
 
         //then
         assertThat(response.getMultiGetResponseDocuments(), is(empty()));
+    }
+
+    @Test
+    public void shouldParseNotFoundDocument() throws Exception {
+        // given
+        AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
+        when(asyncHttpClient.preparePost("http://someHost:9200/some-index/_mget")).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.setBodyEncoding(anyString())).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", NOT_FOUND_RESPONSE)));
+
+        // when
+        MultiGetResponse response = requestBuilder.setRequestDocuments(asList(multiGetRequestDocumentBuilder().withId("V1").build())).execute();
+
+        //then
+        verify(boundRequestBuilderMock).setBody("{\"docs\":[{\"_id\":\"V1\"}]}");
+        verify(asyncHttpClient).preparePost("http://someHost:9200/some-index/_mget");
+        assertThat(response.getMultiGetResponseDocuments(), hasSize(1));
+        assertThat(response.getMultiGetResponseDocuments().get(0), is(new MultiGetResponseDocument("V1", false, new JsonObject())));
     }
 
 }
