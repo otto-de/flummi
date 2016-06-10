@@ -320,6 +320,11 @@ public class ElasticSearchHttpClient {
         return new DeleteRequestBuilder(asyncHttpClient, hosts, hostIndexOfNextRequest);
     }
 
+    public MultiGetRequestBuilder prepareMultiGet() {
+        nextHost();
+        return new MultiGetRequestBuilder(asyncHttpClient, hosts, hostIndexOfNextRequest);
+    }
+
     public IndexRequestBuilder prepareIndex() {
         nextHost();
         return new IndexRequestBuilder(asyncHttpClient, hosts, hostIndexOfNextRequest);
