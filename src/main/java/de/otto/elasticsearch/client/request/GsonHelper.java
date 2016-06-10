@@ -5,6 +5,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+import java.util.List;
+
+import static java.util.Arrays.asList;
+
 public final class GsonHelper {
 
     public static final JsonObject object() {
@@ -87,6 +91,10 @@ public final class GsonHelper {
     }
 
     public static final JsonArray array(JsonElement... elements) {
+        return array(asList(elements));
+    }
+
+    public static final JsonArray array(List<JsonElement> elements) {
         JsonArray jsonArray = new JsonArray();
         for(JsonElement element: elements) {
             jsonArray.add(element);
