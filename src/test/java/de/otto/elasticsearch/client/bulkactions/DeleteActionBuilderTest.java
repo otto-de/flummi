@@ -52,4 +52,10 @@ public class DeleteActionBuilderTest {
         }
         // then
     }
+
+    @Test
+    public void shouldSetRouting() throws Exception {
+        String result = new DeleteActionBuilder("someIndex", "someId", "someType").setRouting("someRoutingId").toBulkRequestAction();
+        assertThat(result, is("{\"delete\":{\"_index\":\"someIndex\",\"_id\":\"someId\",\"_type\":\"someType\",\"_routing\":\"someRoutingId\"}}"));
+    }
 }
