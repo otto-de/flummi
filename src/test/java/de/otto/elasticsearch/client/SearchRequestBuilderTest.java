@@ -33,6 +33,15 @@ public class SearchRequestBuilderTest {
             PRODUCT_JSON +
             "}" +
             "]}}";
+    public static final String SEARCH_RESPONSE_WITH_SCROLL_ID = "{\"took\":1," +
+            "\"_scroll_id\":\"some_scroll_id\"," +
+            "\"timed_out\":false," +
+            "\"_shards\":{\"total\":5,\"successful\":5,\"failed\":0}," +
+            "\"hits\":{\"total\":100000,\"max_score\":1.0,\"hits\":[" +
+            "{\"_index\":\"product_1460618266743\",\"_type\":\"product\",\"_id\":\"P0\",\"_score\":1.0,\"_source\":" +
+            PRODUCT_JSON +
+            "}" +
+            "]}}";
     SearchRequestBuilder searchRequestBuilder;
     RoundRobinLoadBalancingHttpClient httpClient;
     private ImmutableList<String> HOSTS = ImmutableList.of("someHost:9200");
@@ -191,6 +200,27 @@ public class SearchRequestBuilderTest {
         verify(boundRequestBuilderMock).setBody("{\"query\":{\"term\":{\"someField\":\"someValue\"}}," +
                 "\"aggregations\":{\"Katzenklo\":{\"terms\":{\"field\":\"someField\"}}}}");
         verify(httpClient).preparePost("/some-index/_search");
+    }
+
+    @Test
+    public void shouldBuildRequestWithScroll() throws Exception {
+        // given
+        AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
+        when(httpClient.preparePost("/some-index/_search")).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.setBodyEncoding(anyString())).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", SEARCH_RESPONSE_WITH_SCROLL_ID)));
+
+        // when
+        SearchResponse response = searchRequestBuilder.setQuery(createSampleQuery())
+                .setScroll("1m")
+                .execute();
+
+        //then
+        verify(boundRequestBuilderMock).setBody("{\"query\":{\"term\":{\"someField\":\"someValue\"}}}");
+        verify(httpClient).preparePost("/some-index/_search");
+        verify(boundRequestBuilderMock).addQueryParam("scroll", "1m");
+        assertThat(response.getScrollId(), is("some_scroll_id"));
     }
 
     @Test
