@@ -8,22 +8,17 @@ import static org.hamcrest.Matchers.is;
 public class RequestBuilderUtilTest {
 
     @Test
-    public void shouldBuildUrl(){
-        assertThat(RequestBuilderUtil.buildUrl("someHost:9200", "someIndexName"), is("http://someHost:9200/someIndexName"));
+    public void shouldBuildUrlWithDocumentType() {
+        assertThat(RequestBuilderUtil.buildUrl("someIndexName", "someDocumentType"), is("/someIndexName/someDocumentType"));
     }
 
     @Test
-    public void shouldBuildUrlWithDocumentType(){
-        assertThat(RequestBuilderUtil.buildUrl("someHost:9200", "someIndexName", "someDocumentType"), is("http://someHost:9200/someIndexName/someDocumentType"));
+    public void shouldBuildUrlWithDocumentTypeAndOperation() {
+        assertThat(RequestBuilderUtil.buildUrl("someIndexName", "someDocumentType", "someOperation"), is("/someIndexName/someDocumentType/someOperation"));
     }
 
     @Test
-    public void shouldBuildUrlWithDocumentTypeAndOperation(){
-        assertThat(RequestBuilderUtil.buildUrl("someHost:9200", "someIndexName", "someDocumentType", "someOperation"), is("http://someHost:9200/someIndexName/someDocumentType/someOperation"));
-    }
-
-    @Test
-    public void shouldBuildUrlWithIndicesAndTypesAndOperation(){
-        assertThat(RequestBuilderUtil.buildUrl("someHost:9200", new String[]{"someIndexName", "someIndexName2"}, new String[]{"someType", "someType2"}, "someOperation"), is("http://someHost:9200/someIndexName,someIndexName2/someType,someType2/someOperation"));
+    public void shouldBuildUrlWithIndicesAndTypesAndOperation() {
+        assertThat(RequestBuilderUtil.buildUrl(new String[]{"someIndexName", "someIndexName2"}, new String[]{"someType", "someType2"}, "someOperation"), is("/someIndexName,someIndexName2/someType,someType2/someOperation"));
     }
 }

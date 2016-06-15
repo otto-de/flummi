@@ -1,6 +1,5 @@
 package de.otto.elasticsearch.client.request;
 
-import com.google.common.collect.ImmutableList;
 import com.ning.http.client.AsyncHttpClient;
 import de.otto.elasticsearch.client.CompletedFuture;
 import de.otto.elasticsearch.client.InvalidElasticsearchResponseException;
@@ -8,6 +7,7 @@ import de.otto.elasticsearch.client.MockResponse;
 import de.otto.elasticsearch.client.bulkactions.IndexActionBuilder;
 import de.otto.elasticsearch.client.bulkactions.IndexOpType;
 import de.otto.elasticsearch.client.response.HttpServerErrorException;
+import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -21,15 +21,14 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class BulkRequestBuilderTest {
 
     BulkRequestBuilder testee;
-    private ImmutableList<String> HOSTS = ImmutableList.of("someHost:9200");
 
     @Mock
-    AsyncHttpClient asyncHttpClient;
+    RoundRobinLoadBalancingHttpClient asyncHttpClient;
 
     @BeforeMethod
     public void setUp() throws Exception {
         initMocks(this);
-        testee = new BulkRequestBuilder(asyncHttpClient, HOSTS, 0);
+        testee = new BulkRequestBuilder(asyncHttpClient);
     }
 
     @Test
@@ -37,7 +36,7 @@ public class BulkRequestBuilderTest {
         // given
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
 
-        when(asyncHttpClient.preparePost("http://" + HOSTS.get(0) + "/_bulk")).thenReturn(boundRequestBuilderMock);
+        when(asyncHttpClient.preparePost("/_bulk")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody("{\"index\":{\"_index\":\"someIndex\",\"_type\":\"Flutschfinger\"}}\n{\"Eis\":\"am Stiel\"}\n")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBodyEncoding("UTF-8")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok", "{\"errors\":false}")));
@@ -48,7 +47,7 @@ public class BulkRequestBuilderTest {
         testee.execute();
 
         // then
-        verify(asyncHttpClient).preparePost("http://" + HOSTS.get(0) + "/_bulk");
+        verify(asyncHttpClient).preparePost("/_bulk");
         verify(boundRequestBuilderMock).execute();
         verify(boundRequestBuilderMock).setBody("{\"index\":{\"_index\":\"someIndex\",\"_type\":\"Flutschfinger\"}}\n{\"Eis\":\"am Stiel\"}\n");
     }
@@ -58,7 +57,7 @@ public class BulkRequestBuilderTest {
         // given
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
 
-        when(asyncHttpClient.preparePost("http://" + HOSTS.get(0) + "/_bulk")).thenReturn(boundRequestBuilderMock);
+        when(asyncHttpClient.preparePost("/_bulk")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody("{\"index\":{\"_index\":\"someIndex\",\"_type\":\"Flutschfinger\"}}\n{\"Eis\":\"am Stiel\"}\n")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBodyEncoding("UTF-8")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(400, "not ok", "{\"errors\":false}")));
@@ -82,7 +81,7 @@ public class BulkRequestBuilderTest {
         // given
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
 
-        when(asyncHttpClient.preparePost("http://" + HOSTS.get(0) + "/_bulk")).thenReturn(boundRequestBuilderMock);
+        when(asyncHttpClient.preparePost("/_bulk")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody("{\"index\":{\"_index\":\"someIndex\",\"_type\":\"Flutschfinger\"}}\n{\"Eis\":\"am Stiel\"}\n")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBodyEncoding("UTF-8")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok", "{\"errors\":true,\"items\":[{\"index\":{\"status\":400,\"error\":\"someError\"}}]}")));
@@ -103,7 +102,7 @@ public class BulkRequestBuilderTest {
         // given
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
 
-        when(asyncHttpClient.preparePost("http://" + HOSTS.get(0) + "/_bulk")).thenReturn(boundRequestBuilderMock);
+        when(asyncHttpClient.preparePost("/_bulk")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody("{\"index\":{\"_index\":\"someIndex\",\"_type\":\"Flutschfinger\"}}\n{\"Eis\":\"am Stiel\"}\n")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBodyEncoding("UTF-8")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok", "{\"errors\":true,\"items\":[{\"update\":{\"status\":404,\"error\":\"someError\"}}]}")));
@@ -120,7 +119,7 @@ public class BulkRequestBuilderTest {
         // given
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
 
-        when(asyncHttpClient.preparePost("http://" + HOSTS.get(0) + "/_bulk")).thenReturn(boundRequestBuilderMock);
+        when(asyncHttpClient.preparePost("/_bulk")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody("{\"index\":{\"_index\":\"someIndex\",\"_type\":\"Flutschfinger\"}}\n{\"Eis\":\"am Stiel\"}\n")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBodyEncoding("UTF-8")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok", "{\"errors\":true,\"items\":[{\"index\":{\"status\":503,\"error\":\"someError\"}}]}")));
@@ -141,7 +140,7 @@ public class BulkRequestBuilderTest {
         // given
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
 
-        when(asyncHttpClient.preparePost("http://" + HOSTS.get(0) + "/_bulk")).thenReturn(boundRequestBuilderMock);
+        when(asyncHttpClient.preparePost("/_bulk")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody("{\"index\":{\"_index\":\"someIndex\",\"_type\":\"Flutschfinger\"}}\n{\"Eis\":\"am Stiel\"}\n")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBodyEncoding("UTF-8")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok", "{\"errors\":true,\"items\":[{\"create\":{\"status\":200}},{\"delete\":{\"status\":503,\"error\":\"someError\"}}]}")));
@@ -162,7 +161,7 @@ public class BulkRequestBuilderTest {
         // given
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
 
-        when(asyncHttpClient.preparePost("http://" + HOSTS.get(0) + "/_bulk")).thenReturn(boundRequestBuilderMock);
+        when(asyncHttpClient.preparePost("/_bulk")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody("{\"index\":{\"_index\":\"someIndex\",\"_type\":\"Flutschfinger\"}}\n{\"Eis\":\"am Stiel\"}\n")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBodyEncoding("UTF-8")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok", "{\"errors\":true,\"items\":[{\"create\":{\"status\":200}},{\"update\":{\"status\":404,\"error\":\"someError\"}}]}")));
@@ -179,7 +178,7 @@ public class BulkRequestBuilderTest {
         // given
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
 
-        when(asyncHttpClient.preparePost("http://" + HOSTS.get(0) + "/_bulk")).thenReturn(boundRequestBuilderMock);
+        when(asyncHttpClient.preparePost("/_bulk")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody("{\"index\":{\"_index\":\"someIndex\",\"_type\":\"Flutschfinger\"}}\n{\"Eis\":\"am Stiel\"}\n")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBodyEncoding("UTF-8")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok", "{\"errors\":true,\"items\":[{\"update\":{\"_index\":\"mytestindex\",\"_type\":\"product\",\"_id\":\"340891232\",\"status\":409}}]}")));
@@ -190,7 +189,7 @@ public class BulkRequestBuilderTest {
         testee.execute();
 
         // then
-        verify(asyncHttpClient).preparePost("http://" + HOSTS.get(0) + "/_bulk");
+        verify(asyncHttpClient).preparePost("/_bulk");
         verify(boundRequestBuilderMock).execute();
     }
 }

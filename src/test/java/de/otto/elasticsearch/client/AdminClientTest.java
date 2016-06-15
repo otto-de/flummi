@@ -1,11 +1,11 @@
 package de.otto.elasticsearch.client;
 
-import com.google.common.collect.ImmutableList;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.ListenableFuture;
 import com.ning.http.client.Response;
 import de.otto.elasticsearch.client.request.ClusterHealthRequestBuilder;
 import de.otto.elasticsearch.client.request.CreateIndexRequestBuilder;
+import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
 import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -21,14 +21,13 @@ import static org.mockito.Mockito.*;
 public class AdminClientTest {
 
     private AdminClient adminClient;
-    private AsyncHttpClient asyncHttpClient;
-    private ImmutableList<String> hosts = ImmutableList.of("someHost:9200");
+    private RoundRobinLoadBalancingHttpClient httpClient;
 
 
     @BeforeMethod
     public void setup() {
-        asyncHttpClient = mock(AsyncHttpClient.class);
-        adminClient = new AdminClient(asyncHttpClient, hosts, 0);
+        httpClient = mock(RoundRobinLoadBalancingHttpClient.class);
+        adminClient = new AdminClient(httpClient);
     }
 
     @Test
@@ -41,7 +40,7 @@ public class AdminClientTest {
         when(response.getResponseBody()).thenReturn("{\"status\":\"GREEN\", \"cluster_name\":\"someClusterName\", \"timed_out\":\"someTimedOut\"}");
         when(listenableFuture.get()).thenReturn(response);
         when(boundRequestBuilder.execute()).thenReturn(listenableFuture);
-        when(asyncHttpClient.prepareGet(anyString())).thenReturn(boundRequestBuilder);
+        when(httpClient.prepareGet(anyString())).thenReturn(boundRequestBuilder);
         final ClusterAdminClient cluster = adminClient.cluster();
         final ClusterHealthRequestBuilder clusterHealthRequestBuilder = cluster.prepareHealth("someIndexName");
 
@@ -49,7 +48,7 @@ public class AdminClientTest {
         clusterHealthRequestBuilder.execute();
 
         //Then
-        Mockito.verify(asyncHttpClient).prepareGet("http://someHost:9200/_cluster/health/someIndexName");
+        Mockito.verify(httpClient).prepareGet("/_cluster/health/someIndexName");
         assertThat(cluster, notNullValue());
     }
 
@@ -57,7 +56,7 @@ public class AdminClientTest {
     public void shouldCreateIndicesAdminClient() throws ExecutionException, InterruptedException, IOException {
         //Given
         final AsyncHttpClient.BoundRequestBuilder boundRequestBuilder = mock(AsyncHttpClient.BoundRequestBuilder.class);
-        when(asyncHttpClient.preparePut(anyString())).thenReturn(boundRequestBuilder);
+        when(httpClient.preparePut(anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setBody(anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setBodyEncoding(anyString())).thenReturn(boundRequestBuilder);
         final ListenableFuture<Response> listenableFuture = mock(ListenableFuture.class);
@@ -73,7 +72,7 @@ public class AdminClientTest {
         createIndexRequestBuilder.execute();
 
         //Then
-        verify(asyncHttpClient).preparePut("http://someHost:9200/someIndexName");
+        verify(httpClient).preparePut("/someIndexName");
         assertThat(indicesAdminClient, notNullValue());
     }
 

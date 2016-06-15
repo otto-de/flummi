@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.Response;
 import de.otto.elasticsearch.client.RequestBuilderUtil;
+import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -17,19 +18,15 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class CountRequestBuilder implements RequestBuilder<Long> {
 
-    private final AsyncHttpClient client;
-    private final ImmutableList<String> hosts;
-    private final int hostIndexOfNextRequest;
     private final String[] indices;
     private final Gson gson;
     private String[] types;
 
     public static final Logger LOG = getLogger(CountRequestBuilder.class);
+    private RoundRobinLoadBalancingHttpClient httpClient;
 
-    public CountRequestBuilder(AsyncHttpClient client, ImmutableList<String> hosts, int hostIndexOfNextRequest, String... indices) {
-        this.client = client;
-        this.hosts = hosts;
-        this.hostIndexOfNextRequest = hostIndexOfNextRequest;
+    public CountRequestBuilder(RoundRobinLoadBalancingHttpClient httpClient, String... indices) {
+        this.httpClient = httpClient;
         this.indices = indices;
         this.gson = new Gson();
     }
@@ -41,30 +38,21 @@ public class CountRequestBuilder implements RequestBuilder<Long> {
 
     @Override
     public Long execute() {
-        for (int i = hostIndexOfNextRequest, count = 0; count < hosts.size(); i = (i + 1) % hosts.size()) {
-            try {
-                String url = RequestBuilderUtil.buildUrl(hosts.get(i), indices, types, "_count");
-                Response response = client.prepareGet(url).execute().get();
-                if (response.getStatusCode() >= 300) {
-                    throw toHttpServerErrorException(response);
-                }
-                String jsonString = response.getResponseBody();
-                JsonObject responseObject = gson.fromJson(jsonString, JsonObject.class);
-                return responseObject.get("count").getAsLong();
-            } catch (IOException e) {
-                throw new UncheckedIOException(e);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            } catch (ExecutionException e) {
-                if (i == ((hostIndexOfNextRequest - 1) % hosts.size())) {
-                    LOG.warn("Could not connect to host '" + hosts.get(i) + "'");
-                    throw new RuntimeException(e);
-                } else {
-                    LOG.warn("Could not connect to host '" + hosts.get(i) + "'");
-                }
+        try {
+            String url = RequestBuilderUtil.buildUrl(indices, types, "_count");
+            Response response = httpClient.prepareGet(url).execute().get();
+            if (response.getStatusCode() >= 300) {
+                throw toHttpServerErrorException(response);
             }
-            count++;
+            String jsonString = response.getResponseBody();
+            JsonObject responseObject = gson.fromJson(jsonString, JsonObject.class);
+            return responseObject.get("count").getAsLong();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
         }
-        throw new RuntimeException("Could not connect to cluster");
     }
 }

@@ -10,8 +10,8 @@ public class RequestBuilderUtil {
 
     public static final String[] EMPTY_ARRAY = new String[]{};
 
-    public static String buildUrl(String baseUrl, String[] indexNames, String[] types, String operationOrId) {
-        StringBuilder urlBuilder = new StringBuilder("http://" + baseUrl);
+    public static String buildUrl(String[] indexNames, String[] types, String operationOrId) {
+        StringBuilder urlBuilder = new StringBuilder();
         if (indexNames != null && indexNames.length > 0) {
             urlBuilder.append("/").append(String.join(",", indexNames));
         }
@@ -33,20 +33,13 @@ public class RequestBuilderUtil {
         }
     }
 
-    public static String buildUrl(String host, String indexName) {
-        return "http://" +
-                host +
-                "/" +
-                indexName;
-    }
-
-    public static String buildUrl(String baseUrl, String indexName, String type, String operationOrId) {
+    public static String buildUrl(String indexName, String type, String operationOrId) {
         String[] types = type != null ? new String[]{type} : EMPTY_ARRAY;
         String[] indexNames = indexName != null ? new String[]{indexName} : EMPTY_ARRAY;
-        return buildUrl(baseUrl, indexNames, types, operationOrId);
+        return buildUrl(indexNames, types, operationOrId);
     }
 
-    public static String buildUrl(String baseUrl, String indexName, String documentType) {
-        return buildUrl(baseUrl, indexName, documentType, null);
+    public static String buildUrl(String indexName, String documentType) {
+        return buildUrl(indexName, documentType, null);
     }
 }

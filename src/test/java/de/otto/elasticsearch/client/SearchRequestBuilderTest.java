@@ -10,6 +10,7 @@ import de.otto.elasticsearch.client.query.QueryBuilders;
 import de.otto.elasticsearch.client.request.SearchRequestBuilder;
 import de.otto.elasticsearch.client.response.SearchHit;
 import de.otto.elasticsearch.client.response.SearchResponse;
+import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -28,25 +29,25 @@ public class SearchRequestBuilderTest {
             "\"timed_out\":false," +
             "\"_shards\":{\"total\":5,\"successful\":5,\"failed\":0}," +
             "\"hits\":{\"total\":1,\"max_score\":1.0,\"hits\":[" +
-             "{\"_index\":\"product_1460618266743\",\"_type\":\"product\",\"_id\":\"P0\",\"_score\":1.0,\"_source\":" +
+            "{\"_index\":\"product_1460618266743\",\"_type\":\"product\",\"_id\":\"P0\",\"_score\":1.0,\"_source\":" +
             PRODUCT_JSON +
             "}" +
             "]}}";
     SearchRequestBuilder searchRequestBuilder;
-    AsyncHttpClient asyncHttpClient;
+    RoundRobinLoadBalancingHttpClient httpClient;
     private ImmutableList<String> HOSTS = ImmutableList.of("someHost:9200");
 
     @BeforeMethod
     public void setUp() throws Exception {
-        asyncHttpClient = mock(AsyncHttpClient.class);
-        searchRequestBuilder = new SearchRequestBuilder(asyncHttpClient, HOSTS, 0, "some-index");
+        httpClient = mock(RoundRobinLoadBalancingHttpClient.class);
+        searchRequestBuilder = new SearchRequestBuilder(httpClient, "some-index");
     }
 
     @Test
     public void shouldBuilderQueryWithOneField() throws Exception {
         // given
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
-        when(asyncHttpClient.preparePost("http://someHost:9200/some-index/_search")).thenReturn(boundRequestBuilderMock);
+        when(httpClient.preparePost("/some-index/_search")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBodyEncoding(anyString())).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", EMPTY_SEARCH_RESPONSE)));
@@ -56,14 +57,14 @@ public class SearchRequestBuilderTest {
 
         //then
         verify(boundRequestBuilderMock).setBody("{\"query\":{\"term\":{\"someField\":\"someValue\"}},\"fields\":[\"someField\"]}");
-        verify(asyncHttpClient).preparePost("http://someHost:9200/some-index/_search");
+        verify(httpClient).preparePost("/some-index/_search");
     }
 
     @Test
     public void shouldParseSearchResponseWithFullDocuments() throws Exception {
         // given
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
-        when(asyncHttpClient.preparePost("http://someHost:9200/some-index/_search")).thenReturn(boundRequestBuilderMock);
+        when(httpClient.preparePost("/some-index/_search")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBodyEncoding(anyString())).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", SEARCH_RESPONSE_WITH_ONE_HIT)));
@@ -73,11 +74,11 @@ public class SearchRequestBuilderTest {
 
         //then
         verify(boundRequestBuilderMock).setBody("{\"query\":{\"term\":{\"someField\":\"someValue\"}}}");
-        verify(asyncHttpClient).preparePost("http://someHost:9200/some-index/_search");
+        verify(httpClient).preparePost("/some-index/_search");
 
         assertThat(response.getTookInMillis(), is(1L));
         assertThat(response.getHits().getMaxScore(), is(1F));
-        assertThat(response.getAggregations().size(), is(0)) ;
+        assertThat(response.getAggregations().size(), is(0));
         assertThat(response.getHits().getTotalHits(), is(1L));
         SearchHit firstHit = response.getHits().iterator().next();
         assertThat(firstHit.getFields().entrySet().size(), is(0));
@@ -90,7 +91,7 @@ public class SearchRequestBuilderTest {
     public void shouldBuilderQueryWithFromAndSize() throws Exception {
         // given
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
-        when(asyncHttpClient.preparePost("http://someHost:9200/some-index/_search")).thenReturn(boundRequestBuilderMock);
+        when(httpClient.preparePost("/some-index/_search")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBodyEncoding(anyString())).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", EMPTY_SEARCH_RESPONSE)));
@@ -100,14 +101,14 @@ public class SearchRequestBuilderTest {
 
         //then
         verify(boundRequestBuilderMock).setBody("{\"query\":{\"term\":{\"someField\":\"someValue\"}},\"from\":111,\"size\":42}");
-        verify(asyncHttpClient).preparePost("http://someHost:9200/some-index/_search");
+        verify(httpClient).preparePost("/some-index/_search");
     }
 
     @Test
     public void shouldSetHttpRequestTimeout() throws Exception {
         // given
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
-        when(asyncHttpClient.preparePost("http://someHost:9200/some-index/_search")).thenReturn(boundRequestBuilderMock);
+        when(httpClient.preparePost("/some-index/_search")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBodyEncoding(anyString())).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", EMPTY_SEARCH_RESPONSE)));
@@ -118,14 +119,14 @@ public class SearchRequestBuilderTest {
         //then
         verify(boundRequestBuilderMock).setBody("{\"query\":{\"term\":{\"someField\":\"someValue\"}}}");
         verify(boundRequestBuilderMock).setRequestTimeout(54321);
-        verify(asyncHttpClient).preparePost("http://someHost:9200/some-index/_search");
+        verify(httpClient).preparePost("/some-index/_search");
     }
 
     @Test
     public void shouldBuildRequestWithOneSort() throws Exception {
         // given
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
-        when(asyncHttpClient.preparePost("http://someHost:9200/some-index/_search")).thenReturn(boundRequestBuilderMock);
+        when(httpClient.preparePost("/some-index/_search")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBodyEncoding(anyString())).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", EMPTY_SEARCH_RESPONSE)));
@@ -135,14 +136,14 @@ public class SearchRequestBuilderTest {
 
         //then
         verify(boundRequestBuilderMock).setBody("{\"query\":{\"term\":{\"someField\":\"someValue\"}},\"sort\":[{\"someKey\":{\"order\":\"desc\"}}]}");
-        verify(asyncHttpClient).preparePost("http://someHost:9200/some-index/_search");
+        verify(httpClient).preparePost("/some-index/_search");
     }
 
     @Test
     public void shouldBuildRequestWithMultipleSort() throws Exception {
         // given
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
-        when(asyncHttpClient.preparePost("http://someHost:9200/some-index/_search")).thenReturn(boundRequestBuilderMock);
+        when(httpClient.preparePost("/some-index/_search")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBodyEncoding(anyString())).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", EMPTY_SEARCH_RESPONSE)));
@@ -152,14 +153,14 @@ public class SearchRequestBuilderTest {
 
         //then
         verify(boundRequestBuilderMock).setBody("{\"query\":{\"term\":{\"someField\":\"someValue\"}},\"sort\":[{\"someKey\":{\"order\":\"desc\"}},{\"someOtherKey\":{\"order\":\"asc\"}}]}");
-        verify(asyncHttpClient).preparePost("http://someHost:9200/some-index/_search");
+        verify(httpClient).preparePost("/some-index/_search");
     }
 
     @Test
     public void shouldBuildRequestWithPostFilter() throws Exception {
         // given
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
-        when(asyncHttpClient.preparePost("http://someHost:9200/some-index/_search")).thenReturn(boundRequestBuilderMock);
+        when(httpClient.preparePost("/some-index/_search")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBodyEncoding(anyString())).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", EMPTY_SEARCH_RESPONSE)));
@@ -169,14 +170,14 @@ public class SearchRequestBuilderTest {
 
         //then
         verify(boundRequestBuilderMock).setBody("{\"query\":{\"term\":{\"someField\":\"someValue\"}},\"post_filter\":{\"term\":{\"someField\":\"someValue\"}}}");
-        verify(asyncHttpClient).preparePost("http://someHost:9200/some-index/_search");
+        verify(httpClient).preparePost("/some-index/_search");
     }
 
     @Test
     public void shouldBuildRequestWithAggregations() throws Exception {
         // given
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
-        when(asyncHttpClient.preparePost("http://someHost:9200/some-index/_search")).thenReturn(boundRequestBuilderMock);
+        when(httpClient.preparePost("/some-index/_search")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBodyEncoding(anyString())).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", EMPTY_SEARCH_RESPONSE)));
@@ -189,14 +190,14 @@ public class SearchRequestBuilderTest {
         //then
         verify(boundRequestBuilderMock).setBody("{\"query\":{\"term\":{\"someField\":\"someValue\"}}," +
                 "\"aggregations\":{\"Katzenklo\":{\"terms\":{\"field\":\"someField\"}}}}");
-        verify(asyncHttpClient).preparePost("http://someHost:9200/some-index/_search");
+        verify(httpClient).preparePost("/some-index/_search");
     }
 
     @Test
     public void shouldBuildRequestWithNestedAggregations() throws Exception {
         // given
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
-        when(asyncHttpClient.preparePost("http://someHost:9200/some-index/_search")).thenReturn(boundRequestBuilderMock);
+        when(httpClient.preparePost("/some-index/_search")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBodyEncoding(anyString())).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", EMPTY_SEARCH_RESPONSE)));
@@ -224,7 +225,7 @@ public class SearchRequestBuilderTest {
                         "}" +
                         "}" +
                         "}");
-        verify(asyncHttpClient).preparePost("http://someHost:9200/some-index/_search");
+        verify(httpClient).preparePost("/some-index/_search");
     }
 
 

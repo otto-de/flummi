@@ -1,10 +1,10 @@
 package de.otto.elasticsearch.client.request;
 
-import com.google.common.collect.ImmutableList;
 import com.ning.http.client.AsyncHttpClient;
 import de.otto.elasticsearch.client.CompletedFuture;
 import de.otto.elasticsearch.client.MockResponse;
 import de.otto.elasticsearch.client.response.HttpServerErrorException;
+import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -19,23 +19,21 @@ public class IndexRequestBuilderTest {
 
     IndexRequestBuilder testee;
 
-    AsyncHttpClient asyncHttpClient;
+    RoundRobinLoadBalancingHttpClient httpClient;
 
     AsyncHttpClient.BoundRequestBuilder boundRequestBuilder;
-    private ImmutableList<String> hosts = ImmutableList.of("someHost:9200");
-
 
     @BeforeMethod
     public void setUp() throws Exception {
-        asyncHttpClient = mock(AsyncHttpClient.class);
+        httpClient = mock(RoundRobinLoadBalancingHttpClient.class);
         boundRequestBuilder = mock(AsyncHttpClient.BoundRequestBuilder.class);
         when(boundRequestBuilder.setBody(any(String.class))).thenReturn(boundRequestBuilder);
-        testee = new IndexRequestBuilder(asyncHttpClient, hosts, 0);
+        testee = new IndexRequestBuilder(httpClient);
     }
 
     @Test
     public void shouldFireIndexRequestWithId() throws Exception {
-        when(asyncHttpClient.preparePut(any(String.class))).thenReturn(boundRequestBuilder);
+        when(httpClient.preparePut(any(String.class))).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setBodyEncoding(anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "OK", "{\"allet tutti\":\"wa\"}")));
         testee
@@ -48,14 +46,14 @@ public class IndexRequestBuilderTest {
         testee.execute();
 
         // then
-        verify(asyncHttpClient).preparePut("http://someHost:9200/someIndex/someType/4711");
+        verify(httpClient).preparePut("/someIndex/someType/4711");
         verify(boundRequestBuilder).setBody("{\"some\":{\"friggin\":\"source\"}}");
     }
 
 
     @Test
     public void shouldFireIndexRequestWithoutId() throws Exception {
-        when(asyncHttpClient.preparePost(any(String.class))).thenReturn(boundRequestBuilder);
+        when(httpClient.preparePost(any(String.class))).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setBodyEncoding(anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "OK", "{\"allet tutti\":\"wa\"}")));
         testee
@@ -67,13 +65,13 @@ public class IndexRequestBuilderTest {
         testee.execute();
 
         // then
-        verify(asyncHttpClient).preparePost("http://someHost:9200/someIndex/someType");
+        verify(httpClient).preparePost("/someIndex/someType");
         verify(boundRequestBuilder).setBody("{\"some\":{\"friggin\":\"source\"}}");
     }
 
     @Test(expectedExceptions = HttpServerErrorException.class)
     public void shouldThrowWhenServerReturnsBadStatusCode() throws Exception {
-        when(asyncHttpClient.preparePost(any(String.class))).thenReturn(boundRequestBuilder);
+        when(httpClient.preparePost(any(String.class))).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setBodyEncoding(anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture<>(new MockResponse(400, "Bad Request", "{\"query\":\"war kaputt\"}")));
         testee
@@ -88,7 +86,7 @@ public class IndexRequestBuilderTest {
 
         // then
         catch (HttpServerErrorException e) {
-            verify(asyncHttpClient).preparePost("http://someHost:9200/someIndex/someType");
+            verify(httpClient).preparePost("/someIndex/someType");
             verify(boundRequestBuilder).setBody("{\"some\":{\"friggin\":\"source\"}}");
             assertThat(e.getStatusCode(), is(400));
             assertThat(e.getMessage(), is("400 Bad Request"));

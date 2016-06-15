@@ -8,6 +8,7 @@ import de.otto.elasticsearch.client.CompletedFuture;
 import de.otto.elasticsearch.client.MockResponse;
 import de.otto.elasticsearch.client.response.GetResponse;
 import de.otto.elasticsearch.client.response.HttpServerErrorException;
+import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -20,14 +21,11 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class GetRequestBuilderTest {
 
-    public static final ImmutableList<String> HOSTS = ImmutableList.of("someHost:9200");
     @Mock
-    AsyncHttpClient asyncHttpClient;
+    RoundRobinLoadBalancingHttpClient httpClient;
 
     @Mock
     AsyncHttpClient.BoundRequestBuilder boundRequestBuilder;
-
-    GetRequestBuilder testee;
 
     @BeforeMethod
     public void setUp() throws Exception {
@@ -37,7 +35,7 @@ public class GetRequestBuilderTest {
     @Test
     public void shouldExecuteFlushIndex() throws Exception {
         // given
-        when(asyncHttpClient.prepareGet("http://" + HOSTS.get(0) + "/someIndex/someType/someId")).thenReturn(boundRequestBuilder);
+        when(httpClient.prepareGet("/someIndex/someType/someId")).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok",
                 "{\n" +
                         "  \"_index\": \"product_1461747600019\",\n" +
@@ -52,7 +50,7 @@ public class GetRequestBuilderTest {
                         "}\n" +
                         "}")));
         // when
-        GetResponse response = new GetRequestBuilder(asyncHttpClient, HOSTS, 0, "someIndex", "someType", "someId").execute();
+        GetResponse response = new GetRequestBuilder(httpClient, "someIndex", "someType", "someId").execute();
 
         // then
         JsonObject jsonObject = new JsonObject();
@@ -62,19 +60,19 @@ public class GetRequestBuilderTest {
 
         assertThat(response.isExists(), is(true));
         assertThat(response.getSource(), is(jsonObject));
-        verify(asyncHttpClient).prepareGet("http://" + HOSTS.get(0) + "/someIndex/someType/someId");
+        verify(httpClient).prepareGet("/someIndex/someType/someId");
         verify(boundRequestBuilder).execute();
     }
 
     @Test(expectedExceptions = HttpServerErrorException.class)
     public void shouldThrowExceptionIfHttpStatusIsNotEqual400() throws Exception {
         // given
-        when(asyncHttpClient.prepareGet("http://" + HOSTS.get(0) + "/someIndex/someType/someId")).thenReturn(boundRequestBuilder);
+        when(httpClient.prepareGet("/someIndex/someType/someId")).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(400, "not ok",
                 "{}")));
         // when
         try {
-            new GetRequestBuilder(asyncHttpClient, HOSTS, 0, "someIndex", "someType", "someId").execute();
+            new GetRequestBuilder(httpClient, "someIndex", "someType", "someId").execute();
         } catch (HttpServerErrorException e) {
             assertThat(e.getMessage(), is("400 not ok"));
             assertThat(e.getResponseBody(), is("{}"));

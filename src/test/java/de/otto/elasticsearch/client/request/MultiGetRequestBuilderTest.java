@@ -8,6 +8,7 @@ import de.otto.elasticsearch.client.CompletedFuture;
 import de.otto.elasticsearch.client.MockResponse;
 import de.otto.elasticsearch.client.response.MultiGetResponse;
 import de.otto.elasticsearch.client.response.MultiGetResponseDocument;
+import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -24,9 +25,8 @@ import static org.mockito.Mockito.*;
 
 public class MultiGetRequestBuilderTest {
 
-    private AsyncHttpClient asyncHttpClient;
+    private RoundRobinLoadBalancingHttpClient httpClient;
     private MultiGetRequestBuilder requestBuilder;
-    private ImmutableList<String> HOSTS = ImmutableList.of("someHost:9200");
 
     public static final String ONE_DOC_FOUND_RESPONSE = "{\n" +
             "  \"docs\": [\n" +
@@ -85,15 +85,15 @@ public class MultiGetRequestBuilderTest {
 
     @BeforeMethod
     public void setUp() throws Exception {
-        asyncHttpClient = mock(AsyncHttpClient.class);
-        requestBuilder = new MultiGetRequestBuilder(asyncHttpClient, HOSTS, 0, "some-index");
+        httpClient = mock(RoundRobinLoadBalancingHttpClient.class);
+        requestBuilder = new MultiGetRequestBuilder(httpClient, "some-index");
     }
 
     @Test
     public void shouldReturnOneMatchedDocument() throws Exception {
         // given
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
-        when(asyncHttpClient.preparePost("http://someHost:9200/some-index/_mget")).thenReturn(boundRequestBuilderMock);
+        when(httpClient.preparePost("/some-index/_mget")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBodyEncoding(anyString())).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", ONE_DOC_FOUND_RESPONSE)));
@@ -103,7 +103,7 @@ public class MultiGetRequestBuilderTest {
 
         //then
         verify(boundRequestBuilderMock).setBody("{\"docs\":[{\"_id\":\"V1\"}]}");
-        verify(asyncHttpClient).preparePost("http://someHost:9200/some-index/_mget");
+        verify(httpClient).preparePost("/some-index/_mget");
         assertThat(response.getMultiGetResponseDocuments(), hasSize(1));
         assertThat(response.getMultiGetResponseDocuments().get(0), is(new MultiGetResponseDocument("V1", true, object("variationId", new JsonPrimitive("V1"), "name", new JsonPrimitive("name1")))));
     }
@@ -112,7 +112,7 @@ public class MultiGetRequestBuilderTest {
     public void shouldReturnMultipleMatchedDocument() throws Exception {
         // given
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
-        when(asyncHttpClient.preparePost("http://someHost:9200/some-index/_mget")).thenReturn(boundRequestBuilderMock);
+        when(httpClient.preparePost("/some-index/_mget")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBodyEncoding(anyString())).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", TWO_DOC_FOUND_RESPONSE)));
@@ -122,7 +122,7 @@ public class MultiGetRequestBuilderTest {
 
         //then
         verify(boundRequestBuilderMock).setBody("{\"docs\":[{\"_id\":\"V1\"},{\"_id\":\"V2\"}]}");
-        verify(asyncHttpClient).preparePost("http://someHost:9200/some-index/_mget");
+        verify(httpClient).preparePost("/some-index/_mget");
         assertThat(response.getMultiGetResponseDocuments(), hasSize(2));
         assertThat(response.getMultiGetResponseDocuments().get(0), is(new MultiGetResponseDocument("V1", true, object("variationId", new JsonPrimitive("V1"), "name", new JsonPrimitive("name1")))));
         assertThat(response.getMultiGetResponseDocuments().get(1), is(new MultiGetResponseDocument("V2", true, object("variationId", new JsonPrimitive("V2"), "name", new JsonPrimitive("name2")))));
@@ -132,7 +132,7 @@ public class MultiGetRequestBuilderTest {
     public void shouldBuildAndReturnDocumentWithTypeAndIndex() throws Exception {
         // given
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
-        when(asyncHttpClient.preparePost("http://someHost:9200/some-index/_mget")).thenReturn(boundRequestBuilderMock);
+        when(httpClient.preparePost("/some-index/_mget")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBodyEncoding(anyString())).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", ONE_DOC_FOUND_RESPONSE)));
@@ -148,7 +148,7 @@ public class MultiGetRequestBuilderTest {
     public void shouldReturnAnEmptyResultFor404Response() throws Exception {
         // given
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
-        when(asyncHttpClient.preparePost("http://someHost:9200/some-index/_mget")).thenReturn(boundRequestBuilderMock);
+        when(httpClient.preparePost("/some-index/_mget")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBodyEncoding(anyString())).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(404, "not found", "")));
@@ -164,7 +164,7 @@ public class MultiGetRequestBuilderTest {
     public void shouldParseNotFoundDocument() throws Exception {
         // given
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
-        when(asyncHttpClient.preparePost("http://someHost:9200/some-index/_mget")).thenReturn(boundRequestBuilderMock);
+        when(httpClient.preparePost("/some-index/_mget")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBodyEncoding(anyString())).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", NOT_FOUND_RESPONSE)));
@@ -174,7 +174,7 @@ public class MultiGetRequestBuilderTest {
 
         //then
         verify(boundRequestBuilderMock).setBody("{\"docs\":[{\"_id\":\"V1\"}]}");
-        verify(asyncHttpClient).preparePost("http://someHost:9200/some-index/_mget");
+        verify(httpClient).preparePost("/some-index/_mget");
         assertThat(response.getMultiGetResponseDocuments(), hasSize(1));
         assertThat(response.getMultiGetResponseDocuments().get(0), is(new MultiGetResponseDocument("V1", false, new JsonObject())));
     }

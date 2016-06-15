@@ -6,28 +6,26 @@ import com.ning.http.client.AsyncHttpClient;
 import de.otto.elasticsearch.client.request.CreateIndexRequestBuilder;
 import de.otto.elasticsearch.client.request.DeleteIndexRequestBuilder;
 import de.otto.elasticsearch.client.request.IndicesExistsRequestBuilder;
+import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
 
 public class IndicesAdminClient {
 
-    final AsyncHttpClient asyncHttpClient;
-    private final ImmutableList<String> hosts;
-    private final int hostIndexOfNextRequest;
+    private RoundRobinLoadBalancingHttpClient httpClient;
 
-    public IndicesAdminClient(AsyncHttpClient asyncHttpClient, ImmutableList<String> hosts, int hostIndexOfNextRequest) {
-        this.asyncHttpClient = asyncHttpClient;
-        this.hosts = hosts;
-        this.hostIndexOfNextRequest = hostIndexOfNextRequest;
+    public IndicesAdminClient(RoundRobinLoadBalancingHttpClient httpClient) {
+
+        this.httpClient = httpClient;
     }
 
     public CreateIndexRequestBuilder prepareCreate(String indexName) {
-        return new CreateIndexRequestBuilder(asyncHttpClient, hosts, hostIndexOfNextRequest, indexName);
+        return new CreateIndexRequestBuilder(httpClient, indexName);
     }
 
     public IndicesExistsRequestBuilder prepareExists(String indexName) {
-        return new IndicesExistsRequestBuilder(asyncHttpClient, hosts, hostIndexOfNextRequest, indexName);
+        return new IndicesExistsRequestBuilder(httpClient, indexName);
     }
 
     public DeleteIndexRequestBuilder prepareDelete(String indexName) {
-        return new DeleteIndexRequestBuilder(asyncHttpClient, hosts, hostIndexOfNextRequest, indexName);
+        return new DeleteIndexRequestBuilder(httpClient, indexName);
     }
 }

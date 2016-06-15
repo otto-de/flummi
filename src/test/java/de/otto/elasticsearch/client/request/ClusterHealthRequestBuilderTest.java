@@ -4,24 +4,25 @@ import com.google.common.collect.ImmutableList;
 import com.ning.http.client.AsyncHttpClient;
 import de.otto.elasticsearch.client.*;
 import de.otto.elasticsearch.client.response.HttpServerErrorException;
+import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
+import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
 
 public class ClusterHealthRequestBuilderTest {
 
-    private AsyncHttpClient asyncHttpClient;
-    private ImmutableList<String> HOSTS = ImmutableList.of("someHost:9200");
+    private RoundRobinLoadBalancingHttpClient asyncHttpClient;
     private ClusterHealthRequestBuilder testee;
 
     @BeforeMethod
     public void setUp() throws Exception {
-        asyncHttpClient = mock(AsyncHttpClient.class);
-        testee = new ClusterHealthRequestBuilder(asyncHttpClient, HOSTS, 0, new String[]{"someIndex", "someOtherIndex"});
+        asyncHttpClient = mock(RoundRobinLoadBalancingHttpClient.class);
+        testee = new ClusterHealthRequestBuilder(asyncHttpClient, new String[]{"someIndex", "someOtherIndex"});
     }
 
     @Test
@@ -29,9 +30,9 @@ public class ClusterHealthRequestBuilderTest {
         // given
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
 
-        when(asyncHttpClient.prepareGet("http://" + HOSTS.get(0) + "/_cluster/health/someIndex,someOtherIndex")).thenReturn(boundRequestBuilderMock);
-        when(boundRequestBuilderMock.addQueryParam(anyString(), anyString())).thenReturn(boundRequestBuilderMock);
-        when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok",
+        Mockito.when(asyncHttpClient.prepareGet("/_cluster/health/someIndex,someOtherIndex")).thenReturn(boundRequestBuilderMock);
+        Mockito.when(boundRequestBuilderMock.addQueryParam(anyString(), anyString())).thenReturn(boundRequestBuilderMock);
+        Mockito.when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok",
                 "{\n" +
                         "  \"cluster_name\": \"myCluster\",\n" +
                         "  \"status\": \"green\",\n" +
@@ -52,9 +53,9 @@ public class ClusterHealthRequestBuilderTest {
         // given
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
 
-        when(asyncHttpClient.prepareGet("http://" + HOSTS.get(0) + "/_cluster/health/someIndex,someOtherIndex")).thenReturn(boundRequestBuilderMock);
-        when(boundRequestBuilderMock.addQueryParam(anyString(), anyString())).thenReturn(boundRequestBuilderMock);
-        when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok",
+        Mockito.when(asyncHttpClient.prepareGet("/_cluster/health/someIndex,someOtherIndex")).thenReturn(boundRequestBuilderMock);
+        Mockito.when(boundRequestBuilderMock.addQueryParam(anyString(), anyString())).thenReturn(boundRequestBuilderMock);
+        Mockito.when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok",
                 "{\n" +
                         "  \"cluster_name\": \"myCluster\",\n" +
                         "  \"status\": \"green\",\n" +
@@ -68,7 +69,7 @@ public class ClusterHealthRequestBuilderTest {
         assertThat(healthResponse.getStatus(), is(ClusterHealthStatus.GREEN));
         assertThat(healthResponse.getCluster_name(), is("myCluster"));
         assertThat(healthResponse.isTimedOut(), is(false));
-        verify(boundRequestBuilderMock).addQueryParam("timeout", "1000ms");
+        Mockito.verify(boundRequestBuilderMock).addQueryParam("timeout", "1000ms");
     }
 
     @Test
@@ -76,9 +77,9 @@ public class ClusterHealthRequestBuilderTest {
         // given
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
 
-        when(asyncHttpClient.prepareGet("http://" + HOSTS.get(0) + "/_cluster/health/someIndex,someOtherIndex")).thenReturn(boundRequestBuilderMock);
-        when(boundRequestBuilderMock.addQueryParam(anyString(), anyString())).thenReturn(boundRequestBuilderMock);
-        when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok",
+        Mockito.when(asyncHttpClient.prepareGet("/_cluster/health/someIndex,someOtherIndex")).thenReturn(boundRequestBuilderMock);
+        Mockito.when(boundRequestBuilderMock.addQueryParam(anyString(), anyString())).thenReturn(boundRequestBuilderMock);
+        Mockito.when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok",
                 "{\n" +
                         "  \"cluster_name\": \"myCluster\",\n" +
                         "  \"status\": \"green\",\n" +
@@ -92,7 +93,7 @@ public class ClusterHealthRequestBuilderTest {
         assertThat(healthResponse.getStatus(), is(ClusterHealthStatus.GREEN));
         assertThat(healthResponse.getCluster_name(), is("myCluster"));
         assertThat(healthResponse.isTimedOut(), is(false));
-        verify(boundRequestBuilderMock).addQueryParam("wait_for_status", "yellow");
+        Mockito.verify(boundRequestBuilderMock).addQueryParam("wait_for_status", "yellow");
     }
 
     @Test
@@ -100,8 +101,8 @@ public class ClusterHealthRequestBuilderTest {
         // given
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
 
-        when(asyncHttpClient.prepareGet("http://" + HOSTS.get(0) + "/_cluster/health/someIndex,someOtherIndex")).thenReturn(boundRequestBuilderMock);
-        when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok",
+        Mockito.when(asyncHttpClient.prepareGet("/_cluster/health/someIndex,someOtherIndex")).thenReturn(boundRequestBuilderMock);
+        Mockito.when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok",
                 "{\n" +
                         "  \"cluster_name\": \"myCluster\",\n" +
                         "  \"timed_out\": false" +
@@ -122,8 +123,8 @@ public class ClusterHealthRequestBuilderTest {
         // given
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
 
-        when(asyncHttpClient.prepareGet("http://" + HOSTS.get(0) + "/_cluster/health/someIndex,someOtherIndex")).thenReturn(boundRequestBuilderMock);
-        when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok",
+        Mockito.when(asyncHttpClient.prepareGet("/_cluster/health/someIndex,someOtherIndex")).thenReturn(boundRequestBuilderMock);
+        Mockito.when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok",
                 "{\n" +
                         "  \"cluster_name\": \"myCluster\",\n" +
                         "  \"status\": \"red\"" +
@@ -144,8 +145,8 @@ public class ClusterHealthRequestBuilderTest {
         // given
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
 
-        when(asyncHttpClient.prepareGet("http://" + HOSTS.get(0) + "/_cluster/health/someIndex,someOtherIndex")).thenReturn(boundRequestBuilderMock);
-        when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok",
+        Mockito.when(asyncHttpClient.prepareGet("/_cluster/health/someIndex,someOtherIndex")).thenReturn(boundRequestBuilderMock);
+        Mockito.when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok",
                 "{\n" +
                         "  \"timed_out\": false,\n" +
                         "  \"status\": \"red\"" +
@@ -166,8 +167,8 @@ public class ClusterHealthRequestBuilderTest {
         // given
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
 
-        when(asyncHttpClient.prepareGet("http://" + HOSTS.get(0) + "/_cluster/health/someIndex,someOtherIndex")).thenReturn(boundRequestBuilderMock);
-        when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok",
+        Mockito.when(asyncHttpClient.prepareGet("/_cluster/health/someIndex,someOtherIndex")).thenReturn(boundRequestBuilderMock);
+        Mockito.when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok",
                 "{\n" +
                         "  \"cluster_name\": \"myCluster\",\n" +
                         "  \"timed_out\": true,\n" +
@@ -189,8 +190,8 @@ public class ClusterHealthRequestBuilderTest {
         // given
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
 
-        when(asyncHttpClient.prepareGet("http://" + HOSTS.get(0) + "/_cluster/health/someIndex,someOtherIndex")).thenReturn(boundRequestBuilderMock);
-        when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(400, "not ok",
+        Mockito.when(asyncHttpClient.prepareGet("/_cluster/health/someIndex,someOtherIndex")).thenReturn(boundRequestBuilderMock);
+        Mockito.when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(400, "not ok",
                 "{\n" +
                         "  \"cluster_name\": \"myCluster\",\n" +
                         "  \"timed_out\": false,\n" +

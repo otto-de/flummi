@@ -1,10 +1,10 @@
 package de.otto.elasticsearch.client.request;
 
-import com.google.common.collect.ImmutableList;
 import com.ning.http.client.AsyncHttpClient;
 import de.otto.elasticsearch.client.CompletedFuture;
 import de.otto.elasticsearch.client.MockResponse;
 import de.otto.elasticsearch.client.response.HttpServerErrorException;
+import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -14,30 +14,29 @@ import static org.mockito.Mockito.*;
 
 public class DeleteIndexRequestBuilderTest {
 
-    private AsyncHttpClient asyncHttpClient;
+    private RoundRobinLoadBalancingHttpClient httpClient;
     private DeleteIndexRequestBuilder testee;
-    private ImmutableList<String> HOSTS = ImmutableList.of("someHost:9200");
 
     @BeforeMethod
     private void setup() {
-        asyncHttpClient = mock(AsyncHttpClient.class);
-        testee = new DeleteIndexRequestBuilder(asyncHttpClient, HOSTS, 0, "someIndexName");
+        httpClient = mock(RoundRobinLoadBalancingHttpClient.class);
+        testee = new DeleteIndexRequestBuilder(httpClient, "someIndexName");
     }
 
     @Test
     public void shouldDeleteIndex() {
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
 
-        when(asyncHttpClient.prepareDelete("http://" + HOSTS.get(0) + "/someIndexName")).thenReturn(boundRequestBuilderMock);
+        when(httpClient.prepareDelete("/someIndexName")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok", "")));
         testee.execute();
-        verify(asyncHttpClient).prepareDelete("http://someHost:9200/someIndexName");
+        verify(httpClient).prepareDelete("/someIndexName");
     }
 
     @Test(expectedExceptions = HttpServerErrorException.class)
     public void shouldThrowExceptionIfStatusCodeNotOk() {
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
-        when(asyncHttpClient.prepareDelete("http://" + HOSTS.get(0) + "/someIndexName")).thenReturn(boundRequestBuilderMock);
+        when(httpClient.prepareDelete("/someIndexName")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(400, "not ok", "")));
         try {
             testee.execute();

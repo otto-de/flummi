@@ -1,7 +1,7 @@
 package de.otto.elasticsearch.client;
 
 import com.google.common.collect.ImmutableList;
-import com.ning.http.client.AsyncHttpClient;
+import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -12,17 +12,16 @@ import static org.mockito.Mockito.mock;
 public class ClusterAdminClientTest {
 
     private ClusterAdminClient clusterAdminClient;
-    private AsyncHttpClient asyncHttpClient;
-    private ImmutableList<String> HOSTS = ImmutableList.of("someHost:9200");
+    private RoundRobinLoadBalancingHttpClient httpClient;
 
     @BeforeMethod
     public void setup() {
-        asyncHttpClient = mock(AsyncHttpClient.class);
-        clusterAdminClient = new ClusterAdminClient(asyncHttpClient, HOSTS, 0);
+        httpClient = mock(RoundRobinLoadBalancingHttpClient.class);
+        clusterAdminClient = new ClusterAdminClient(httpClient);
     }
 
     @Test
-    public void shouldPrepareClusterHealth(){
+    public void shouldPrepareClusterHealth() {
         assertThat(clusterAdminClient.prepareHealth(), notNullValue());
     }
 

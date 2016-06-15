@@ -1,11 +1,11 @@
 package de.otto.elasticsearch.client.request;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.Response;
+import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
 import org.slf4j.Logger;
 
 import java.io.UnsupportedEncodingException;
@@ -17,9 +17,6 @@ import static de.otto.elasticsearch.client.RequestBuilderUtil.toHttpServerErrorE
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class IndexRequestBuilder implements RequestBuilder<Void> {
-    private final AsyncHttpClient asyncHttpClient;
-    private final ImmutableList<String> hosts;
-    private final int hostIndexOfNextRequest;
     private final Gson gson;
     private JsonPrimitive id;
     private String indexName;
@@ -28,11 +25,10 @@ public class IndexRequestBuilder implements RequestBuilder<Void> {
     private String parent;
 
     public static final Logger LOG = getLogger(IndexRequestBuilder.class);
+    private RoundRobinLoadBalancingHttpClient httpClient;
 
-    public IndexRequestBuilder(AsyncHttpClient asyncHttpClient, ImmutableList<String> hosts, int hostIndexOfNextRequest) {
-        this.asyncHttpClient = asyncHttpClient;
-        this.hosts = hosts;
-        this.hostIndexOfNextRequest = hostIndexOfNextRequest;
+    public IndexRequestBuilder(RoundRobinLoadBalancingHttpClient httpClient) {
+        this.httpClient = httpClient;
         this.gson = new Gson();
     }
 
@@ -68,38 +64,30 @@ public class IndexRequestBuilder implements RequestBuilder<Void> {
 
     @Override
     public Void execute() {
-        for (int i = hostIndexOfNextRequest, count = 0; count < hosts.size(); i = (i + 1) % hosts.size()) {
+        try {
             AsyncHttpClient.BoundRequestBuilder reqBuilder;
-            try {
-                if (id != null) {
-                    String url = buildUrl(hosts.get(i), indexName, documentType, URLEncoder.encode(id.getAsString(), "UTF-8"));
-                    reqBuilder = asyncHttpClient.preparePut(url);
-                } else {
-                    String url = buildUrl(hosts.get(i), indexName, documentType);
-                    reqBuilder = asyncHttpClient.preparePost(url);
-                }
-                if(parent!=null) {
-                    reqBuilder.addQueryParam("parent", parent);
-                }
-                Response response = reqBuilder.setBody(gson.toJson(source)).setBodyEncoding("UTF-8").execute().get();
-                if (response.getStatusCode() >= 300) {
-                    throw toHttpServerErrorException(response);
-                }
-                return null;
-            } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException(e);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            } catch (ExecutionException e) {
-                if (i == ((hostIndexOfNextRequest - 1) % hosts.size())) {
-                    LOG.warn("Could not connect to host '" + hosts.get(i) + "'");
-                    throw new RuntimeException(e);
-                } else {
-                    LOG.warn("Could not connect to host '" + hosts.get(i) + "'");
-                }
+            if (id != null) {
+                String url = buildUrl(indexName, documentType, URLEncoder.encode(id.getAsString(), "UTF-8"));
+                reqBuilder = httpClient.preparePut(url);
+            } else {
+                String url = buildUrl(indexName, documentType);
+                reqBuilder = httpClient.preparePost(url);
             }
-            count++;
+            if (parent != null) {
+                reqBuilder.addQueryParam("parent", parent);
+            }
+            Response response = reqBuilder.setBody(gson.toJson(source)).setBodyEncoding("UTF-8").execute().get();
+            if (response.getStatusCode() >= 300) {
+                throw toHttpServerErrorException(response);
+            }
+            return null;
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
         }
-        throw new RuntimeException("Could not connect to cluster");
     }
+
 }

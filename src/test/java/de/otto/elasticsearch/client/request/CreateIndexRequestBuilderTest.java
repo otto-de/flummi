@@ -1,11 +1,11 @@
 package de.otto.elasticsearch.client.request;
 
-import com.google.common.collect.ImmutableList;
 import com.ning.http.client.AsyncHttpClient;
 import de.otto.elasticsearch.client.CompletedFuture;
 import de.otto.elasticsearch.client.InvalidElasticsearchResponseException;
 import de.otto.elasticsearch.client.MockResponse;
 import de.otto.elasticsearch.client.response.HttpServerErrorException;
+import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -21,10 +21,8 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class CreateIndexRequestBuilderTest {
 
-    private ImmutableList<String> HOSTS = ImmutableList.of("someHost:9200");
-
     @Mock
-    AsyncHttpClient asyncHttpClient;
+    RoundRobinLoadBalancingHttpClient httpClient;
 
     @Mock
     AsyncHttpClient.BoundRequestBuilder boundRequestBuilder;
@@ -34,13 +32,13 @@ public class CreateIndexRequestBuilderTest {
     @BeforeMethod
     public void setUp() throws Exception {
         initMocks(this);
-        testee = new CreateIndexRequestBuilder(asyncHttpClient, HOSTS, 0, "someIndex");
+        testee = new CreateIndexRequestBuilder(httpClient, "someIndex");
     }
 
     @Test
     public void shouldExecuteCreateIndexRequestWithMappings() throws Exception {
         // given
-        when(asyncHttpClient.preparePut("http://" + HOSTS.get(0) + "/someIndex")).thenReturn(boundRequestBuilder);
+        when(httpClient.preparePut("/someIndex")).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setBody(any(String.class))).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setBodyEncoding(anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok", "{\"acknowledged\": true}")));
@@ -50,7 +48,7 @@ public class CreateIndexRequestBuilderTest {
         testee.execute();
 
         // then
-        verify(asyncHttpClient).preparePut("http://" + HOSTS.get(0) + "/someIndex");
+        verify(httpClient).preparePut("/someIndex");
         verify(boundRequestBuilder).execute();
         verify(boundRequestBuilder).setBody("{\"mappings\":{\"someType\":{\"someField\":{\"someSetting\":\"someValue\"}}}}");
     }
@@ -58,7 +56,7 @@ public class CreateIndexRequestBuilderTest {
     @Test
     public void shouldExecuteCreateIndexRequestWithSettings() throws Exception {
         // given
-        when(asyncHttpClient.preparePut("http://" + HOSTS.get(0) + "/someIndex")).thenReturn(boundRequestBuilder);
+        when(httpClient.preparePut("/someIndex")).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setBody(any(String.class))).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setBodyEncoding(anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok", "{\"acknowledged\": true}")));
@@ -68,7 +66,7 @@ public class CreateIndexRequestBuilderTest {
         testee.execute();
 
         // then
-        verify(asyncHttpClient).preparePut("http://" + HOSTS.get(0) + "/someIndex");
+        verify(httpClient).preparePut("/someIndex");
         verify(boundRequestBuilder).execute();
         verify(boundRequestBuilder).setBody("{\"settings\":{\"someSetting\":\"someValue\"}}");
     }
@@ -76,7 +74,7 @@ public class CreateIndexRequestBuilderTest {
     @Test(expectedExceptions = HttpServerErrorException.class)
     public void shouldThrowWhenServerReturnsBadStatusCode() throws Exception {
         // given
-        when(asyncHttpClient.preparePut("http://" + HOSTS.get(0) + "/someIndex")).thenReturn(boundRequestBuilder);
+        when(httpClient.preparePut("/someIndex")).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setBody(any(String.class))).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setBodyEncoding(anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(400, "Bad Request", "someBadBody")));
@@ -99,7 +97,7 @@ public class CreateIndexRequestBuilderTest {
     @Test(expectedExceptions = InvalidElasticsearchResponseException.class)
     public void shouldThrowWhenServerReturnsAcknowledgedFalse() throws Exception {
         // given
-        when(asyncHttpClient.preparePut("http://" + HOSTS.get(0) + "/someIndex")).thenReturn(boundRequestBuilder);
+        when(httpClient.preparePut("/someIndex")).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setBody(any(String.class))).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setBodyEncoding(anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", "{\"acknowledged\": false}")));

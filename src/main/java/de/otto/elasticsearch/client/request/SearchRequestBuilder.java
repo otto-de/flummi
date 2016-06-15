@@ -13,6 +13,7 @@ import de.otto.elasticsearch.client.response.Aggregation;
 import de.otto.elasticsearch.client.response.SearchHit;
 import de.otto.elasticsearch.client.response.SearchHits;
 import de.otto.elasticsearch.client.response.SearchResponse;
+import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -28,9 +29,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
     private static final JsonObject EMPTY_JSON_OBJECT = new JsonObject();
 
-    private final AsyncHttpClient asyncHttpClient;
-    private final ImmutableList<String> hosts;
-    private final int hostIndexOfNextRequest;
+    private RoundRobinLoadBalancingHttpClient httpClient;
     private final String[] indices;
     private final Gson gson;
     private String[] types;
@@ -45,10 +44,8 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
 
     public static final Logger LOG = getLogger(SearchRequestBuilder.class);
 
-    public SearchRequestBuilder(AsyncHttpClient asyncHttpClient, ImmutableList<String> hosts, int hostIndexOfNextRequest, String... indices) {
-        this.asyncHttpClient = asyncHttpClient;
-        this.hosts = hosts;
-        this.hostIndexOfNextRequest = hostIndexOfNextRequest;
+    public SearchRequestBuilder(RoundRobinLoadBalancingHttpClient httpClient, String... indices) {
+        this.httpClient = httpClient;
         this.indices = indices;
         this.gson = new Gson();
     }
@@ -108,110 +105,101 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
 
     @Override
     public SearchResponse execute() {
-        for (int i = hostIndexOfNextRequest, count = 0; count < hosts.size(); i = (i + 1) % hosts.size()) {
-            try {
-                String url = RequestBuilderUtil.buildUrl(hosts.get(i), indices, types, "_search");
-                JsonObject body = new JsonObject();
-                if (query != null) {
-                    body.add("query", query);
-                }
-                if (fields != null) {
-                    body.add("fields", fields);
-                }
-                if (from != null) {
-                    body.add("from", new JsonPrimitive(from));
-                }
-                if (size != null) {
-                    body.add("size", new JsonPrimitive(size));
-                }
-                if (sorts != null) {
-                    body.add("sort", sorts);
-                }
-                if (postFilter != null) {
-                    body.add("post_filter", postFilter.build());
-                }
-                if (aggregations != null) {
-                    JsonObject jsonObject = new JsonObject();
-                    aggregations.stream()
-                            .forEach(a ->
-                                    jsonObject.add(a.getName(), a.build()));
-                    body.add("aggregations", jsonObject);
-                }
-                AsyncHttpClient.BoundRequestBuilder boundRequestBuilder = asyncHttpClient
-                        .preparePost(url)
-                        .setBodyEncoding("UTF-8");
-                if (timeoutMillis != null) {
-                    boundRequestBuilder.setRequestTimeout(timeoutMillis);
-                }
-
-                Response response = boundRequestBuilder.setBody(gson.toJson(body))
-                        .execute()
-                        .get();
-
-                //Did not find an entry
-                if (response.getStatusCode() == 404) {
-                    return new SearchResponse(0, new SearchHits(0L, 0F, ImmutableList.of()), ImmutableMap.of());
-                }
-
-                //Server Error
-                if (response.getStatusCode() >= 300) {
-                    throw toHttpServerErrorException(response);
-                }
-
-                JsonObject jsonObject = gson.fromJson(response.getResponseBody(), JsonObject.class);
-                long took = jsonObject.get("took").getAsLong();
-                JsonObject hits = jsonObject.get("hits").getAsJsonObject();
-                long totalHits = hits.get("total").getAsLong();
-                JsonElement max_score = hits.get("max_score");
-                Float maxScore = max_score.isJsonPrimitive() ? max_score.getAsFloat() : null;
-                JsonArray hitsArray = hits.get("hits").getAsJsonArray();
-
-
-                final Map<String, Aggregation> responseAggregations = new HashMap<>();
-                JsonElement aggregationsJsonElement = jsonObject.get("aggregations");
-                if (aggregationsJsonElement != null) {
-                    final JsonObject aggregationsJsonObject = aggregationsJsonElement.getAsJsonObject();
-
-                    aggregations.stream().forEach(a -> {
-                        JsonElement aggreagationElement = aggregationsJsonObject.get(a.getName());
-                        if (aggreagationElement != null) {
-                            Aggregation aggregation = a.parseResponse(aggreagationElement.getAsJsonObject());
-                            responseAggregations.put(a.getName(), aggregation);
-                        }
-                    });
-                }
-
-                List<SearchHit> searchHit = new ArrayList<>();
-                for (JsonElement element : hitsArray) {
-                    JsonObject asJsonObject = element.getAsJsonObject();
-                    JsonElement scoreElem = asJsonObject.get("_score");
-                    Float score = scoreElem.isJsonNull() ? null : scoreElem.getAsFloat();
-                    String id = asJsonObject.get("_id").getAsString();
-                    JsonElement source = asJsonObject.get("_source");
-                    JsonElement hitFields = asJsonObject.get("fields");
-                    SearchHit hit = new SearchHit(id,
-                            source != null ? source.getAsJsonObject() : null,
-                            hitFields != null ? hitFields.getAsJsonObject() : EMPTY_JSON_OBJECT,
-                            score);
-                    searchHit.add(hit);
-                }
-                SearchHits searchHits = new SearchHits(totalHits, maxScore, searchHit);
-                return new SearchResponse(took, searchHits, responseAggregations);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            } catch (ExecutionException e) {
-                if (i == ((hostIndexOfNextRequest - 1) % hosts.size())) {
-                    LOG.warn("Could not connect to host '" + hosts.get(i) + "'");
-                    throw new RuntimeException(e);
-                } else {
-                    LOG.warn("Could not connect to host '" + hosts.get(i) + "'");
-                }
+        try {
+            String url = RequestBuilderUtil.buildUrl(indices, types, "_search");
+            JsonObject body = new JsonObject();
+            if (query != null) {
+                body.add("query", query);
             }
-            count++;
+            if (fields != null) {
+                body.add("fields", fields);
+            }
+            if (from != null) {
+                body.add("from", new JsonPrimitive(from));
+            }
+            if (size != null) {
+                body.add("size", new JsonPrimitive(size));
+            }
+            if (sorts != null) {
+                body.add("sort", sorts);
+            }
+            if (postFilter != null) {
+                body.add("post_filter", postFilter.build());
+            }
+            if (aggregations != null) {
+                JsonObject jsonObject = new JsonObject();
+                aggregations.stream()
+                        .forEach(a ->
+                                jsonObject.add(a.getName(), a.build()));
+                body.add("aggregations", jsonObject);
+            }
+            AsyncHttpClient.BoundRequestBuilder boundRequestBuilder = httpClient
+                    .preparePost(url)
+                    .setBodyEncoding("UTF-8");
+            if (timeoutMillis != null) {
+                boundRequestBuilder.setRequestTimeout(timeoutMillis);
+            }
+
+            Response response = boundRequestBuilder.setBody(gson.toJson(body))
+                    .execute()
+                    .get();
+
+            //Did not find an entry
+            if (response.getStatusCode() == 404) {
+                return new SearchResponse(0, new SearchHits(0L, 0F, ImmutableList.of()), ImmutableMap.of());
+            }
+
+            //Server Error
+            if (response.getStatusCode() >= 300) {
+                throw toHttpServerErrorException(response);
+            }
+
+            JsonObject jsonObject = gson.fromJson(response.getResponseBody(), JsonObject.class);
+            long took = jsonObject.get("took").getAsLong();
+            JsonObject hits = jsonObject.get("hits").getAsJsonObject();
+            long totalHits = hits.get("total").getAsLong();
+            JsonElement max_score = hits.get("max_score");
+            Float maxScore = max_score.isJsonPrimitive() ? max_score.getAsFloat() : null;
+            JsonArray hitsArray = hits.get("hits").getAsJsonArray();
+
+
+            final Map<String, Aggregation> responseAggregations = new HashMap<>();
+            JsonElement aggregationsJsonElement = jsonObject.get("aggregations");
+            if (aggregationsJsonElement != null) {
+                final JsonObject aggregationsJsonObject = aggregationsJsonElement.getAsJsonObject();
+
+                aggregations.stream().forEach(a -> {
+                    JsonElement aggreagationElement = aggregationsJsonObject.get(a.getName());
+                    if (aggreagationElement != null) {
+                        Aggregation aggregation = a.parseResponse(aggreagationElement.getAsJsonObject());
+                        responseAggregations.put(a.getName(), aggregation);
+                    }
+                });
+            }
+
+            List<SearchHit> searchHit = new ArrayList<>();
+            for (JsonElement element : hitsArray) {
+                JsonObject asJsonObject = element.getAsJsonObject();
+                JsonElement scoreElem = asJsonObject.get("_score");
+                Float score = scoreElem.isJsonNull() ? null : scoreElem.getAsFloat();
+                String id = asJsonObject.get("_id").getAsString();
+                JsonElement source = asJsonObject.get("_source");
+                JsonElement hitFields = asJsonObject.get("fields");
+                SearchHit hit = new SearchHit(id,
+                        source != null ? source.getAsJsonObject() : null,
+                        hitFields != null ? hitFields.getAsJsonObject() : EMPTY_JSON_OBJECT,
+                        score);
+                searchHit.add(hit);
+            }
+            SearchHits searchHits = new SearchHits(totalHits, maxScore, searchHit);
+            return new SearchResponse(took, searchHits, responseAggregations);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
         }
-        throw new RuntimeException("Could not connect to cluster");
     }
 
     public SearchRequestBuilder setPostFilter(QueryBuilder postFilter) {

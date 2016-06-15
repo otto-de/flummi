@@ -8,6 +8,7 @@ import de.otto.elasticsearch.client.RequestBuilderUtil;
 import de.otto.elasticsearch.client.response.MultiGetRequestDocument;
 import de.otto.elasticsearch.client.response.MultiGetResponse;
 import de.otto.elasticsearch.client.response.MultiGetResponseDocument;
+import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -23,23 +24,20 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class MultiGetRequestBuilder implements RequestBuilder<MultiGetResponse> {
 
-    private final AsyncHttpClient asyncHttpClient;
-    private final ImmutableList<String> hosts;
-    private final int hostIndexOfNextRequest;
     private final String[] indices;
     private final Gson gson;
+    private final RoundRobinLoadBalancingHttpClient httpClient;
     private String[] types;
     private Integer timeoutMillis;
     private List<MultiGetRequestDocument> documents;
 
     public static final Logger LOG = getLogger(MultiGetRequestBuilder.class);
 
-    public MultiGetRequestBuilder(AsyncHttpClient asyncHttpClient, ImmutableList<String> hosts, int hostIndexOfNextRequest, String... indices) {
-        this.asyncHttpClient = asyncHttpClient;
-        this.hosts = hosts;
-        this.hostIndexOfNextRequest = hostIndexOfNextRequest;
-        this.indices = indices;
+    public MultiGetRequestBuilder(RoundRobinLoadBalancingHttpClient httpClient, String... indices) {
         this.gson = new Gson();
+
+        this.httpClient = httpClient;
+        this.indices = indices;
     }
 
     public MultiGetRequestBuilder setRequestDocuments(List<MultiGetRequestDocument> requestDocument) {
@@ -59,64 +57,55 @@ public class MultiGetRequestBuilder implements RequestBuilder<MultiGetResponse> 
 
     @Override
     public MultiGetResponse execute() {
-        for (int i = hostIndexOfNextRequest, count = 0; count < hosts.size(); i = (i + 1) % hosts.size()) {
-            try {
-                String url = RequestBuilderUtil.buildUrl(hosts.get(i), indices, types, "_mget");
-                JsonObject body = new JsonObject();
-                if (documents != null) {
-                    body.add("docs", array(documents.stream().map(d -> create(d)).collect(toList())));
-                }
-                AsyncHttpClient.BoundRequestBuilder boundRequestBuilder = asyncHttpClient
-                        .preparePost(url)
-                        .setBodyEncoding("UTF-8");
-                if (timeoutMillis != null) {
-                    boundRequestBuilder.setRequestTimeout(timeoutMillis);
-                }
-                long start = System.currentTimeMillis();
-                Response response = boundRequestBuilder.setBody(gson.toJson(body))
-                        .execute()
-                        .get();
-
-                long tookInMillis = System.currentTimeMillis() - start;
-                //Did not find an entry
-                if (response.getStatusCode() == 404) {
-                    return new MultiGetResponse(emptyList(), tookInMillis);
-                }
-
-                //Server Error
-                if (response.getStatusCode() >= 300) {
-                    throw toHttpServerErrorException(response);
-                }
-
-                JsonObject jsonObject = gson.fromJson(response.getResponseBody(), JsonObject.class);
-                JsonArray docs = jsonObject.get("docs").getAsJsonArray();
-
-                List<MultiGetResponseDocument> documents = new ArrayList<>();
-                for (JsonElement doc : docs) {
-                    JsonObject jsonDoc = doc.getAsJsonObject();
-                    String id = jsonDoc.get("_id").getAsString();
-                    JsonObject source = new JsonObject();
-                    boolean found = jsonDoc.get("found").getAsBoolean();
-                    if (found) {
-                        source = jsonDoc.get("_source").getAsJsonObject();
-                    }
-                    documents.add(new MultiGetResponseDocument(id, found, source));
-                }
-
-                return new MultiGetResponse(documents, tookInMillis);
-            } catch (InterruptedException | IOException e) {
-                throw new RuntimeException(e);
-            } catch (ExecutionException e) {
-                if (i == ((hostIndexOfNextRequest - 1) % hosts.size())) {
-                    LOG.warn("Could not connect to host '" + hosts.get(i) + "'");
-                    throw new RuntimeException(e);
-                } else {
-                    LOG.warn("Could not connect to host '" + hosts.get(i) + "'");
-                }
+        try {
+            String url = RequestBuilderUtil.buildUrl(indices, types, "_mget");
+            JsonObject body = new JsonObject();
+            if (documents != null) {
+                body.add("docs", array(documents.stream().map(d -> create(d)).collect(toList())));
             }
-            count++;
+            AsyncHttpClient.BoundRequestBuilder boundRequestBuilder = httpClient
+                    .preparePost(url)
+                    .setBodyEncoding("UTF-8");
+            if (timeoutMillis != null) {
+                boundRequestBuilder.setRequestTimeout(timeoutMillis);
+            }
+            long start = System.currentTimeMillis();
+            Response response = boundRequestBuilder.setBody(gson.toJson(body))
+                    .execute()
+                    .get();
+
+            long tookInMillis = System.currentTimeMillis() - start;
+            //Did not find an entry
+            if (response.getStatusCode() == 404) {
+                return new MultiGetResponse(emptyList(), tookInMillis);
+            }
+
+            //Server Error
+            if (response.getStatusCode() >= 300) {
+                throw toHttpServerErrorException(response);
+            }
+
+            JsonObject jsonObject = gson.fromJson(response.getResponseBody(), JsonObject.class);
+            JsonArray docs = jsonObject.get("docs").getAsJsonArray();
+
+            List<MultiGetResponseDocument> documents = new ArrayList<>();
+            for (JsonElement doc : docs) {
+                JsonObject jsonDoc = doc.getAsJsonObject();
+                String id = jsonDoc.get("_id").getAsString();
+                JsonObject source = new JsonObject();
+                boolean found = jsonDoc.get("found").getAsBoolean();
+                if (found) {
+                    source = jsonDoc.get("_source").getAsJsonObject();
+                }
+                documents.add(new MultiGetResponseDocument(id, found, source));
+            }
+
+            return new MultiGetResponse(documents, tookInMillis);
+        } catch (InterruptedException | IOException e) {
+            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
         }
-        throw new RuntimeException("Could not connect to cluster");
     }
 
     private JsonObject create(MultiGetRequestDocument multiGetRequestDocument) {

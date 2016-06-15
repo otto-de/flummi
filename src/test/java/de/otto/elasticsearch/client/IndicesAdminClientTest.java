@@ -1,12 +1,12 @@
 package de.otto.elasticsearch.client;
 
-import com.google.common.collect.ImmutableList;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.ListenableFuture;
 import com.ning.http.client.Response;
 import de.otto.elasticsearch.client.request.CreateIndexRequestBuilder;
 import de.otto.elasticsearch.client.request.DeleteIndexRequestBuilder;
 import de.otto.elasticsearch.client.request.IndicesExistsRequestBuilder;
+import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -18,20 +18,19 @@ import static org.mockito.Mockito.*;
 
 public class IndicesAdminClientTest {
     private IndicesAdminClient indicesAdminClient;
-    private AsyncHttpClient asyncHttpClient;
-    private ImmutableList<String> hosts = ImmutableList.of("someHost:9200");
+    private RoundRobinLoadBalancingHttpClient httpClient;
 
     @BeforeMethod
     public void setup() {
-        asyncHttpClient = mock(AsyncHttpClient.class);
-        indicesAdminClient = new IndicesAdminClient(asyncHttpClient, hosts, 0);
+        httpClient = mock(RoundRobinLoadBalancingHttpClient.class);
+        indicesAdminClient = new IndicesAdminClient(httpClient);
     }
 
     @Test
     public void shouldPrepareCreate() throws ExecutionException, InterruptedException, IOException {
         //Given
         final AsyncHttpClient.BoundRequestBuilder boundRequestBuilder = mock(AsyncHttpClient.BoundRequestBuilder.class);
-        when(asyncHttpClient.preparePut(anyString())).thenReturn(boundRequestBuilder);
+        when(httpClient.preparePut(anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setBody(anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setBodyEncoding(anyString())).thenReturn(boundRequestBuilder);
         final ListenableFuture<Response> listenableFuture = mock(ListenableFuture.class);
@@ -46,14 +45,14 @@ public class IndicesAdminClientTest {
         createIndexRequestBuilder.execute();
 
         //Then
-        verify(asyncHttpClient).preparePut("http://someHost:9200/someIndexName");
+        verify(httpClient).preparePut("/someIndexName");
     }
 
     @Test
     public void shouldPrepareExists() throws ExecutionException, InterruptedException, IOException {
         //Given
         final AsyncHttpClient.BoundRequestBuilder boundRequestBuilder = mock(AsyncHttpClient.BoundRequestBuilder.class);
-        when(asyncHttpClient.prepareHead(anyString())).thenReturn(boundRequestBuilder);
+        when(httpClient.prepareHead(anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setBody(anyString())).thenReturn(boundRequestBuilder);
         final ListenableFuture<Response> listenableFuture = mock(ListenableFuture.class);
         when(boundRequestBuilder.execute()).thenReturn(listenableFuture);
@@ -66,14 +65,14 @@ public class IndicesAdminClientTest {
         indicesExistsRequestBuilder.execute();
 
         //Then
-        verify(asyncHttpClient).prepareHead("http://someHost:9200/someIndexName");
+        verify(httpClient).prepareHead("/someIndexName");
     }
 
     @Test
     public void shouldPrepareDelete() throws ExecutionException, InterruptedException {
         //Given
         final AsyncHttpClient.BoundRequestBuilder boundRequestBuilder = mock(AsyncHttpClient.BoundRequestBuilder.class);
-        when(asyncHttpClient.prepareDelete(anyString())).thenReturn(boundRequestBuilder);
+        when(httpClient.prepareDelete(anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setBody(anyString())).thenReturn(boundRequestBuilder);
         final ListenableFuture<Response> listenableFuture = mock(ListenableFuture.class);
         when(boundRequestBuilder.execute()).thenReturn(listenableFuture);
@@ -86,7 +85,7 @@ public class IndicesAdminClientTest {
         deleteIndexRequestBuilder.execute();
 
         //Then
-        verify(asyncHttpClient).prepareDelete("http://someHost:9200/someIndexName");
+        verify(httpClient).prepareDelete("/someIndexName");
     }
 
 }
