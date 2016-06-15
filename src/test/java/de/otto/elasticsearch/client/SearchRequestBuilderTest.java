@@ -8,6 +8,7 @@ import de.otto.elasticsearch.client.aggregations.NestedAggregationBuilder;
 import de.otto.elasticsearch.client.aggregations.TermsBuilder;
 import de.otto.elasticsearch.client.query.QueryBuilders;
 import de.otto.elasticsearch.client.request.SearchRequestBuilder;
+import de.otto.elasticsearch.client.response.Aggregation;
 import de.otto.elasticsearch.client.response.ScrollingSearchHits;
 import de.otto.elasticsearch.client.response.SearchHit;
 import de.otto.elasticsearch.client.response.SearchResponse;
@@ -17,6 +18,7 @@ import org.testng.annotations.Test;
 
 import static de.otto.elasticsearch.client.SortOrder.ASC;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -34,6 +36,18 @@ public class SearchRequestBuilderTest {
             PRODUCT_JSON +
             "}" +
             "]}}";
+    public static final String SEARCH_RESPONSE_WITH_AGGREGATION = "{\"took\":85," +
+            "\"timed_out\":false," +
+            "\"_shards\":{\"total\":1,\"successful\":1,\"failed\":0}," +
+            "\"hits\":{\"total\":2,\"max_score\":0.0,\"hits\":[]}," +
+            "\"aggregations\":{" +
+            "\"categories_distinct\":{" +
+            "\"doc_count\":2," +
+            "\"categories_unique_id_distinct\":{" +
+            "\"doc_count_error_upper_bound\":0," +
+            "\"sum_other_doc_count\":0," +
+            "\"buckets\":[{\"key\":\"Spielzeug>Path>More§spielzeug§damen\",\"doc_count\":1},{\"key\":\"Spielzeug>Path§spielzeug§herren\",\"doc_count\":1}]}}}}";
+
     public static final String SEARCH_RESPONSE_WITH_SCROLL_ID = "{\"took\":1," +
             "\"_scroll_id\":\"some_scroll_id\"," +
             "\"timed_out\":false," +
@@ -98,6 +112,35 @@ public class SearchRequestBuilderTest {
         assertThat(firstHit.getId(), is("P0"));
         assertThat(firstHit.getScore(), is(1F));
         assertThat(firstHit.getSource(), is(new Gson().fromJson(PRODUCT_JSON, JsonObject.class)));
+    }
+
+    @Test
+    public void shouldParseSearchResponseWithAggregations() throws Exception {
+        // given
+        AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
+        when(httpClient.preparePost("/some-index/_search")).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.setBodyEncoding(anyString())).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", SEARCH_RESPONSE_WITH_AGGREGATION)));
+
+        // when
+        SearchResponse response = searchRequestBuilder
+                .addAggregation(
+                        new NestedAggregationBuilder("categories_distinct")
+                                .path("categories")
+                                .subAggregation(
+                                        new TermsBuilder("categories_unique_id_distinct")
+                                                .field("categories.uniqueId")
+                                                .size(10)
+                                ))
+                .setQuery(createSampleQuery()).execute();
+
+        //then
+        verify(httpClient).preparePost("/some-index/_search");
+
+        assertThat(response.getAggregations().size(), is(1));
+        Aggregation categoriesAggregation = response.getAggregations().get("categories_distinct");
+        assertThat(categoriesAggregation.getNestedAggregations().get("categories_unique_id_distinct").getTermsAggregation().getBuckets(), hasSize(2));
     }
 
     @Test

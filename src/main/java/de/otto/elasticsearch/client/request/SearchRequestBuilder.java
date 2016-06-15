@@ -163,7 +163,6 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
             JsonObject jsonResponse = gson.fromJson(response.getResponseBody(), JsonObject.class);
             SearchResponse.Builder searchResponse = parseResponse(jsonResponse, scroll, httpClient);
 
-            final Map<String, Aggregation> responseAggregations = new HashMap<>();
             JsonElement aggregationsJsonElement = jsonResponse.get("aggregations");
             if (aggregationsJsonElement != null) {
                 final JsonObject aggregationsJsonObject = aggregationsJsonElement.getAsJsonObject();
@@ -172,7 +171,7 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
                     JsonElement aggreagationElement = aggregationsJsonObject.get(a.getName());
                     if (aggreagationElement != null) {
                         Aggregation aggregation = a.parseResponse(aggreagationElement.getAsJsonObject());
-                        responseAggregations.put(a.getName(), aggregation);
+                        searchResponse.addAggregation(a.getName(), aggregation);
                     }
                 });
             }
