@@ -17,7 +17,7 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 
 archivesBaseName='elasticsearch-http-client'
-version='0.1.11'
+version='0.1.12-SNAPSHOT'
 
 repositories {
     mavenCentral()
