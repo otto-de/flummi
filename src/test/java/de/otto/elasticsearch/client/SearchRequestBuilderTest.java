@@ -8,6 +8,7 @@ import de.otto.elasticsearch.client.aggregations.NestedAggregationBuilder;
 import de.otto.elasticsearch.client.aggregations.TermsBuilder;
 import de.otto.elasticsearch.client.query.QueryBuilders;
 import de.otto.elasticsearch.client.request.SearchRequestBuilder;
+import de.otto.elasticsearch.client.response.ScrollingSearchHits;
 import de.otto.elasticsearch.client.response.SearchHit;
 import de.otto.elasticsearch.client.response.SearchResponse;
 import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
@@ -37,8 +38,11 @@ public class SearchRequestBuilderTest {
             "\"_scroll_id\":\"some_scroll_id\"," +
             "\"timed_out\":false," +
             "\"_shards\":{\"total\":5,\"successful\":5,\"failed\":0}," +
-            "\"hits\":{\"total\":100000,\"max_score\":1.0,\"hits\":[" +
+            "\"hits\":{\"total\":10,\"max_score\":1.0,\"hits\":[" +
             "{\"_index\":\"product_1460618266743\",\"_type\":\"product\",\"_id\":\"P0\",\"_score\":1.0,\"_source\":" +
+            PRODUCT_JSON +
+            "}," +
+            "{\"_index\":\"product_1460618266743\",\"_type\":\"product\",\"_id\":\"P1\",\"_score\":1.0,\"_source\":" +
             PRODUCT_JSON +
             "}" +
             "]}}";
@@ -258,6 +262,23 @@ public class SearchRequestBuilderTest {
         verify(httpClient).preparePost("/some-index/_search");
     }
 
+    @Test
+    public void shouldScroll() throws Exception {
+        // given
+        AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
+        when(httpClient.preparePost("/some-index/_search")).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.setBodyEncoding(anyString())).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", SEARCH_RESPONSE_WITH_SCROLL_ID)));
+
+        // when
+        SearchResponse response = searchRequestBuilder.setQuery(createSampleQuery())
+                .setScroll("1m")
+                .execute();
+
+        //then
+        assertThat(response.getHits().getClass().getName(), is(ScrollingSearchHits.class.getName()));
+    }
 
     private JsonObject createSampleQuery() {
         return QueryBuilders.termQuery("someField", "someValue").build();

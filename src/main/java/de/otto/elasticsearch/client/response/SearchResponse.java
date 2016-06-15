@@ -43,7 +43,7 @@ public class SearchResponse {
     }
 
     public static SearchResponse emptyResponse() {
-        return new SearchResponse(0, null, new SearchHits(0L, 0F, ImmutableList.of()), ImmutableMap.of());
+        return new SearchResponse(0, null, new SimpleSearchHits(0L, 0F, ImmutableList.of()), ImmutableMap.of());
     }
 
     public static final class Builder {

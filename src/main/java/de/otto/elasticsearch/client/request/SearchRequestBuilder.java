@@ -7,10 +7,7 @@ import de.otto.elasticsearch.client.RequestBuilderUtil;
 import de.otto.elasticsearch.client.SortOrder;
 import de.otto.elasticsearch.client.aggregations.AggregationBuilder;
 import de.otto.elasticsearch.client.query.QueryBuilder;
-import de.otto.elasticsearch.client.response.Aggregation;
-import de.otto.elasticsearch.client.response.SearchHit;
-import de.otto.elasticsearch.client.response.SearchHits;
-import de.otto.elasticsearch.client.response.SearchResponse;
+import de.otto.elasticsearch.client.response.*;
 import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
 import org.slf4j.Logger;
 
@@ -164,14 +161,14 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
             }
 
             JsonObject jsonResponse = gson.fromJson(response.getResponseBody(), JsonObject.class);
-            SearchResponse.Builder searchResponse = parseResponse(jsonResponse);
+            SearchResponse.Builder searchResponse = parseResponse(jsonResponse, scroll, httpClient);
 
             final Map<String, Aggregation> responseAggregations = new HashMap<>();
             JsonElement aggregationsJsonElement = jsonResponse.get("aggregations");
             if (aggregationsJsonElement != null) {
                 final JsonObject aggregationsJsonObject = aggregationsJsonElement.getAsJsonObject();
 
-                aggregations.stream().forEach(a -> {
+                aggregations.forEach(a -> {
                     JsonElement aggreagationElement = aggregationsJsonObject.get(a.getName());
                     if (aggreagationElement != null) {
                         Aggregation aggregation = a.parseResponse(aggreagationElement.getAsJsonObject());
@@ -189,7 +186,7 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
         }
     }
 
-    public static SearchResponse.Builder parseResponse(JsonObject jsonObject) {
+    public static SearchResponse.Builder parseResponse(JsonObject jsonObject, String scroll, RoundRobinLoadBalancingHttpClient client) {
         SearchResponse.Builder searchResponse = SearchResponse.builder();
         searchResponse.setTookInMillis(jsonObject.get("took").getAsLong());
         JsonObject hits = jsonObject.get("hits").getAsJsonObject();
@@ -202,7 +199,7 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
         }
         JsonArray hitsArray = hits.get("hits").getAsJsonArray();
 
-        List<SearchHit> searchHit = new ArrayList<>();
+        List<SearchHit> searchHitsCurrentPage = new ArrayList<>();
         for (JsonElement element : hitsArray) {
             JsonObject asJsonObject = element.getAsJsonObject();
             JsonElement scoreElem = asJsonObject.get("_score");
@@ -214,9 +211,13 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
                     source != null ? source.getAsJsonObject() : null,
                     hitFields != null ? hitFields.getAsJsonObject() : EMPTY_JSON_OBJECT,
                     score);
-            searchHit.add(hit);
+            searchHitsCurrentPage.add(hit);
         }
-        searchResponse.setHits(new SearchHits(totalHits, maxScore, searchHit));
+        if(scroll!=null) {
+            searchResponse.setHits(new ScrollingSearchHits(totalHits, maxScore, scroll_id.getAsString(), scroll, searchHitsCurrentPage, client));
+        } else {
+            searchResponse.setHits(new SimpleSearchHits(totalHits, maxScore, searchHitsCurrentPage));
+        }
         return searchResponse;
     }
 

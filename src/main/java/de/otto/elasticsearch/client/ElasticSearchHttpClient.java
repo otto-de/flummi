@@ -231,6 +231,10 @@ public class ElasticSearchHttpClient {
         return new MultiGetRequestBuilder(httpClient, indices);
     }
 
+    public SearchScrollRequestBuilder prepareScroll() {
+        return new SearchScrollRequestBuilder(httpClient);
+    }
+
     public IndexRequestBuilder prepareIndex() {
         return new IndexRequestBuilder(httpClient);
     }

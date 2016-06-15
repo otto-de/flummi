@@ -59,7 +59,7 @@ public class SearchScrollRequestBuilder implements RequestBuilder<SearchResponse
             }
 
             JsonObject jsonResponse = gson.fromJson(response.getResponseBody(), JsonObject.class);
-            SearchResponse.Builder searchResponse = parseResponse(jsonResponse);
+            SearchResponse.Builder searchResponse = parseResponse(jsonResponse, null, null);
 
             return searchResponse.build();
         } catch (InterruptedException | ExecutionException e) {
