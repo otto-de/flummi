@@ -8,10 +8,8 @@ import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Stream;
 
 import static de.otto.elasticsearch.client.request.GsonHelper.object;
 import static java.util.stream.Collectors.toList;
@@ -19,6 +17,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
+import static org.testng.AssertJUnit.assertTrue;
 
 
 public class ScrollingSearchHitsTest {
@@ -76,10 +75,27 @@ public class ScrollingSearchHitsTest {
         when(httpClient.preparePost(anyString())).thenReturn(requestBuilder);
 
         Iterator<SearchHit> iterator = testee.iterator();
+        assertTrue(iterator.hasNext());
         assertThat(iterator.next().getId(), is("P0"));
+        assertTrue(iterator.hasNext());
         assertThat(iterator.next().getId(), is("P1"));
         verifyZeroInteractions(httpClient);
+        assertTrue(iterator.hasNext());
         assertThat(iterator.next().getId(), is("P2"));
+        verify(httpClient).preparePost("/_search/scroll");
+    }
+
+    @Test
+    public void shouldSpliterate() throws Exception {
+        when(requestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", NEXT_PAGE)));
+        ScrollingSearchHits testee = new ScrollingSearchHits(100, 1F, "someScrollId", "1m", someSearchHits("P0", "P1"), httpClient);
+        when(httpClient.preparePost(anyString())).thenReturn(requestBuilder);
+
+        Spliterator<SearchHit> spliterator = testee.spliterator();
+        assertTrue(spliterator.tryAdvance(hit -> assertThat(hit.getId(), is("P0"))));
+        assertTrue(spliterator.tryAdvance(hit -> assertThat(hit.getId(), is("P1"))));
+        verifyZeroInteractions(httpClient);
+        assertTrue(spliterator.tryAdvance(hit -> assertThat(hit.getId(), is("P2"))));
         verify(httpClient).preparePost("/_search/scroll");
     }
 

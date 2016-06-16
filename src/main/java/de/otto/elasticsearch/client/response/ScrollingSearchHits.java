@@ -117,10 +117,6 @@ public class ScrollingSearchHits implements SearchHits {
                 if(!hasNextElement(index)) {
                     return false;
                 }
-                if (index >= hitsCurrentPage.size()) {
-                    LOG.error("index of " + index + " is  >= than current page size of " + hitsCurrentPage.size());
-                    return false;
-                }
                 action.accept(hitsCurrentPage.get(index++));
                 return true;
             }
