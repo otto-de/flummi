@@ -49,18 +49,6 @@ public class ScrollingSearchHits implements SearchHits {
         return maxScore;
     }
 
-    private boolean hasNextElement(int index) {
-        if (index < hitsCurrentPage.size()) {
-            return true;
-        }
-        if(index==0 || this.hitsCurrentPage.isEmpty()) {
-            return false;
-        }
-        fetchNextPage();
-        index = 0;
-        return index < hitsCurrentPage.size();
-    }
-
     @Override
     public Iterator<SearchHit> iterator() {
         assertNotDirty();
@@ -69,7 +57,15 @@ public class ScrollingSearchHits implements SearchHits {
 
             @Override
             public boolean hasNext() {
-                return hasNextElement(currentPageIdx);
+                if (currentPageIdx < hitsCurrentPage.size()) {
+                    return true;
+                }
+                if(hitsCurrentPage.isEmpty()) {
+                    return false;
+                }
+                fetchNextPage();
+                currentPageIdx = 0;
+                return !hitsCurrentPage.isEmpty();
             }
 
             @Override
@@ -111,14 +107,14 @@ public class ScrollingSearchHits implements SearchHits {
     public Spliterator<SearchHit> spliterator() {
         assertNotDirty();
         return new Spliterator<SearchHit>() {
-            int index = 0;
+            Iterator<SearchHit> iterator = iterator();
             @Override
             public boolean tryAdvance(Consumer<? super SearchHit> action) {
-                if(!hasNextElement(index)) {
-                    return false;
+                if(iterator.hasNext()) {
+                    action.accept(iterator.next());
+                    return true;
                 }
-                action.accept(hitsCurrentPage.get(index++));
-                return true;
+                return false;
             }
 
             @Override
