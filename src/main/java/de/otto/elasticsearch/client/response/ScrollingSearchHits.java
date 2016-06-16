@@ -3,6 +3,7 @@ package de.otto.elasticsearch.client.response;
 import de.otto.elasticsearch.client.ElasticSearchHttpClient;
 import de.otto.elasticsearch.client.request.SearchScrollRequestBuilder;
 import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
+import org.slf4j.Logger;
 
 import java.util.Iterator;
 import java.util.List;
@@ -10,6 +11,8 @@ import java.util.Spliterator;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Auto-scrolling implementation of SearchHits. Contains a page of search results
@@ -23,6 +26,8 @@ public class ScrollingSearchHits implements SearchHits {
     private final RoundRobinLoadBalancingHttpClient client;
     private List<SearchHit> hitsCurrentPage;
     private boolean dirty;
+    public static final Logger LOG = getLogger(ScrollingSearchHits.class);
+
 
     public ScrollingSearchHits(long totalHits, Float maxScore, String scrollId, String scroll, List<SearchHit> hitsCurrentPage, RoundRobinLoadBalancingHttpClient client) {
         this.totalHits = totalHits;
@@ -48,7 +53,7 @@ public class ScrollingSearchHits implements SearchHits {
         if (index < hitsCurrentPage.size()) {
             return true;
         }
-        if(index==0) {
+        if(index==0 || this.hitsCurrentPage.isEmpty()) {
             return false;
         }
         fetchNextPage();
@@ -110,6 +115,10 @@ public class ScrollingSearchHits implements SearchHits {
             @Override
             public boolean tryAdvance(Consumer<? super SearchHit> action) {
                 if(!hasNextElement(index)) {
+                    return false;
+                }
+                if (index >= hitsCurrentPage.size()) {
+                    LOG.error("index of " + index + " is  >= than current page size of " + hitsCurrentPage.size());
                     return false;
                 }
                 action.accept(hitsCurrentPage.get(index++));
