@@ -7,6 +7,7 @@ import de.otto.elasticsearch.client.RequestBuilderUtil;
 import de.otto.elasticsearch.client.SortOrder;
 import de.otto.elasticsearch.client.aggregations.AggregationBuilder;
 import de.otto.elasticsearch.client.query.QueryBuilder;
+import de.otto.elasticsearch.client.query.sort.SortBuilder;
 import de.otto.elasticsearch.client.response.*;
 import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
 import org.slf4j.Logger;
@@ -14,9 +15,7 @@ import org.slf4j.Logger;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import static de.otto.elasticsearch.client.RequestBuilderUtil.toHttpServerErrorException;
@@ -80,6 +79,14 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
         element.add(key, orderObj);
         orderObj.add("order", new JsonPrimitive(order.toString()));
         sorts.add(element);
+        return this;
+    }
+
+    public SearchRequestBuilder addSort(SortBuilder builder){
+        if (sorts == null) {
+            sorts = new JsonArray();
+        }
+        sorts.add(builder.build());
         return this;
     }
 
