@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.otto.elasticsearch.client.GsonCollectors.toJsonArray;
-import static de.otto.elasticsearch.client.aggregations.AggregationResultParser.parseBuckets;
 import static de.otto.elasticsearch.client.aggregations.AggregationResultParser.parseSubAggregations;
 import static de.otto.elasticsearch.client.request.GsonHelper.object;
 

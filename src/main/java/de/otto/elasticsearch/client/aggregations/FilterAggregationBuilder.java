@@ -26,7 +26,7 @@ public class FilterAggregationBuilder extends AggregationBuilder<FilterAggregati
     @Override
     public JsonObject build() {
         if (subAggregations == null) {
-            throw new RuntimeException("No subaggregations defined");
+            throw new RuntimeException("No subAggregations defined");
         }
         JsonObject aggsJson = new JsonObject();
         subAggregations.stream().forEach(a -> aggsJson.add(a.getName(), a.build()));

@@ -28,7 +28,7 @@ public class NestedAggregationBuilder extends AggregationBuilder<NestedAggregati
             throw new RuntimeException("missing property 'path'");
         }
         if (subAggregations == null) {
-            throw new RuntimeException("property 'termsAggregation' is missing");
+            throw new RuntimeException("property 'nestedAggregations' is missing");
         }
         JsonObject jsonObject = new JsonObject();
         JsonObject nestedObject = new JsonObject();
