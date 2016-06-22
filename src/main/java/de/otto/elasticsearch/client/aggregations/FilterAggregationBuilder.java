@@ -36,13 +36,6 @@ public class FilterAggregationBuilder extends AggregationBuilder<FilterAggregati
 
     @Override
     public AggregationResult parseResponse(JsonObject jsonObject) {
-        Map<String, AggregationResult> aggregations = new HashMap<>();
-
-        if (subAggregations != null) {
-            subAggregations.stream().forEach(t ->
-                    aggregations.put(t.getName(), t.parseResponse(jsonObject.get(t.getName()).getAsJsonObject())));
-        }
-
-        return new AggregationResult(aggregations);
+        return AggregationResultParser.parseSubAggregations(jsonObject, subAggregations);
     }
 }

@@ -1,16 +1,15 @@
 package de.otto.elasticsearch.client.aggregations;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import de.otto.elasticsearch.client.response.AggregationResult;
-import de.otto.elasticsearch.client.response.Bucket;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static de.otto.elasticsearch.client.GsonCollectors.toJsonArray;
+import static de.otto.elasticsearch.client.aggregations.AggregationResultParser.parseBuckets;
+import static de.otto.elasticsearch.client.aggregations.AggregationResultParser.parseSubAggregations;
 import static de.otto.elasticsearch.client.request.GsonHelper.object;
 
 public class RangeBuilder extends AggregationBuilder<RangeBuilder> {
@@ -18,7 +17,7 @@ public class RangeBuilder extends AggregationBuilder<RangeBuilder> {
     private String fieldName;
     private final List<Range> ranges = new ArrayList();
 
-    protected RangeBuilder(String name) {
+    public RangeBuilder(String name) {
         super(name);
     }
 
@@ -36,9 +35,14 @@ public class RangeBuilder extends AggregationBuilder<RangeBuilder> {
             result.add("from", new JsonPrimitive(r.getFrom()));
         }
         if(r.getTo()!=null) {
-            result.add("from", new JsonPrimitive(r.getTo()));
+            result.add("to", new JsonPrimitive(r.getTo()));
         }
         return result;
+    }
+
+    public RangeBuilder field(String fieldName) {
+        this.fieldName = fieldName;
+        return this;
     }
 
     public RangeBuilder addRange(String key, double from, double to) {
@@ -58,18 +62,6 @@ public class RangeBuilder extends AggregationBuilder<RangeBuilder> {
 
     @Override
     public AggregationResult parseResponse(JsonObject jsonObject) {
-        AggregationResult aggregation = null;
-
-        JsonElement bucketsElement = jsonObject.get("buckets");
-        if (bucketsElement != null) {
-            JsonArray bucketsArray = bucketsElement.getAsJsonArray();
-            ArrayList<Bucket> bucketList = new ArrayList<>();
-            for (JsonElement elem : bucketsArray) {
-                JsonObject elemObject = elem.getAsJsonObject();
-                bucketList.add(new Bucket(elemObject.get("key").getAsString(), elemObject.get("doc_count").getAsLong()));
-            }
-            aggregation = new AggregationResult(bucketList);
-        }
-        return aggregation;
+        return parseSubAggregations(jsonObject, subAggregations);
     }
 }

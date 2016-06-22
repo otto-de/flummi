@@ -30,42 +30,4 @@ public class FilterAggregationBuilderTest {
         assertThat(result.toString(), is("{\"filter\":{\"match_all\":{}},\"aggregations\":{\"termsBuilder\":{\"terms\":{\"field\":\"bla\",\"size\":10}}}}"));
 
     }
-
-    @Test
-    public void shouldParseResponseWithNestedTermsQuery() {
-        // given
-        FilterAggregationBuilder filterAggregationBuilder = new FilterAggregationBuilder("bla")
-                .subAggregation(new TermsBuilder("someName").field("someField"));
-        JsonObject response = object("someName", object("buckets", array(object("key", "someKey", "doc_count", "1"))));
-
-        // when
-        AggregationResult aggregation = filterAggregationBuilder.parseResponse(response);
-
-        // then
-        assertThat(aggregation.getBuckets(), nullValue());
-        List<Bucket> buckets = aggregation.getNestedAggregations().get("someName").getBuckets();
-        assertThat(buckets, hasSize(1));
-        assertThat(buckets.get(0).getKey(), is("someKey"));
-        assertThat(buckets.get(0).getDocCount(), is(1L));
-    }
-
-    @Test
-    public void shouldParseResponseWithReverseNestedTermsQuery() {
-        // given
-        FilterAggregationBuilder nestedAggregationBuilder = new FilterAggregationBuilder("bla").subAggregation(
-                new ReverseNestedTermBuilder("someName")
-                        .withTermsBuilder(new TermsBuilder("someName").field("someField"))
-                        .withReverseNestedFieldName("fieldPerProduct"));
-        JsonObject response = object("someName", object("buckets", array(object("key", new JsonPrimitive("someKey"), "fieldPerProduct", object("doc_count", new JsonPrimitive(2))))));
-
-        // when
-        AggregationResult aggregation = nestedAggregationBuilder.parseResponse(response);
-
-        // then
-        assertThat(aggregation.getBuckets(), nullValue());
-        List<Bucket> buckets = aggregation.getNestedAggregations().get("someName").getBuckets();
-        assertThat(buckets, hasSize(1));
-        assertThat(buckets.get(0).getKey(), is("someKey"));
-        assertThat(buckets.get(0).getDocCount(), is(2L));
-    }
 }

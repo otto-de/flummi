@@ -2,19 +2,10 @@ package de.otto.elasticsearch.client.aggregations;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import de.otto.elasticsearch.client.response.AggregationResult;
-import de.otto.elasticsearch.client.response.Bucket;
 import org.testng.annotations.Test;
 
-import java.util.List;
-
-import static de.otto.elasticsearch.client.request.GsonHelper.array;
-import static de.otto.elasticsearch.client.request.GsonHelper.object;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
 
 public class NestedAggregationBuilderTest {
 
@@ -109,37 +100,4 @@ public class NestedAggregationBuilderTest {
         //then
     }
 
-    @Test
-    public void shouldParseResponseWithNestedTermsQuery() {
-        // given
-        NestedAggregationBuilder nestedAggregationBuilder = new NestedAggregationBuilder("bla").path("somePath").subAggregation(new TermsBuilder("someName").field("someField"));
-        JsonObject response = object("someName", object("buckets", array(object("key", "someKey", "doc_count", "1"))));
-
-        // when
-        AggregationResult aggregation = nestedAggregationBuilder.parseResponse(response);
-
-        // then
-        assertThat(aggregation.getBuckets(), nullValue());
-        List<Bucket> buckets = aggregation.getNestedAggregations().get("someName").getBuckets();
-        assertThat(buckets, hasSize(1));
-        assertThat(buckets.get(0).getKey(), is("someKey"));
-        assertThat(buckets.get(0).getDocCount(), is(1L));
-    }
-
-    @Test
-    public void shouldParseResponseWithReverseNestedTermsQuery() {
-        // given
-        NestedAggregationBuilder nestedAggregationBuilder = new NestedAggregationBuilder("bla").path("somePath").subAggregation(new ReverseNestedTermBuilder("someName").withTermsBuilder(new TermsBuilder("someName").field("someField")).withReverseNestedFieldName("fieldPerProduct"));
-        JsonObject response = object("someName", object("buckets", array(object("key", new JsonPrimitive("someKey"), "fieldPerProduct", object("doc_count", new JsonPrimitive(2))))));
-
-        // when
-        AggregationResult aggregation = nestedAggregationBuilder.parseResponse(response);
-
-        // then
-        assertThat(aggregation.getBuckets(), nullValue());
-        List<Bucket> buckets = aggregation.getNestedAggregations().get("someName").getBuckets();
-        assertThat(buckets, hasSize(1));
-        assertThat(buckets.get(0).getKey(), is("someKey"));
-        assertThat(buckets.get(0).getDocCount(), is(2L));
-    }
 }

@@ -1,16 +1,16 @@
 package de.otto.elasticsearch.client.aggregations;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import de.otto.elasticsearch.client.SortOrder;
 import de.otto.elasticsearch.client.response.AggregationResult;
-import de.otto.elasticsearch.client.response.Bucket;
 import de.otto.elasticsearch.client.util.StringUtils;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
+
+import static de.otto.elasticsearch.client.aggregations.AggregationResultParser.parseBuckets;
 
 public class TermsBuilder extends AggregationBuilder<TermsBuilder> {
     private String fieldName;
@@ -61,19 +61,7 @@ public class TermsBuilder extends AggregationBuilder<TermsBuilder> {
 
     @Override
     public AggregationResult parseResponse(JsonObject jsonObject) {
-        AggregationResult aggregation = null;
-
-        JsonElement bucketsElement = jsonObject.get("buckets");
-        if (bucketsElement != null) {
-            JsonArray bucketsArray = bucketsElement.getAsJsonArray();
-            ArrayList<Bucket> bucketList = new ArrayList<>();
-            for (JsonElement elem : bucketsArray) {
-                JsonObject elemObject = elem.getAsJsonObject();
-                bucketList.add(new Bucket(elemObject.get("key").getAsString(), elemObject.get("doc_count").getAsLong()));
-            }
-            aggregation = new AggregationResult(bucketList);
-        }
-        return aggregation;
+        return parseBuckets(jsonObject);
     }
 
     public JsonElement buildValue() {
