@@ -5,9 +5,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import de.otto.elasticsearch.client.SortOrder;
-import de.otto.elasticsearch.client.response.Aggregation;
+import de.otto.elasticsearch.client.response.AggregationResult;
 import de.otto.elasticsearch.client.response.Bucket;
-import de.otto.elasticsearch.client.response.TermsAggregation;
 import de.otto.elasticsearch.client.util.StringUtils;
 import javafx.util.Pair;
 
@@ -61,8 +60,8 @@ public class TermsBuilder extends AggregationBuilder<TermsBuilder> {
     }
 
     @Override
-    public Aggregation parseResponse(JsonObject jsonObject) {
-        Aggregation aggregation = null;
+    public AggregationResult parseResponse(JsonObject jsonObject) {
+        AggregationResult aggregation = null;
 
         JsonElement bucketsElement = jsonObject.get("buckets");
         if (bucketsElement != null) {
@@ -72,7 +71,7 @@ public class TermsBuilder extends AggregationBuilder<TermsBuilder> {
                 JsonObject elemObject = elem.getAsJsonObject();
                 bucketList.add(new Bucket(elemObject.get("key").getAsString(), elemObject.get("doc_count").getAsLong()));
             }
-            aggregation = new Aggregation(new TermsAggregation(bucketList));
+            aggregation = new AggregationResult(bucketList);
         }
         return aggregation;
     }

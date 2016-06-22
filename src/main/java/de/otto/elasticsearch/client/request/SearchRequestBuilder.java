@@ -177,7 +177,7 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
                 aggregations.forEach(a -> {
                     JsonElement aggreagationElement = aggregationsJsonObject.get(a.getName());
                     if (aggreagationElement != null) {
-                        Aggregation aggregation = a.parseResponse(aggreagationElement.getAsJsonObject());
+                        AggregationResult aggregation = a.parseResponse(aggreagationElement.getAsJsonObject());
                         searchResponse.addAggregation(a.getName(), aggregation);
                     }
                 });

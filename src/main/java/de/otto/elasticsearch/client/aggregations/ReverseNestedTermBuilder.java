@@ -3,9 +3,8 @@ package de.otto.elasticsearch.client.aggregations;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import de.otto.elasticsearch.client.response.Aggregation;
+import de.otto.elasticsearch.client.response.AggregationResult;
 import de.otto.elasticsearch.client.response.Bucket;
-import de.otto.elasticsearch.client.response.TermsAggregation;
 
 import java.util.ArrayList;
 
@@ -49,8 +48,8 @@ public class ReverseNestedTermBuilder extends AggregationBuilder<ReverseNestedTe
     }
 
     @Override
-    public Aggregation parseResponse(JsonObject jsonObject) {
-        Aggregation aggregation = null;
+    public AggregationResult parseResponse(JsonObject jsonObject) {
+        AggregationResult aggregation = null;
 
         JsonElement bucketsElement = jsonObject.get("buckets");
         if (bucketsElement != null) {
@@ -64,7 +63,7 @@ public class ReverseNestedTermBuilder extends AggregationBuilder<ReverseNestedTe
                 }
                 bucketList.add(new Bucket(bucket.get("key").getAsString(), reverseNestedAggregationResult.get("doc_count").getAsLong()));
             }
-            aggregation = new Aggregation(new TermsAggregation(bucketList));
+            aggregation = new AggregationResult(bucketList);
         }
         return aggregation;
     }

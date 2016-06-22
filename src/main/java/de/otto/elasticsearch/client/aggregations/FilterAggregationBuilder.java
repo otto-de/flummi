@@ -2,7 +2,7 @@ package de.otto.elasticsearch.client.aggregations;
 
 import com.google.gson.JsonObject;
 import de.otto.elasticsearch.client.query.QueryBuilder;
-import de.otto.elasticsearch.client.response.Aggregation;
+import de.otto.elasticsearch.client.response.AggregationResult;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,14 +35,14 @@ public class FilterAggregationBuilder extends AggregationBuilder<FilterAggregati
     }
 
     @Override
-    public Aggregation parseResponse(JsonObject jsonObject) {
-        Map<String, Aggregation> aggregations = new HashMap<>();
+    public AggregationResult parseResponse(JsonObject jsonObject) {
+        Map<String, AggregationResult> aggregations = new HashMap<>();
 
         if (subAggregations != null) {
             subAggregations.stream().forEach(t ->
                     aggregations.put(t.getName(), t.parseResponse(jsonObject.get(t.getName()).getAsJsonObject())));
         }
 
-        return new Aggregation(aggregations);
+        return new AggregationResult(aggregations);
     }
 }

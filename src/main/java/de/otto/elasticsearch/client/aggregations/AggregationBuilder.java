@@ -1,10 +1,9 @@
 package de.otto.elasticsearch.client.aggregations;
 
 import com.google.gson.JsonObject;
-import de.otto.elasticsearch.client.response.Aggregation;
+import de.otto.elasticsearch.client.response.AggregationResult;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public abstract class AggregationBuilder<T extends AggregationBuilder<T>> {
@@ -29,5 +28,5 @@ public abstract class AggregationBuilder<T extends AggregationBuilder<T>> {
     }
 
     public abstract JsonObject build();
-    public abstract Aggregation parseResponse(JsonObject jsonObject);
+    public abstract AggregationResult parseResponse(JsonObject jsonObject);
 }

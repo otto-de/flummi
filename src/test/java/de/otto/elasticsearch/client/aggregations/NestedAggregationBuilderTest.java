@@ -3,7 +3,7 @@ package de.otto.elasticsearch.client.aggregations;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import de.otto.elasticsearch.client.response.Aggregation;
+import de.otto.elasticsearch.client.response.AggregationResult;
 import de.otto.elasticsearch.client.response.Bucket;
 import org.testng.annotations.Test;
 
@@ -116,11 +116,11 @@ public class NestedAggregationBuilderTest {
         JsonObject response = object("someName", object("buckets", array(object("key", "someKey", "doc_count", "1"))));
 
         // when
-        Aggregation aggregation = nestedAggregationBuilder.parseResponse(response);
+        AggregationResult aggregation = nestedAggregationBuilder.parseResponse(response);
 
         // then
-        assertThat(aggregation.getTermsAggregation(), nullValue());
-        List<Bucket> buckets = aggregation.getNestedAggregations().get("someName").getTermsAggregation().getBuckets();
+        assertThat(aggregation.getBuckets(), nullValue());
+        List<Bucket> buckets = aggregation.getNestedAggregations().get("someName").getBuckets();
         assertThat(buckets, hasSize(1));
         assertThat(buckets.get(0).getKey(), is("someKey"));
         assertThat(buckets.get(0).getDocCount(), is(1L));
@@ -133,11 +133,11 @@ public class NestedAggregationBuilderTest {
         JsonObject response = object("someName", object("buckets", array(object("key", new JsonPrimitive("someKey"), "fieldPerProduct", object("doc_count", new JsonPrimitive(2))))));
 
         // when
-        Aggregation aggregation = nestedAggregationBuilder.parseResponse(response);
+        AggregationResult aggregation = nestedAggregationBuilder.parseResponse(response);
 
         // then
-        assertThat(aggregation.getTermsAggregation(), nullValue());
-        List<Bucket> buckets = aggregation.getNestedAggregations().get("someName").getTermsAggregation().getBuckets();
+        assertThat(aggregation.getBuckets(), nullValue());
+        List<Bucket> buckets = aggregation.getNestedAggregations().get("someName").getBuckets();
         assertThat(buckets, hasSize(1));
         assertThat(buckets.get(0).getKey(), is("someKey"));
         assertThat(buckets.get(0).getDocCount(), is(2L));

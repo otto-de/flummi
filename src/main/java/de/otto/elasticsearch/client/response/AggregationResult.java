@@ -1,21 +1,22 @@
 package de.otto.elasticsearch.client.response;
 
+import java.util.List;
 import java.util.Map;
 
 public class AggregationResult {
     private Map<String, AggregationResult> nestedAggregations;
-    private TermsAggregation termsAggregation;
+    private List<Bucket> buckets;
 
     public AggregationResult(final Map<String, AggregationResult> nestedAggregations) {
         this.nestedAggregations = nestedAggregations;
     }
 
-    public AggregationResult(final TermsAggregation termsAggregation) {
-        this.termsAggregation = termsAggregation;
+    public AggregationResult(final List<Bucket> buckets) {
+        this.buckets = buckets;
     }
 
-    public TermsAggregation getTermsAggregation() {
-        return termsAggregation;
+    public List<Bucket> getBuckets() {
+        return buckets;
     }
 
     public Map<String, AggregationResult> getNestedAggregations() {

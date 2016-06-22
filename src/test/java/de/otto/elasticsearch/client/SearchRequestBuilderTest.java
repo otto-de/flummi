@@ -8,7 +8,7 @@ import de.otto.elasticsearch.client.aggregations.NestedAggregationBuilder;
 import de.otto.elasticsearch.client.aggregations.TermsBuilder;
 import de.otto.elasticsearch.client.query.QueryBuilders;
 import de.otto.elasticsearch.client.request.SearchRequestBuilder;
-import de.otto.elasticsearch.client.response.Aggregation;
+import de.otto.elasticsearch.client.response.AggregationResult;
 import de.otto.elasticsearch.client.response.ScrollingSearchHits;
 import de.otto.elasticsearch.client.response.SearchHit;
 import de.otto.elasticsearch.client.response.SearchResponse;
@@ -139,8 +139,8 @@ public class SearchRequestBuilderTest {
         verify(httpClient).preparePost("/some-index/_search");
 
         assertThat(response.getAggregations().size(), is(1));
-        Aggregation categoriesAggregation = response.getAggregations().get("categories_distinct");
-        assertThat(categoriesAggregation.getNestedAggregations().get("categories_unique_id_distinct").getTermsAggregation().getBuckets(), hasSize(2));
+        AggregationResult categoriesAggregation = response.getAggregations().get("categories_distinct");
+        assertThat(categoriesAggregation.getNestedAggregations().get("categories_unique_id_distinct").getBuckets(), hasSize(2));
     }
 
     @Test

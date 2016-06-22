@@ -3,7 +3,7 @@ package de.otto.elasticsearch.client.aggregations;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import de.otto.elasticsearch.client.SortOrder;
-import de.otto.elasticsearch.client.response.Aggregation;
+import de.otto.elasticsearch.client.response.AggregationResult;
 import org.testng.annotations.Test;
 
 import static de.otto.elasticsearch.client.request.GsonHelper.array;
@@ -96,13 +96,13 @@ public class TermsBuilderTest {
         JsonObject response = object("buckets", array(object("key", "someKey", "doc_count", "1")));
 
         // when
-        Aggregation aggregation = termsBuilder.parseResponse(response);
+        AggregationResult aggregation = termsBuilder.parseResponse(response);
 
         // then
         assertThat(aggregation.getNestedAggregations(), nullValue());
-        assertThat(aggregation.getTermsAggregation().getBuckets(), hasSize(1));
-        assertThat(aggregation.getTermsAggregation().getBuckets().get(0).getKey(), is("someKey"));
-        assertThat(aggregation.getTermsAggregation().getBuckets().get(0).getDocCount(), is(1L));
+        assertThat(aggregation.getBuckets(), hasSize(1));
+        assertThat(aggregation.getBuckets().get(0).getKey(), is("someKey"));
+        assertThat(aggregation.getBuckets().get(0).getDocCount(), is(1L));
     }
 
     @Test
@@ -112,15 +112,15 @@ public class TermsBuilderTest {
         JsonObject response = object("buckets", array(object("key", "someKey", "doc_count", "1"), object("key", "someKey2", "doc_count", "3")));
 
         // when
-        Aggregation aggregation = termsBuilder.parseResponse(response);
+        AggregationResult aggregation = termsBuilder.parseResponse(response);
 
         // then
         assertThat(aggregation.getNestedAggregations(), nullValue());
-        assertThat(aggregation.getTermsAggregation().getBuckets(), hasSize(2));
-        assertThat(aggregation.getTermsAggregation().getBuckets().get(0).getKey(), is("someKey"));
-        assertThat(aggregation.getTermsAggregation().getBuckets().get(0).getDocCount(), is(1L));
-        assertThat(aggregation.getTermsAggregation().getBuckets().get(1).getKey(), is("someKey2"));
-        assertThat(aggregation.getTermsAggregation().getBuckets().get(1).getDocCount(), is(3L));
+        assertThat(aggregation.getBuckets(), hasSize(2));
+        assertThat(aggregation.getBuckets().get(0).getKey(), is("someKey"));
+        assertThat(aggregation.getBuckets().get(0).getDocCount(), is(1L));
+        assertThat(aggregation.getBuckets().get(1).getKey(), is("someKey2"));
+        assertThat(aggregation.getBuckets().get(1).getDocCount(), is(3L));
     }
 
     @Test
@@ -130,11 +130,11 @@ public class TermsBuilderTest {
         JsonObject response = object("buckets", array());
 
         // when
-        Aggregation aggregation = termsBuilder.parseResponse(response);
+        AggregationResult aggregation = termsBuilder.parseResponse(response);
 
         // then
         assertThat(aggregation.getNestedAggregations(), nullValue());
-        assertThat(aggregation.getTermsAggregation().getBuckets(), hasSize(0));
+        assertThat(aggregation.getBuckets(), hasSize(0));
     }
 
 

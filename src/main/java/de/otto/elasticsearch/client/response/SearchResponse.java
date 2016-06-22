@@ -12,10 +12,10 @@ public class SearchResponse {
     private final long tookInMillis;
     private final String scrollId;
     private final SearchHits hits;
-    private final Map<String,Aggregation> aggregations;
+    private final Map<String,AggregationResult> aggregations;
 
 
-    public SearchResponse(long tookInMillis, String scrollId, SearchHits hits, Map<String, Aggregation> aggregations) {
+    public SearchResponse(long tookInMillis, String scrollId, SearchHits hits, Map<String, AggregationResult> aggregations) {
         this.tookInMillis = tookInMillis;
         this.scrollId = scrollId;
         this.hits = hits;
@@ -26,7 +26,7 @@ public class SearchResponse {
         return hits;
     }
 
-    public Map<String,Aggregation> getAggregations() {
+    public Map<String,AggregationResult> getAggregations() {
         return aggregations;
     }
 
@@ -50,7 +50,7 @@ public class SearchResponse {
         private long tookInMillis;
         private String scrollId;
         private SearchHits hits;
-        private Map<String,Aggregation> aggregations = new HashMap<>();
+        private Map<String,AggregationResult> aggregations = new HashMap<>();
 
         public Builder setTookInMillis(long tookInMillis) {
             this.tookInMillis = tookInMillis;
@@ -67,7 +67,7 @@ public class SearchResponse {
             return this;
         }
 
-        public Builder addAggregation(String name, Aggregation value) {
+        public Builder addAggregation(String name, AggregationResult value) {
             this.aggregations.put(name, value);
             return this;
         }
