@@ -2,15 +2,15 @@ package de.otto.elasticsearch.client.response;
 
 import java.util.Map;
 
-public class Aggregation {
-    private Map<String, Aggregation> nestedAggregations;
+public class AggregationResult {
+    private Map<String, AggregationResult> nestedAggregations;
     private TermsAggregation termsAggregation;
 
-    public Aggregation(final Map<String, Aggregation> nestedAggregations) {
+    public AggregationResult(final Map<String, AggregationResult> nestedAggregations) {
         this.nestedAggregations = nestedAggregations;
     }
 
-    public Aggregation(final TermsAggregation termsAggregation) {
+    public AggregationResult(final TermsAggregation termsAggregation) {
         this.termsAggregation = termsAggregation;
     }
 
@@ -18,7 +18,7 @@ public class Aggregation {
         return termsAggregation;
     }
 
-    public Map<String, Aggregation> getNestedAggregations() {
+    public Map<String, AggregationResult> getNestedAggregations() {
         return nestedAggregations;
     }
 
