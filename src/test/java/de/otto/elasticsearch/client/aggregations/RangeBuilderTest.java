@@ -14,14 +14,13 @@ public class RangeBuilderTest {
                 .addRange("billig", 0, 100)
                 .addRange("teuer", 101, 200).build();
 
-        assertThat(rangeAggregation.toString(), is("{\"hans-peter\":{" +
+        assertThat(rangeAggregation.toString(), is("{" +
                 "\"range\":{" +
                 "\"field\":\"Preis\"," +
                 "\"ranges\":[" +
                 "{\"key\":\"billig\",\"from\":0.0,\"to\":100.0}," +
                 "{\"key\":\"teuer\",\"from\":101.0,\"to\":200.0}" +
                 "]" +
-                "}" +
                 "}" +
                 "}"));
     }
@@ -33,14 +32,13 @@ public class RangeBuilderTest {
                 .addUnboundedTo("billig", 100)
                 .addUnboundedFrom("teuer", 101).build();
 
-        assertThat(rangeAggregation.toString(), is("{\"hans-peter\":{" +
+        assertThat(rangeAggregation.toString(), is("{" +
                 "\"range\":{" +
                 "\"field\":\"Preis\"," +
                 "\"ranges\":[" +
                 "{\"key\":\"billig\",\"to\":100.0}," +
                 "{\"key\":\"teuer\",\"from\":101.0}" +
                 "]" +
-                "}" +
                 "}" +
                 "}"));
     }

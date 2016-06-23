@@ -25,7 +25,7 @@ public class RangeBuilder extends AggregationBuilder<RangeBuilder> {
         JsonObject rangeAggregatorObject = object(
                 "field", new JsonPrimitive(fieldName),
                 "ranges", ranges.stream().map(r -> rangeToJson(r)).collect(toJsonArray()));
-        return object(getName(), object("range", rangeAggregatorObject));
+        return object("range", rangeAggregatorObject);
     }
 
     private JsonObject rangeToJson(Range r) {

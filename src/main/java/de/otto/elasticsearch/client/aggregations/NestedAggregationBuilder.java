@@ -5,9 +5,6 @@ import com.google.gson.JsonPrimitive;
 import de.otto.elasticsearch.client.response.AggregationResult;
 import de.otto.elasticsearch.client.util.StringUtils;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class NestedAggregationBuilder extends AggregationBuilder<NestedAggregationBuilder> {
     private String path;
 
