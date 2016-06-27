@@ -23,7 +23,7 @@ public class IndicesAdminClient {
         return new IndicesExistsRequestBuilder(httpClient, indexName);
     }
 
-    public DeleteIndexRequestBuilder prepareDelete(String indexName) {
-        return new DeleteIndexRequestBuilder(httpClient, indexName);
+    public DeleteIndexRequestBuilder prepareDelete(String... indexNames) {
+        return new DeleteIndexRequestBuilder(httpClient, indexNames);
     }
 }
