@@ -2,7 +2,6 @@ package de.otto.elasticsearch.client.query;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import de.otto.elasticsearch.client.util.StringUtils;
 
 public class TermQueryBuilder implements QueryBuilder {
     private final String name;
@@ -15,7 +14,7 @@ public class TermQueryBuilder implements QueryBuilder {
 
     @Override
     public JsonObject build() {
-        if (StringUtils.isEmpty(name)) {
+        if (name==null || name.isEmpty()) {
             throw new RuntimeException("missing property 'name'");
         }
         if (value == null) {

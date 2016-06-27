@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import de.otto.elasticsearch.client.SortOrder;
 import de.otto.elasticsearch.client.response.AggregationResult;
-import de.otto.elasticsearch.client.util.StringUtils;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
@@ -41,7 +40,7 @@ public class TermsBuilder extends AggregationBuilder<TermsBuilder> {
 
     @Override
     public JsonObject build() {
-        if (StringUtils.isEmpty(fieldName)) {
+        if (fieldName==null || fieldName.isEmpty()) {
             throw new RuntimeException("missing property 'field'");
         }
         JsonObject jsonObject = new JsonObject();
@@ -65,7 +64,7 @@ public class TermsBuilder extends AggregationBuilder<TermsBuilder> {
     }
 
     public JsonElement buildValue() {
-        if (StringUtils.isEmpty(fieldName)) {
+        if (fieldName==null || fieldName.isEmpty()) {
             throw new RuntimeException("missing property 'field'");
         }
         JsonObject fields = new JsonObject();

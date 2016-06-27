@@ -1,11 +1,10 @@
 package de.otto.elasticsearch.client.response;
 
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
 
 public class SearchResponse {
 
@@ -43,7 +42,7 @@ public class SearchResponse {
     }
 
     public static SearchResponse emptyResponse() {
-        return new SearchResponse(0, null, new SimpleSearchHits(0L, 0F, ImmutableList.of()), ImmutableMap.of());
+        return new SearchResponse(0, null, new SimpleSearchHits(0L, 0F, emptyList()), emptyMap());
     }
 
     public static final class Builder {

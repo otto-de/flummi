@@ -1,11 +1,8 @@
 package de.otto.elasticsearch.client.request;
 
-import com.google.common.collect.ImmutableList;
-import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.Response;
 import de.otto.elasticsearch.client.RequestBuilderUtil;
 import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
-import de.otto.elasticsearch.client.util.StringUtils;
 import org.slf4j.Logger;
 
 import java.io.UnsupportedEncodingException;
@@ -44,13 +41,13 @@ public class DeleteRequestBuilder {
 
     public void execute() {
         try {
-            if (StringUtils.isEmpty(indexName)) {
+            if (indexName==null || indexName.isEmpty()) {
                 throw new RuntimeException("missing property 'indexName'");
             }
-            if (StringUtils.isEmpty(documentType)) {
+            if (documentType==null || documentType.isEmpty()) {
                 throw new RuntimeException("missing property 'type'");
             }
-            if (StringUtils.isEmpty(id)) {
+            if (id==null || id.isEmpty()) {
                 throw new RuntimeException("missing property 'id'");
             }
             Response response = httpClient.prepareDelete(buildUrl(indexName, documentType, URLEncoder.encode(id, "UTF-8")))

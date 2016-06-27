@@ -1,7 +1,8 @@
 package de.otto.elasticsearch.client.util;
 
-import com.google.common.collect.ImmutableList;
 import com.ning.http.client.AsyncHttpClient;
+
+import java.util.List;
 
 import static java.lang.Math.abs;
 
@@ -9,10 +10,10 @@ public class RoundRobinLoadBalancingHttpClient {
 
     private final int numHosts;
     private final AsyncHttpClient asyncHttpClient;
-    private final ImmutableList<String> hosts;
+    private final List<String> hosts;
     int roundRobinCounter;
 
-    public RoundRobinLoadBalancingHttpClient(AsyncHttpClient asyncHttpClient, ImmutableList<String> hosts) {
+    public RoundRobinLoadBalancingHttpClient(AsyncHttpClient asyncHttpClient, List<String> hosts) {
         this.asyncHttpClient = asyncHttpClient;
         this.hosts = hosts;
         this.numHosts = hosts.size();

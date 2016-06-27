@@ -9,7 +9,6 @@ import com.ning.http.client.Response;
 import de.otto.elasticsearch.client.InvalidElasticsearchResponseException;
 import de.otto.elasticsearch.client.bulkactions.BulkActionBuilder;
 import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
-import de.otto.elasticsearch.client.util.StringUtils;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -19,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-import static com.google.common.collect.Iterables.isEmpty;
 import static de.otto.elasticsearch.client.RequestBuilderUtil.toHttpServerErrorException;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -44,7 +42,7 @@ public class BulkRequestBuilder implements RequestBuilder<Void> {
     @Override
     public Void execute() {
         try {
-            if (isEmpty(actions)) {
+            if (actions.isEmpty()) {
                 return null;
             }
 
@@ -76,13 +74,14 @@ public class BulkRequestBuilder implements RequestBuilder<Void> {
                     if (updateField != null) {
                         final JsonElement status = updateField.getAsJsonObject().get("status");
                         final JsonElement error = updateField.getAsJsonObject().get("error");
-                        if (status != null && status.getAsInt() != 404 && error != null && !StringUtils.isEmpty(error.getAsString())) {
+                        if (status != null && status.getAsInt() != 404 && error != null && !error.getAsString().isEmpty()) {
                             foundError = true;
                         }
                     } else {
                         for (Map.Entry<String, JsonElement> opElement : jsonElement.getAsJsonObject().entrySet()) {
                             JsonObject opObject = opElement.getValue().getAsJsonObject();
-                            if (opObject != null && opObject.get("error") != null && !StringUtils.isEmpty(opObject.get("error").getAsString())) {
+                            JsonElement errorObj = opObject.get("error");
+                            if (opObject != null && errorObj != null && !errorObj.getAsString().isEmpty()) {
                                 foundError = true;
                             }
                         }

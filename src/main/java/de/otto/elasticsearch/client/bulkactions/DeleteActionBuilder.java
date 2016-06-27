@@ -3,7 +3,6 @@ package de.otto.elasticsearch.client.bulkactions;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import de.otto.elasticsearch.client.util.StringUtils;
 
 import static de.otto.elasticsearch.client.request.GsonHelper.object;
 
@@ -24,13 +23,13 @@ public class DeleteActionBuilder implements BulkActionBuilder {
 
     @Override
     public String toBulkRequestAction() {
-        if (StringUtils.isEmpty(indexName)) {
+        if (indexName==null || indexName.isEmpty()) {
             throw new RuntimeException("missing property 'index'");
         }
-        if (StringUtils.isEmpty(id)) {
+        if (id==null || id.isEmpty()) {
             throw new RuntimeException("missing property 'id'");
         }
-        if (StringUtils.isEmpty(type)) {
+        if (type==null || type.isEmpty()) {
             throw new RuntimeException("missing property 'type'");
         }
         JsonObject bulkObject = object("_index", indexName);

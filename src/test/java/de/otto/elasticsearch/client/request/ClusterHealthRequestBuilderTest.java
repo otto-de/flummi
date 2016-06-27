@@ -1,6 +1,5 @@
 package de.otto.elasticsearch.client.request;
 
-import com.google.common.collect.ImmutableList;
 import com.ning.http.client.AsyncHttpClient;
 import de.otto.elasticsearch.client.*;
 import de.otto.elasticsearch.client.response.HttpServerErrorException;

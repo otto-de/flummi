@@ -1,6 +1,5 @@
 package de.otto.elasticsearch.client.request;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.ning.http.client.AsyncHttpClient;

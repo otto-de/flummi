@@ -2,7 +2,6 @@ package de.otto.elasticsearch.client.query;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import de.otto.elasticsearch.client.util.StringUtils;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
@@ -82,7 +81,7 @@ public class DateRangeQueryBuilder implements QueryBuilder{
         if(toDate == null && toDateTime == null && fromDate == null && fromDateTime == null) {
             throw new RuntimeException("from and to fields are missing");
         }
-        if(StringUtils.isEmpty(fieldName)) {
+        if(fieldName==null || fieldName.isEmpty()) {
             throw new RuntimeException("fieldName is missing");
         }
         JsonObject jsonObject = new JsonObject();

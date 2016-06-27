@@ -1,11 +1,12 @@
 package de.otto.elasticsearch.client.util;
 
-import com.google.common.collect.ImmutableList;
 import com.ning.http.client.AsyncHttpClient;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static com.google.common.collect.ImmutableList.of;
+import java.util.List;
+
+import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Matchers.anyString;
@@ -13,7 +14,7 @@ import static org.mockito.Mockito.*;
 
 @Test
 public class RoundRobinLoadBalancingHttpClientTest {
-    private final ImmutableList<String> hosts = of("http://someHost:9200", "http://someOtherHost:9200");
+    private final List<String> hosts = asList("http://someHost:9200", "http://someOtherHost:9200");
     private AsyncHttpClient asyncHttpClient;
     private AsyncHttpClient.BoundRequestBuilder boundRequestBuilder;
 

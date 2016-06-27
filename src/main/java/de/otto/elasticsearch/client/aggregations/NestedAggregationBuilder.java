@@ -3,7 +3,6 @@ package de.otto.elasticsearch.client.aggregations;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import de.otto.elasticsearch.client.response.AggregationResult;
-import de.otto.elasticsearch.client.util.StringUtils;
 
 public class NestedAggregationBuilder extends AggregationBuilder<NestedAggregationBuilder> {
     private String path;
@@ -21,7 +20,7 @@ public class NestedAggregationBuilder extends AggregationBuilder<NestedAggregati
     @Override
     public JsonObject build() {
 
-        if (StringUtils.isEmpty(path)) {
+        if (path==null || path.isEmpty()) {
             throw new RuntimeException("missing property 'path'");
         }
         if (subAggregations == null) {

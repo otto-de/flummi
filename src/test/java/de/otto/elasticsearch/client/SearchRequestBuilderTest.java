@@ -1,6 +1,5 @@
 package de.otto.elasticsearch.client;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.ning.http.client.AsyncHttpClient;
@@ -62,7 +61,6 @@ public class SearchRequestBuilderTest {
             "]}}";
     SearchRequestBuilder searchRequestBuilder;
     RoundRobinLoadBalancingHttpClient httpClient;
-    private ImmutableList<String> HOSTS = ImmutableList.of("someHost:9200");
 
     @BeforeMethod
     public void setUp() throws Exception {

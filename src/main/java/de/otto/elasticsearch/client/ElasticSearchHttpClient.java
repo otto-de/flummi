@@ -1,6 +1,5 @@
 package de.otto.elasticsearch.client;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -11,6 +10,7 @@ import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +18,7 @@ import java.util.concurrent.ExecutionException;
 
 import static de.otto.elasticsearch.client.RequestBuilderUtil.toHttpServerErrorException;
 import static de.otto.elasticsearch.client.request.GsonHelper.object;
-import static de.otto.elasticsearch.client.util.CollectionUtils.toImmutableList;
+import static java.util.stream.Collectors.toList;
 
 
 public class ElasticSearchHttpClient {
@@ -26,9 +26,9 @@ public class ElasticSearchHttpClient {
     private final Gson gson;
 
     public ElasticSearchHttpClient(AsyncHttpClient asyncHttpClient, String hosts) {
-        ImmutableList<String> hostsList = Arrays.stream(hosts.split(","))
+        List<String> hostsList = Arrays.stream(hosts.split(","))
                 .map(host -> "http://" + host.trim())
-                .collect(toImmutableList());
+                .collect(toList());
         this.httpClient = new RoundRobinLoadBalancingHttpClient(asyncHttpClient, hostsList);
         this.gson = new Gson();
     }
@@ -132,7 +132,7 @@ public class ElasticSearchHttpClient {
     }
 
     public List<String> getAllIndexNames() {
-        ImmutableList.Builder<String> indexNamesBuilder = ImmutableList.builder();
+        List<String> indexNames = new ArrayList();
         try {
             Response response = httpClient.prepareGet("/_all").execute().get();
             if (response.getStatusCode() != 200) {
@@ -142,8 +142,8 @@ public class ElasticSearchHttpClient {
             JsonObject responseObject = gson.fromJson(jsonString, JsonObject.class);
 
             responseObject.entrySet().stream()
-                    .forEach(e -> indexNamesBuilder.add(e.getKey()));
-            return indexNamesBuilder.build();
+                    .forEach(e -> indexNames.add(e.getKey()));
+            return indexNames;
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         } catch (InterruptedException e) {

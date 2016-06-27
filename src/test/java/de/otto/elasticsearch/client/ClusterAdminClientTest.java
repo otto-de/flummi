@@ -1,6 +1,5 @@
 package de.otto.elasticsearch.client;
 
-import com.google.common.collect.ImmutableList;
 import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

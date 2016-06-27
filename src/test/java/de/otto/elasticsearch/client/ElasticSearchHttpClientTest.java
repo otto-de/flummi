@@ -1,6 +1,5 @@
 package de.otto.elasticsearch.client;
 
-import com.google.common.collect.Lists;
 import com.google.gson.JsonObject;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.ListenableFuture;
@@ -17,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Matchers.anyString;
@@ -79,7 +79,7 @@ public class ElasticSearchHttpClientTest {
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", "{\"acknowledged\":\"true\"}")));
 
         //When
-        final boolean successful = client.deleteIndex(Lists.newArrayList("someIndexName"));
+        final boolean successful = client.deleteIndex(asList("someIndexName"));
 
         //Then
         assertThat(successful, is(true));
@@ -92,7 +92,7 @@ public class ElasticSearchHttpClientTest {
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", "{\"acknowledged\":\"false\"}")));
 
         //When
-        final boolean successful = client.deleteIndex(Lists.newArrayList("someIndexName"));
+        final boolean successful = client.deleteIndex(asList("someIndexName"));
 
         //Then
         assertThat(successful, is(false));
@@ -105,7 +105,7 @@ public class ElasticSearchHttpClientTest {
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(500, "Internal Server Error", "{\"acknowledged\":\"true\"}")));
 
         //When
-        client.deleteIndex(Lists.newArrayList("someIndexName"));
+        client.deleteIndex(asList("someIndexName"));
     }
 
     @Test
