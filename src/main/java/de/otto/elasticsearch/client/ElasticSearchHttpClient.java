@@ -10,13 +10,14 @@ import de.otto.elasticsearch.client.util.HttpClientWrapper;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 import static de.otto.elasticsearch.client.RequestBuilderUtil.toHttpServerErrorException;
 import static de.otto.elasticsearch.client.request.GsonHelper.object;
+import static java.util.stream.Collectors.toList;
 
 
 public class ElasticSearchHttpClient {
@@ -127,7 +128,6 @@ public class ElasticSearchHttpClient {
     }
 
     public List<String> getAllIndexNames() {
-        List<String> indexNames = new ArrayList();
         try {
             Response response = httpClient.prepareGet("/_all").execute().get();
             if (response.getStatusCode() != 200) {
@@ -136,35 +136,9 @@ public class ElasticSearchHttpClient {
             String jsonString = response.getResponseBody();
             JsonObject responseObject = gson.fromJson(jsonString, JsonObject.class);
 
-            responseObject.entrySet().stream()
-                    .forEach(e -> indexNames.add(e.getKey()));
-            return indexNames;
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public boolean deleteIndex(List<String> indexNamesToDelete) throws InvalidElasticsearchResponseException {
-        if (indexNamesToDelete.isEmpty()) {
-            return true;
-        }
-        String url = RequestBuilderUtil.buildUrl(indexNamesToDelete.toArray(new String[indexNamesToDelete.size()]), null, null);
-        try {
-            Response response = httpClient.prepareDelete(url).execute().get();
-            if (response.getStatusCode() != 200) {
-                throw toHttpServerErrorException(response);
-            }
-            String jsonString = response.getResponseBody();
-            JsonObject responseObject = gson.fromJson(jsonString, JsonObject.class);
-            if (responseObject.has("acknowledged")) {
-                return responseObject.get("acknowledged").getAsBoolean();
-            } else {
-                throw new InvalidElasticsearchResponseException("Response does not contain field 'acknowledged'");
-            }
+            return responseObject.entrySet().stream()
+                    .map(Map.Entry::getKey)
+                    .collect(toList());
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         } catch (InterruptedException e) {
@@ -212,10 +186,6 @@ public class ElasticSearchHttpClient {
 
     public GetRequestBuilder prepareGet(String indexName, String documentType, String id) {
         return new GetRequestBuilder(httpClient, indexName, documentType, id);
-    }
-
-    public DeleteIndexRequestBuilder prepareDeleteByName(String indexName) {
-        return new DeleteIndexRequestBuilder(httpClient, indexName);
     }
 
     public DeleteRequestBuilder prepareDelete() {

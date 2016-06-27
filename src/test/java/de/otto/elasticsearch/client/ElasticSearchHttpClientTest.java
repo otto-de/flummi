@@ -74,41 +74,6 @@ public class ElasticSearchHttpClientTest {
     }
 
     @Test
-    public void shouldDeleteIndex() throws ExecutionException, InterruptedException, IOException {
-        //Given
-        when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", "{\"acknowledged\":\"true\"}")));
-
-        //When
-        final boolean successful = client.deleteIndex(asList("someIndexName"));
-
-        //Then
-        assertThat(successful, is(true));
-        verify(asyncHttpClient).prepareDelete("http://someHost:9200/someIndexName");
-    }
-
-    @Test
-    public void shouldNotDeleteIndexForAcknowledgedFalse() throws ExecutionException, InterruptedException, IOException {
-        //Given
-        when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", "{\"acknowledged\":\"false\"}")));
-
-        //When
-        final boolean successful = client.deleteIndex(asList("someIndexName"));
-
-        //Then
-        assertThat(successful, is(false));
-        verify(asyncHttpClient).prepareDelete("http://someHost:9200/someIndexName");
-    }
-
-    @Test(expectedExceptions = HttpServerErrorException.class)
-    public void shouldNotDeleteIndexForErrorResponseCodeFalse() throws ExecutionException, InterruptedException, IOException {
-        //Given
-        when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(500, "Internal Server Error", "{\"acknowledged\":\"true\"}")));
-
-        //When
-        client.deleteIndex(asList("someIndexName"));
-    }
-
-    @Test
     public void shouldReturnIndexExists() throws ExecutionException, InterruptedException, IOException {
         //Given
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", "{\"someIndexName\":{}}")));
@@ -410,25 +375,6 @@ public class ElasticSearchHttpClientTest {
 
         //Then
         verify(asyncHttpClient).prepareGet("http://someHost:9200/someIndexName/someDocumentType/someProductId");
-    }
-
-    @Test
-    public void shouldPrepareDeleteByName() throws ExecutionException, InterruptedException, IOException {
-        //Given
-        final AsyncHttpClient.BoundRequestBuilder boundRequestBuilder = mock(AsyncHttpClient.BoundRequestBuilder.class);
-        when(asyncHttpClient.prepareDelete(anyString())).thenReturn(boundRequestBuilder);
-        final ListenableFuture listenableFuture = mock(ListenableFuture.class);
-        when(boundRequestBuilder.execute()).thenReturn(listenableFuture);
-        final Response response = mock(Response.class);
-        when(listenableFuture.get()).thenReturn(response);
-        when(response.getStatusCode()).thenReturn(200);
-        final DeleteIndexRequestBuilder deleteIndexRequestBuilder = client.prepareDeleteByName("someIndexName");
-
-        //When
-        deleteIndexRequestBuilder.execute();
-
-        //Then
-        verify(asyncHttpClient).prepareDelete("http://someHost:9200/someIndexName");
     }
 
     @Test

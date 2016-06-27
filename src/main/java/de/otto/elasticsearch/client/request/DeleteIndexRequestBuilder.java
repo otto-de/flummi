@@ -8,16 +8,17 @@ import java.util.concurrent.ExecutionException;
 
 public class DeleteIndexRequestBuilder {
     private final HttpClientWrapper httpClient;
-    private final String indexName;
+    private final String[] indexNames;
 
-    public DeleteIndexRequestBuilder(HttpClientWrapper httpClient, String indexName) {
+    public DeleteIndexRequestBuilder(HttpClientWrapper httpClient, String... indexNames) {
         this.httpClient = httpClient;
-        this.indexName = indexName;
+        this.indexNames = indexNames;
     }
 
     public void execute() {
         try {
-            Response response = httpClient.prepareDelete("/" + indexName).execute().get();
+            String url = RequestBuilderUtil.buildUrl(indexNames, null, null);
+            Response response = httpClient.prepareDelete(url).execute().get();
             if (response.getStatusCode() >= 300 && response.getStatusCode() != 404) {
                 throw RequestBuilderUtil.toHttpServerErrorException(response);
             }
