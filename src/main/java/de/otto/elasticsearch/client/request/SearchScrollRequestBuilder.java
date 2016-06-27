@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.ning.http.client.Response;
 import de.otto.elasticsearch.client.response.SearchResponse;
-import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
+import de.otto.elasticsearch.client.util.HttpClientWrapper;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -17,11 +17,11 @@ import static de.otto.elasticsearch.client.response.SearchResponse.emptyResponse
 
 public class SearchScrollRequestBuilder implements RequestBuilder<SearchResponse> {
     private final Gson gson;
-    private RoundRobinLoadBalancingHttpClient httpClient;
+    private HttpClientWrapper httpClient;
     private String scrollId;
     private String scroll;
 
-    public SearchScrollRequestBuilder(RoundRobinLoadBalancingHttpClient httpClient) {
+    public SearchScrollRequestBuilder(HttpClientWrapper httpClient) {
         this.httpClient = httpClient;
         gson = new Gson();
     }

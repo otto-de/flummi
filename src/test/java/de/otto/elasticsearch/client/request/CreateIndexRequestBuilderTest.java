@@ -5,7 +5,7 @@ import de.otto.elasticsearch.client.CompletedFuture;
 import de.otto.elasticsearch.client.InvalidElasticsearchResponseException;
 import de.otto.elasticsearch.client.MockResponse;
 import de.otto.elasticsearch.client.response.HttpServerErrorException;
-import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
+import de.otto.elasticsearch.client.util.HttpClientWrapper;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -22,7 +22,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class CreateIndexRequestBuilderTest {
 
     @Mock
-    RoundRobinLoadBalancingHttpClient httpClient;
+    HttpClientWrapper httpClient;
 
     @Mock
     AsyncHttpClient.BoundRequestBuilder boundRequestBuilder;

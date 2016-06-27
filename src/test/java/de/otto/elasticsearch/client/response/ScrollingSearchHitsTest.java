@@ -1,15 +1,13 @@
 package de.otto.elasticsearch.client.response;
 
 import com.ning.http.client.AsyncHttpClient;
-import com.ning.http.client.Response;
 import de.otto.elasticsearch.client.CompletedFuture;
 import de.otto.elasticsearch.client.MockResponse;
-import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
+import de.otto.elasticsearch.client.util.HttpClientWrapper;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 import static de.otto.elasticsearch.client.request.GsonHelper.object;
 import static java.util.stream.Collectors.toList;
@@ -40,12 +38,12 @@ public class ScrollingSearchHitsTest {
             "\"hits\":{\"total\":10,\"max_score\":1.0,\"hits\":[]}}";
 
     private AsyncHttpClient.BoundRequestBuilder requestBuilder;
-    private RoundRobinLoadBalancingHttpClient httpClient;
+    private HttpClientWrapper httpClient;
 
     @BeforeMethod
     public void setUp() throws Exception {
         requestBuilder = mock(AsyncHttpClient.BoundRequestBuilder.class);
-        httpClient = mock(RoundRobinLoadBalancingHttpClient.class);
+        httpClient = mock(HttpClientWrapper.class);
         when(requestBuilder.setBody(anyString())).thenReturn(requestBuilder);
     }
 

@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.ning.http.client.Response;
 import de.otto.elasticsearch.client.RequestBuilderUtil;
-import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
+import de.otto.elasticsearch.client.util.HttpClientWrapper;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -21,9 +21,9 @@ public class CountRequestBuilder implements RequestBuilder<Long> {
     private String[] types;
 
     public static final Logger LOG = getLogger(CountRequestBuilder.class);
-    private RoundRobinLoadBalancingHttpClient httpClient;
+    private HttpClientWrapper httpClient;
 
-    public CountRequestBuilder(RoundRobinLoadBalancingHttpClient httpClient, String... indices) {
+    public CountRequestBuilder(HttpClientWrapper httpClient, String... indices) {
         this.httpClient = httpClient;
         this.indices = indices;
         this.gson = new Gson();

@@ -4,13 +4,13 @@ package de.otto.elasticsearch.client;
 import de.otto.elasticsearch.client.request.CreateIndexRequestBuilder;
 import de.otto.elasticsearch.client.request.DeleteIndexRequestBuilder;
 import de.otto.elasticsearch.client.request.IndicesExistsRequestBuilder;
-import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
+import de.otto.elasticsearch.client.util.HttpClientWrapper;
 
 public class IndicesAdminClient {
 
-    private RoundRobinLoadBalancingHttpClient httpClient;
+    private HttpClientWrapper httpClient;
 
-    public IndicesAdminClient(RoundRobinLoadBalancingHttpClient httpClient) {
+    public IndicesAdminClient(HttpClientWrapper httpClient) {
 
         this.httpClient = httpClient;
     }

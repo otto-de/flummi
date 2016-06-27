@@ -11,7 +11,7 @@ import de.otto.elasticsearch.client.response.AggregationResult;
 import de.otto.elasticsearch.client.response.ScrollingSearchHits;
 import de.otto.elasticsearch.client.response.SearchHit;
 import de.otto.elasticsearch.client.response.SearchResponse;
-import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
+import de.otto.elasticsearch.client.util.HttpClientWrapper;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -60,11 +60,11 @@ public class SearchRequestBuilderTest {
             "}" +
             "]}}";
     SearchRequestBuilder searchRequestBuilder;
-    RoundRobinLoadBalancingHttpClient httpClient;
+    HttpClientWrapper httpClient;
 
     @BeforeMethod
     public void setUp() throws Exception {
-        httpClient = mock(RoundRobinLoadBalancingHttpClient.class);
+        httpClient = mock(HttpClientWrapper.class);
         searchRequestBuilder = new SearchRequestBuilder(httpClient, "some-index");
     }
 

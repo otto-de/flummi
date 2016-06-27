@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.Response;
-import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
+import de.otto.elasticsearch.client.util.HttpClientWrapper;
 import org.slf4j.Logger;
 
 import java.io.UnsupportedEncodingException;
@@ -25,9 +25,9 @@ public class IndexRequestBuilder implements RequestBuilder<Void> {
     private String parent;
 
     public static final Logger LOG = getLogger(IndexRequestBuilder.class);
-    private RoundRobinLoadBalancingHttpClient httpClient;
+    private HttpClientWrapper httpClient;
 
-    public IndexRequestBuilder(RoundRobinLoadBalancingHttpClient httpClient) {
+    public IndexRequestBuilder(HttpClientWrapper httpClient) {
         this.httpClient = httpClient;
         this.gson = new Gson();
     }

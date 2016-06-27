@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import com.ning.http.client.Response;
 import de.otto.elasticsearch.client.RequestBuilderUtil;
 import de.otto.elasticsearch.client.response.GetResponse;
-import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
+import de.otto.elasticsearch.client.util.HttpClientWrapper;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -17,7 +17,7 @@ import static de.otto.elasticsearch.client.RequestBuilderUtil.toHttpServerErrorE
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class GetRequestBuilder implements RequestBuilder<GetResponse> {
-    private RoundRobinLoadBalancingHttpClient httpClient;
+    private HttpClientWrapper httpClient;
     private final String indexName;
     private final String documentType;
     private final String id;
@@ -25,7 +25,7 @@ public class GetRequestBuilder implements RequestBuilder<GetResponse> {
 
     public static final Logger LOG = getLogger(GetRequestBuilder.class);
 
-    public GetRequestBuilder(RoundRobinLoadBalancingHttpClient httpClient, String indexName, String documentType, String id) {
+    public GetRequestBuilder(HttpClientWrapper httpClient, String indexName, String documentType, String id) {
         this.httpClient = httpClient;
         this.indexName = indexName;
         this.documentType = documentType;

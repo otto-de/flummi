@@ -8,7 +8,7 @@ import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.Response;
 import de.otto.elasticsearch.client.InvalidElasticsearchResponseException;
 import de.otto.elasticsearch.client.bulkactions.BulkActionBuilder;
-import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
+import de.otto.elasticsearch.client.util.HttpClientWrapper;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -26,9 +26,9 @@ public class BulkRequestBuilder implements RequestBuilder<Void> {
     private List<BulkActionBuilder> actions = new ArrayList();
 
     public static final Logger LOG = getLogger(BulkRequestBuilder.class);
-    private RoundRobinLoadBalancingHttpClient httpClient;
+    private HttpClientWrapper httpClient;
 
-    public BulkRequestBuilder(RoundRobinLoadBalancingHttpClient httpClient) {
+    public BulkRequestBuilder(HttpClientWrapper httpClient) {
         this.httpClient = httpClient;
         this.gson = new Gson();
 

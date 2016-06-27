@@ -7,7 +7,7 @@ import com.ning.http.client.Response;
 import de.otto.elasticsearch.client.ClusterHealthResponse;
 import de.otto.elasticsearch.client.ClusterHealthStatus;
 import de.otto.elasticsearch.client.InvalidElasticsearchResponseException;
-import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
+import de.otto.elasticsearch.client.util.HttpClientWrapper;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -23,10 +23,10 @@ public class ClusterHealthRequestBuilder {
     private Long timeout;
 
     public static final Logger LOG = getLogger(ClusterHealthRequestBuilder.class);
-    private RoundRobinLoadBalancingHttpClient httpClient;
+    private HttpClientWrapper httpClient;
 
 
-    public ClusterHealthRequestBuilder(RoundRobinLoadBalancingHttpClient httpClient, String... indexNames) {
+    public ClusterHealthRequestBuilder(HttpClientWrapper httpClient, String... indexNames) {
         this.httpClient = httpClient;
         this.indexNames = indexNames;
         this.gson = new Gson();

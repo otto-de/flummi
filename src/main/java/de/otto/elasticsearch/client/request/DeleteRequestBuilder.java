@@ -2,7 +2,7 @@ package de.otto.elasticsearch.client.request;
 
 import com.ning.http.client.Response;
 import de.otto.elasticsearch.client.RequestBuilderUtil;
-import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
+import de.otto.elasticsearch.client.util.HttpClientWrapper;
 import org.slf4j.Logger;
 
 import java.io.UnsupportedEncodingException;
@@ -13,14 +13,14 @@ import static de.otto.elasticsearch.client.RequestBuilderUtil.buildUrl;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class DeleteRequestBuilder {
-    private final RoundRobinLoadBalancingHttpClient httpClient;
+    private final HttpClientWrapper httpClient;
     private String indexName;
     private String documentType;
     private String id;
 
     public static final Logger LOG = getLogger(DeleteRequestBuilder.class);
 
-    public DeleteRequestBuilder(RoundRobinLoadBalancingHttpClient httpClient) {
+    public DeleteRequestBuilder(HttpClientWrapper httpClient) {
         this.httpClient = httpClient;
     }
 

@@ -7,7 +7,7 @@ import de.otto.elasticsearch.client.MockResponse;
 import de.otto.elasticsearch.client.bulkactions.IndexActionBuilder;
 import de.otto.elasticsearch.client.bulkactions.IndexOpType;
 import de.otto.elasticsearch.client.response.HttpServerErrorException;
-import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
+import de.otto.elasticsearch.client.util.HttpClientWrapper;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -23,7 +23,7 @@ public class BulkRequestBuilderTest {
     BulkRequestBuilder testee;
 
     @Mock
-    RoundRobinLoadBalancingHttpClient asyncHttpClient;
+    HttpClientWrapper asyncHttpClient;
 
     @BeforeMethod
     public void setUp() throws Exception {

@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import com.ning.http.client.Response;
 import de.otto.elasticsearch.client.InvalidElasticsearchResponseException;
 import de.otto.elasticsearch.client.RequestBuilderUtil;
-import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
+import de.otto.elasticsearch.client.util.HttpClientWrapper;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -19,11 +19,11 @@ public class CreateIndexRequestBuilder {
     private final String indexName;
     private JsonObject settings;
     private JsonObject mappings;
-    private final RoundRobinLoadBalancingHttpClient httpClient;
+    private final HttpClientWrapper httpClient;
 
     public static final Logger LOG = getLogger(CreateIndexRequestBuilder.class);
 
-    public CreateIndexRequestBuilder(RoundRobinLoadBalancingHttpClient httpClient, String indexName) {
+    public CreateIndexRequestBuilder(HttpClientWrapper httpClient, String indexName) {
         this.httpClient = httpClient;
         this.indexName = indexName;
         this.gson = new Gson();

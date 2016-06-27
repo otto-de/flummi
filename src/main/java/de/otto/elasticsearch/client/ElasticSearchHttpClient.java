@@ -6,30 +6,25 @@ import com.google.gson.JsonObject;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.Response;
 import de.otto.elasticsearch.client.request.*;
-import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
+import de.otto.elasticsearch.client.util.HttpClientWrapper;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 import static de.otto.elasticsearch.client.RequestBuilderUtil.toHttpServerErrorException;
 import static de.otto.elasticsearch.client.request.GsonHelper.object;
-import static java.util.stream.Collectors.toList;
 
 
 public class ElasticSearchHttpClient {
-    private final RoundRobinLoadBalancingHttpClient httpClient;
+    private final HttpClientWrapper httpClient;
     private final Gson gson;
 
-    public ElasticSearchHttpClient(AsyncHttpClient asyncHttpClient, String hosts) {
-        List<String> hostsList = Arrays.stream(hosts.split(","))
-                .map(host -> "http://" + host.trim())
-                .collect(toList());
-        this.httpClient = new RoundRobinLoadBalancingHttpClient(asyncHttpClient, hostsList);
+    public ElasticSearchHttpClient(AsyncHttpClient asyncHttpClient, String baseUrl) {
+        this.httpClient = new HttpClientWrapper(asyncHttpClient, baseUrl);
         this.gson = new Gson();
     }
 

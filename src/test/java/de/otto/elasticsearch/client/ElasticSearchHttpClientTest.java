@@ -32,7 +32,7 @@ public class ElasticSearchHttpClientTest {
     public void setUp() {
         boundRequestBuilder = mock(AsyncHttpClient.BoundRequestBuilder.class);
         asyncHttpClient = mock(AsyncHttpClient.class);
-        client = new ElasticSearchHttpClient(asyncHttpClient, "someHost:9200");
+        client = new ElasticSearchHttpClient(asyncHttpClient, "http://someHost:9200");
         when(asyncHttpClient.prepareGet(anyString())).thenReturn(boundRequestBuilder);
         when(asyncHttpClient.prepareDelete(anyString())).thenReturn(boundRequestBuilder);
         when(asyncHttpClient.preparePost(anyString())).thenReturn(boundRequestBuilder);

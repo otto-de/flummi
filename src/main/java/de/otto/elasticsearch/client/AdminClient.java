@@ -1,6 +1,6 @@
 package de.otto.elasticsearch.client;
 
-import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
+import de.otto.elasticsearch.client.util.HttpClientWrapper;
 import org.slf4j.Logger;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -8,9 +8,9 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class AdminClient {
 
     public static final Logger LOG = getLogger(AdminClient.class);
-    private RoundRobinLoadBalancingHttpClient httpClient;
+    private HttpClientWrapper httpClient;
 
-    public AdminClient(RoundRobinLoadBalancingHttpClient httpClient) {
+    public AdminClient(HttpClientWrapper httpClient) {
         this.httpClient = httpClient;
     }
 

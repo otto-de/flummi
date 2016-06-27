@@ -5,7 +5,7 @@ import com.ning.http.client.ListenableFuture;
 import com.ning.http.client.Response;
 import de.otto.elasticsearch.client.request.ClusterHealthRequestBuilder;
 import de.otto.elasticsearch.client.request.CreateIndexRequestBuilder;
-import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
+import de.otto.elasticsearch.client.util.HttpClientWrapper;
 import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -21,12 +21,12 @@ import static org.mockito.Mockito.*;
 public class AdminClientTest {
 
     private AdminClient adminClient;
-    private RoundRobinLoadBalancingHttpClient httpClient;
+    private HttpClientWrapper httpClient;
 
 
     @BeforeMethod
     public void setup() {
-        httpClient = mock(RoundRobinLoadBalancingHttpClient.class);
+        httpClient = mock(HttpClientWrapper.class);
         adminClient = new AdminClient(httpClient);
     }
 

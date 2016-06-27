@@ -1,8 +1,7 @@
 package de.otto.elasticsearch.client.response;
 
-import de.otto.elasticsearch.client.ElasticSearchHttpClient;
 import de.otto.elasticsearch.client.request.SearchScrollRequestBuilder;
-import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
+import de.otto.elasticsearch.client.util.HttpClientWrapper;
 import org.slf4j.Logger;
 
 import java.util.Iterator;
@@ -23,13 +22,13 @@ public class ScrollingSearchHits implements SearchHits {
     private final Float maxScore;
     private final String scrollId;
     private final String scroll;
-    private final RoundRobinLoadBalancingHttpClient client;
+    private final HttpClientWrapper client;
     private List<SearchHit> hitsCurrentPage;
     private boolean dirty;
     public static final Logger LOG = getLogger(ScrollingSearchHits.class);
 
 
-    public ScrollingSearchHits(long totalHits, Float maxScore, String scrollId, String scroll, List<SearchHit> hitsCurrentPage, RoundRobinLoadBalancingHttpClient client) {
+    public ScrollingSearchHits(long totalHits, Float maxScore, String scrollId, String scroll, List<SearchHit> hitsCurrentPage, HttpClientWrapper client) {
         this.totalHits = totalHits;
         this.maxScore = maxScore;
         this.scrollId = scrollId;

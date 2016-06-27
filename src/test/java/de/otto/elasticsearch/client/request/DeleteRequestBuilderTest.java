@@ -4,7 +4,7 @@ import com.ning.http.client.AsyncHttpClient;
 import de.otto.elasticsearch.client.CompletedFuture;
 import de.otto.elasticsearch.client.MockResponse;
 import de.otto.elasticsearch.client.response.HttpServerErrorException;
-import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
+import de.otto.elasticsearch.client.util.HttpClientWrapper;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -14,12 +14,12 @@ import static org.mockito.Mockito.*;
 
 public class DeleteRequestBuilderTest {
 
-    private RoundRobinLoadBalancingHttpClient httpClient;
+    private HttpClientWrapper httpClient;
     private DeleteRequestBuilder testee;
 
     @BeforeMethod
     private void setup() {
-        httpClient = mock(RoundRobinLoadBalancingHttpClient.class);
+        httpClient = mock(HttpClientWrapper.class);
         testee = new DeleteRequestBuilder(httpClient);
     }
 

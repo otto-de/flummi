@@ -9,7 +9,7 @@ import de.otto.elasticsearch.client.aggregations.AggregationBuilder;
 import de.otto.elasticsearch.client.query.QueryBuilder;
 import de.otto.elasticsearch.client.query.sort.SortBuilder;
 import de.otto.elasticsearch.client.response.*;
-import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
+import de.otto.elasticsearch.client.util.HttpClientWrapper;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -25,7 +25,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
     private static final JsonObject EMPTY_JSON_OBJECT = new JsonObject();
 
-    private RoundRobinLoadBalancingHttpClient httpClient;
+    private HttpClientWrapper httpClient;
     private final String[] indices;
     private final Gson gson;
     private String[] types;
@@ -41,7 +41,7 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
 
     public static final Logger LOG = getLogger(SearchRequestBuilder.class);
 
-    public SearchRequestBuilder(RoundRobinLoadBalancingHttpClient httpClient, String... indices) {
+    public SearchRequestBuilder(HttpClientWrapper httpClient, String... indices) {
         this.httpClient = httpClient;
         this.indices = indices;
         this.gson = new Gson();
@@ -192,7 +192,7 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
         }
     }
 
-    public static SearchResponse.Builder parseResponse(JsonObject jsonObject, String scroll, RoundRobinLoadBalancingHttpClient client) {
+    public static SearchResponse.Builder parseResponse(JsonObject jsonObject, String scroll, HttpClientWrapper client) {
         SearchResponse.Builder searchResponse = SearchResponse.builder();
         searchResponse.setTookInMillis(jsonObject.get("took").getAsLong());
         JsonObject hits = jsonObject.get("hits").getAsJsonObject();

@@ -3,7 +3,7 @@ package de.otto.elasticsearch.client.request;
 
 import com.ning.http.client.Response;
 import de.otto.elasticsearch.client.response.HttpServerErrorException;
-import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
+import de.otto.elasticsearch.client.util.HttpClientWrapper;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -16,9 +16,9 @@ public class IndicesExistsRequestBuilder {
     private final String indexName;
 
     public static final Logger LOG = getLogger(IndicesExistsRequestBuilder.class);
-    private RoundRobinLoadBalancingHttpClient httpClient;
+    private HttpClientWrapper httpClient;
 
-    public IndicesExistsRequestBuilder(RoundRobinLoadBalancingHttpClient httpClient, String indexName) {
+    public IndicesExistsRequestBuilder(HttpClientWrapper httpClient, String indexName) {
         this.indexName = indexName;
         this.httpClient = httpClient;
     }

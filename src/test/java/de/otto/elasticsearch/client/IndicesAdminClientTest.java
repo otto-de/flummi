@@ -6,7 +6,7 @@ import com.ning.http.client.Response;
 import de.otto.elasticsearch.client.request.CreateIndexRequestBuilder;
 import de.otto.elasticsearch.client.request.DeleteIndexRequestBuilder;
 import de.otto.elasticsearch.client.request.IndicesExistsRequestBuilder;
-import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
+import de.otto.elasticsearch.client.util.HttpClientWrapper;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -18,11 +18,11 @@ import static org.mockito.Mockito.*;
 
 public class IndicesAdminClientTest {
     private IndicesAdminClient indicesAdminClient;
-    private RoundRobinLoadBalancingHttpClient httpClient;
+    private HttpClientWrapper httpClient;
 
     @BeforeMethod
     public void setup() {
-        httpClient = mock(RoundRobinLoadBalancingHttpClient.class);
+        httpClient = mock(HttpClientWrapper.class);
         indicesAdminClient = new IndicesAdminClient(httpClient);
     }
 

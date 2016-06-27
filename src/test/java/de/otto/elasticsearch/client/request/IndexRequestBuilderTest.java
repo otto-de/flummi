@@ -4,7 +4,7 @@ import com.ning.http.client.AsyncHttpClient;
 import de.otto.elasticsearch.client.CompletedFuture;
 import de.otto.elasticsearch.client.MockResponse;
 import de.otto.elasticsearch.client.response.HttpServerErrorException;
-import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
+import de.otto.elasticsearch.client.util.HttpClientWrapper;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -19,13 +19,13 @@ public class IndexRequestBuilderTest {
 
     IndexRequestBuilder testee;
 
-    RoundRobinLoadBalancingHttpClient httpClient;
+    HttpClientWrapper httpClient;
 
     AsyncHttpClient.BoundRequestBuilder boundRequestBuilder;
 
     @BeforeMethod
     public void setUp() throws Exception {
-        httpClient = mock(RoundRobinLoadBalancingHttpClient.class);
+        httpClient = mock(HttpClientWrapper.class);
         boundRequestBuilder = mock(AsyncHttpClient.BoundRequestBuilder.class);
         when(boundRequestBuilder.setBody(any(String.class))).thenReturn(boundRequestBuilder);
         testee = new IndexRequestBuilder(httpClient);

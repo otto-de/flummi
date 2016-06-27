@@ -7,7 +7,7 @@ import de.otto.elasticsearch.client.RequestBuilderUtil;
 import de.otto.elasticsearch.client.response.MultiGetRequestDocument;
 import de.otto.elasticsearch.client.response.MultiGetResponse;
 import de.otto.elasticsearch.client.response.MultiGetResponseDocument;
-import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
+import de.otto.elasticsearch.client.util.HttpClientWrapper;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -25,14 +25,14 @@ public class MultiGetRequestBuilder implements RequestBuilder<MultiGetResponse> 
 
     private final String[] indices;
     private final Gson gson;
-    private final RoundRobinLoadBalancingHttpClient httpClient;
+    private final HttpClientWrapper httpClient;
     private String[] types;
     private Integer timeoutMillis;
     private List<MultiGetRequestDocument> documents;
 
     public static final Logger LOG = getLogger(MultiGetRequestBuilder.class);
 
-    public MultiGetRequestBuilder(RoundRobinLoadBalancingHttpClient httpClient, String... indices) {
+    public MultiGetRequestBuilder(HttpClientWrapper httpClient, String... indices) {
         this.gson = new Gson();
 
         this.httpClient = httpClient;

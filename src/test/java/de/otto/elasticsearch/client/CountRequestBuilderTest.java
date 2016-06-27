@@ -3,7 +3,7 @@ package de.otto.elasticsearch.client;
 import com.ning.http.client.AsyncHttpClient;
 import de.otto.elasticsearch.client.request.CountRequestBuilder;
 import de.otto.elasticsearch.client.response.HttpServerErrorException;
-import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
+import de.otto.elasticsearch.client.util.HttpClientWrapper;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -14,13 +14,13 @@ import static org.mockito.Mockito.*;
 public class CountRequestBuilderTest {
 
     private static final String INDEX_NAME = "product-index";
-    private RoundRobinLoadBalancingHttpClient httpClient;
+    private HttpClientWrapper httpClient;
 
     CountRequestBuilder testee;
 
     @BeforeMethod
     public void setUp() throws Exception {
-        httpClient = mock(RoundRobinLoadBalancingHttpClient.class);
+        httpClient = mock(HttpClientWrapper.class);
         testee = new CountRequestBuilder(httpClient, INDEX_NAME);
     }
 

@@ -7,7 +7,7 @@ import de.otto.elasticsearch.client.CompletedFuture;
 import de.otto.elasticsearch.client.MockResponse;
 import de.otto.elasticsearch.client.response.MultiGetResponse;
 import de.otto.elasticsearch.client.response.MultiGetResponseDocument;
-import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
+import de.otto.elasticsearch.client.util.HttpClientWrapper;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.*;
 
 public class MultiGetRequestBuilderTest {
 
-    private RoundRobinLoadBalancingHttpClient httpClient;
+    private HttpClientWrapper httpClient;
     private MultiGetRequestBuilder requestBuilder;
 
     public static final String ONE_DOC_FOUND_RESPONSE = "{\n" +
@@ -84,7 +84,7 @@ public class MultiGetRequestBuilderTest {
 
     @BeforeMethod
     public void setUp() throws Exception {
-        httpClient = mock(RoundRobinLoadBalancingHttpClient.class);
+        httpClient = mock(HttpClientWrapper.class);
         requestBuilder = new MultiGetRequestBuilder(httpClient, "some-index");
     }
 

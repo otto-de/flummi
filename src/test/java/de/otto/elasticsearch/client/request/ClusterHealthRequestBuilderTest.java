@@ -3,7 +3,7 @@ package de.otto.elasticsearch.client.request;
 import com.ning.http.client.AsyncHttpClient;
 import de.otto.elasticsearch.client.*;
 import de.otto.elasticsearch.client.response.HttpServerErrorException;
-import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
+import de.otto.elasticsearch.client.util.HttpClientWrapper;
 import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -15,12 +15,12 @@ import static org.mockito.Mockito.mock;
 
 public class ClusterHealthRequestBuilderTest {
 
-    private RoundRobinLoadBalancingHttpClient asyncHttpClient;
+    private HttpClientWrapper asyncHttpClient;
     private ClusterHealthRequestBuilder testee;
 
     @BeforeMethod
     public void setUp() throws Exception {
-        asyncHttpClient = mock(RoundRobinLoadBalancingHttpClient.class);
+        asyncHttpClient = mock(HttpClientWrapper.class);
         testee = new ClusterHealthRequestBuilder(asyncHttpClient, new String[]{"someIndex", "someOtherIndex"});
     }
 

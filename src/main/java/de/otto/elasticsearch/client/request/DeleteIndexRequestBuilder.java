@@ -2,15 +2,15 @@ package de.otto.elasticsearch.client.request;
 
 import com.ning.http.client.Response;
 import de.otto.elasticsearch.client.RequestBuilderUtil;
-import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
+import de.otto.elasticsearch.client.util.HttpClientWrapper;
 
 import java.util.concurrent.ExecutionException;
 
 public class DeleteIndexRequestBuilder {
-    private final RoundRobinLoadBalancingHttpClient httpClient;
+    private final HttpClientWrapper httpClient;
     private final String indexName;
 
-    public DeleteIndexRequestBuilder(RoundRobinLoadBalancingHttpClient httpClient, String indexName) {
+    public DeleteIndexRequestBuilder(HttpClientWrapper httpClient, String indexName) {
         this.httpClient = httpClient;
         this.indexName = indexName;
     }

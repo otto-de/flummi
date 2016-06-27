@@ -1,6 +1,6 @@
 package de.otto.elasticsearch.client;
 
-import de.otto.elasticsearch.client.util.RoundRobinLoadBalancingHttpClient;
+import de.otto.elasticsearch.client.util.HttpClientWrapper;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -11,11 +11,11 @@ import static org.mockito.Mockito.mock;
 public class ClusterAdminClientTest {
 
     private ClusterAdminClient clusterAdminClient;
-    private RoundRobinLoadBalancingHttpClient httpClient;
+    private HttpClientWrapper httpClient;
 
     @BeforeMethod
     public void setup() {
-        httpClient = mock(RoundRobinLoadBalancingHttpClient.class);
+        httpClient = mock(HttpClientWrapper.class);
         clusterAdminClient = new ClusterAdminClient(httpClient);
     }
 
