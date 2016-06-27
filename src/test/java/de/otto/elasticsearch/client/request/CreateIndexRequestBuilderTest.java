@@ -88,7 +88,6 @@ public class CreateIndexRequestBuilderTest {
         // then
         catch (HttpServerErrorException e) {
             assertThat(e.getStatusCode(), is(400));
-            assertThat(e.getMessage(), is("400 Bad Request"));
             assertThat(e.getResponseBody(), is("someBadBody"));
             throw e;
         }

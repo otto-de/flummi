@@ -73,7 +73,7 @@ public class GetRequestBuilderTest {
         try {
             new GetRequestBuilder(httpClient, "someIndex", "someType", "someId").execute();
         } catch (HttpServerErrorException e) {
-            assertThat(e.getMessage(), is("400 not ok"));
+            assertThat(e.getStatusCode(), is(400));
             assertThat(e.getResponseBody(), is("{}"));
             throw e;
         }

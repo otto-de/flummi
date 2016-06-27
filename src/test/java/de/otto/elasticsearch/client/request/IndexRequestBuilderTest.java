@@ -89,7 +89,6 @@ public class IndexRequestBuilderTest {
             verify(httpClient).preparePost("/someIndex/someType");
             verify(boundRequestBuilder).setBody("{\"some\":{\"friggin\":\"source\"}}");
             assertThat(e.getStatusCode(), is(400));
-            assertThat(e.getMessage(), is("400 Bad Request"));
             assertThat(e.getResponseBody(), is("{\"query\":\"war kaputt\"}"));
             throw e;
         }

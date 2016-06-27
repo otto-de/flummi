@@ -19,8 +19,8 @@ public class RequestBuilderUtil {
             urlBuilder.append("/").append(String.join(",", types));
         }
         if (operationOrId != null) {
-            final String[] splitBySlash = operationOrId.split("/");
-            urlBuilder.append("/").append(splitBySlash[splitBySlash.length -1]);
+            // final String[] splitBySlash = operationOrId.split("/");
+            urlBuilder.append("/").append(operationOrId);
         }
         return urlBuilder.toString();
     }

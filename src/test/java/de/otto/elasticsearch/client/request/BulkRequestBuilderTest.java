@@ -70,7 +70,7 @@ public class BulkRequestBuilderTest {
         }
         // then
         catch (HttpServerErrorException e) {
-            assertThat(e.getMessage(), is("400 not ok"));
+            assertThat(e.getStatusCode(), is(400));
             assertThat(e.getResponseBody(), is("{\"errors\":false}"));
             throw e;
         }

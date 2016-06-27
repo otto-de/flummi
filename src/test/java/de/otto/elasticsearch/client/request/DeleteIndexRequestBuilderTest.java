@@ -57,7 +57,8 @@ public class DeleteIndexRequestBuilderTest {
         try {
             testee.execute();
         } catch (HttpServerErrorException e) {
-            assertThat(e.getMessage(), is("400 not ok"));
+            assertThat(e.getStatusCode(), is(400));
+            assertThat(e.getResponseBody(), is(""));
             throw e;
         }
     }

@@ -74,14 +74,15 @@ public class DeleteRequestBuilderTest {
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
 
         when(httpClient.prepareDelete("/someIndexName/someType/someId")).thenReturn(boundRequestBuilderMock);
-        when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(400, "not ok", "")));
+        when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(400, "not ok", "errorResponse")));
         try {
             testee.setDocumentType("someType")
                     .setId("someId")
                     .setIndexName("someIndexName")
                     .execute();
         } catch (HttpServerErrorException e) {
-            assertThat(e.getMessage(), is("400 not ok"));
+            assertThat(e.getStatusCode(), is(400));
+            assertThat(e.getResponseBody(), is("errorResponse"));
             throw e;
         }
     }

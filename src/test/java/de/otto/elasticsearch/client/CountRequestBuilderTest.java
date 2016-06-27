@@ -79,7 +79,6 @@ public class CountRequestBuilderTest {
         catch (HttpServerErrorException e) {
             verify(httpClient).prepareGet("/product-index/bla/_count");
             assertThat(e.getStatusCode(), is(500));
-            assertThat(e.getMessage(), is("500 Internal Server Error"));
             assertThat(e.getResponseBody(), is("{\"error\" : \"miserable failure\" }"));
             throw e;
         }

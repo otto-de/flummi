@@ -77,7 +77,6 @@ public class IndicesExistsRequestBuilderTest {
         // then
         catch (HttpServerErrorException e) {
             assertThat(e.getStatusCode(), is(503));
-            assertThat(e.getMessage(), is("503 Varnish ist ein guter Proxy"));
             assertThat(e.getResponseBody(), is("someBodyDanceWithMe"));
             throw e;
         }

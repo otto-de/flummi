@@ -203,7 +203,7 @@ public class ClusterHealthRequestBuilderTest {
         }
         // then
         catch (HttpServerErrorException e) {
-            assertThat(e.getMessage(), is("400 not ok"));
+            assertThat(e.getMessage(), is("400 not ok: {\n  \"cluster_name\": \"myCluster\",\n  \"timed_out\": false,\n  \"status\": \"red\"}"));
             assertThat(e.getResponseBody(), is("{\n  \"cluster_name\": \"myCluster\",\n  \"timed_out\": false,\n  \"status\": \"red\"}"));
             throw e;
         }

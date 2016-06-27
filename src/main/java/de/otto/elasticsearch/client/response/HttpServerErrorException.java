@@ -6,7 +6,7 @@ public class HttpServerErrorException extends RuntimeException {
     private final String responseBody;
 
     public HttpServerErrorException(final int statusCode, final String message, String responseBody) {
-        super(statusCode + " " + message);
+        super(statusCode + " " + message+": "+responseBody);
         this.statusCode = statusCode;
         this.responseBody = responseBody;
     }
