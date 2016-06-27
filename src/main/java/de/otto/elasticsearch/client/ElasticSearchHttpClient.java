@@ -84,24 +84,6 @@ public class ElasticSearchHttpClient {
         }
     }
 
-    public boolean indexExists(String indexName) {
-        try {
-            Response response = httpClient.prepareGet("/" + indexName).execute().get();
-            if (response.getStatusCode() != 200) {
-                return false;
-            }
-            String jsonString = response.getResponseBody();
-            JsonObject responseObject = gson.fromJson(jsonString, JsonObject.class);
-            return responseObject.entrySet().size() > 0;
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public boolean aliasExists(String aliasName) {
         try {
             Response response = httpClient.prepareGet("/_aliases").execute().get();

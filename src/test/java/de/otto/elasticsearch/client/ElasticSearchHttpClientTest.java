@@ -74,45 +74,6 @@ public class ElasticSearchHttpClientTest {
     }
 
     @Test
-    public void shouldReturnIndexExists() throws ExecutionException, InterruptedException, IOException {
-        //Given
-        when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", "{\"someIndexName\":{}}")));
-
-        //When
-        final boolean indexExists = client.indexExists("someIndexName");
-
-        //Then
-        assertThat(indexExists, is(true));
-        verify(asyncHttpClient).prepareGet("http://someHost:9200/someIndexName");
-    }
-
-    @Test
-    public void shouldReturnIndexNotExistsForErrorResponseCode() throws ExecutionException, InterruptedException, IOException {
-        //Given
-        when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(500, "Internal Server Error", "{\"someIndexName\":{}}")));
-
-        //When
-        final boolean indexExists = client.indexExists("someIndexName");
-
-        //Then
-        assertThat(indexExists, is(false));
-        verify(asyncHttpClient).prepareGet("http://someHost:9200/someIndexName");
-    }
-
-    @Test
-    public void shouldReturnIndexNotExistsForEmptyResponse() throws ExecutionException, InterruptedException, IOException {
-        //Given
-        when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", "{}")));
-
-        //When
-        final boolean indexExists = client.indexExists("someIndexName");
-
-        //Then
-        assertThat(indexExists, is(false));
-        verify(asyncHttpClient).prepareGet("http://someHost:9200/someIndexName");
-    }
-
-    @Test
     public void shouldPointProductAliasToCurrentIndex() throws ExecutionException, InterruptedException, IOException {
         //Given
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", "{\"acknowledged\":true}")));
