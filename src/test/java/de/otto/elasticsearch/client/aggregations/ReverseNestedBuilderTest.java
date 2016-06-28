@@ -153,5 +153,5 @@ public class ReverseNestedBuilderTest {
                 new Bucket("0bis200EUR", 307248L)
         ));
     }
-    
+
 }
