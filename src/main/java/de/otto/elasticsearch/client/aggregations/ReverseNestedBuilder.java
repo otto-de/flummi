@@ -41,7 +41,7 @@ public class ReverseNestedBuilder extends AggregationBuilder<ReverseNestedBuilde
     @Override
     public AggregationResult parseResponse(JsonObject jsonObject) {
         AggregationResult aggregation = null;
-        JsonObject innerAggregation = jsonObject.getAsJsonObject(getName()).getAsJsonObject(getName());
+        JsonObject innerAggregation = jsonObject.getAsJsonObject(getName());
         JsonElement bucketsElement = innerAggregation.get("buckets");
         if (bucketsElement != null) {
             JsonArray bucketsArray = bucketsElement.getAsJsonArray();

@@ -83,7 +83,7 @@ public class ReverseNestedBuilderTest {
                         "}";
 
         JsonObject responseJson = new Gson().fromJson(response, JsonObject.class);
-        AggregationResult aggregationResult = testee.parseResponse(responseJson.getAsJsonObject("aggregations"));
+        AggregationResult aggregationResult = testee.parseResponse(responseJson.getAsJsonObject("aggregations").getAsJsonObject("fashionSizeUS"));
 
         assertThat(aggregationResult.getBuckets(), hasSize(3));
         assertThat(aggregationResult.getBuckets(), containsInAnyOrder(
@@ -144,7 +144,7 @@ public class ReverseNestedBuilderTest {
                         "}";
 
         JsonObject responseJson = new Gson().fromJson(response, JsonObject.class);
-        AggregationResult aggregationResult = testee.parseResponse(responseJson.getAsJsonObject("aggregations"));
+        AggregationResult aggregationResult = testee.parseResponse(responseJson.getAsJsonObject("aggregations").getAsJsonObject("preis_produkt"));
 
         assertThat(aggregationResult.getBuckets(), hasSize(3));
         assertThat(aggregationResult.getBuckets(), containsInAnyOrder(
@@ -153,4 +153,5 @@ public class ReverseNestedBuilderTest {
                 new Bucket("0bis200EUR", 307248L)
         ));
     }
+    
 }
