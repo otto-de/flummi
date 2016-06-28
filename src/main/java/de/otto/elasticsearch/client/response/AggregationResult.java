@@ -3,16 +3,21 @@ package de.otto.elasticsearch.client.response;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
+
 public class AggregationResult {
-    private Map<String, AggregationResult> nestedAggregations;
-    private List<Bucket> buckets;
+    private final Map<String, AggregationResult> nestedAggregations;
+    private final List<Bucket> buckets;
 
     public AggregationResult(final Map<String, AggregationResult> nestedAggregations) {
         this.nestedAggregations = nestedAggregations;
+        this.buckets = emptyList();
     }
 
     public AggregationResult(final List<Bucket> buckets) {
         this.buckets = buckets;
+        this.nestedAggregations = emptyMap();
     }
 
     public List<Bucket> getBuckets() {
@@ -24,6 +29,6 @@ public class AggregationResult {
     }
 
     public boolean hasNestedAggregation() {
-        return nestedAggregations != null;
+        return !nestedAggregations.isEmpty();
     }
 }

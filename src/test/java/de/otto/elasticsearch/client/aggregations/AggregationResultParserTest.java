@@ -11,6 +11,8 @@ import java.util.List;
 import static de.otto.elasticsearch.client.request.GsonHelper.array;
 import static de.otto.elasticsearch.client.request.GsonHelper.object;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -27,7 +29,7 @@ public class AggregationResultParserTest {
         AggregationResult aggregation = AggregationResultParser.parseBuckets(response);
 
         // then
-        assertThat(aggregation.getNestedAggregations(), nullValue());
+        assertThat(aggregation.getNestedAggregations(), is(emptyMap()));
         assertThat(aggregation.getBuckets(), hasSize(1));
         assertThat(aggregation.getBuckets().get(0).getKey(), is("someKey"));
         assertThat(aggregation.getBuckets().get(0).getDocCount(), is(1L));
@@ -42,7 +44,7 @@ public class AggregationResultParserTest {
         AggregationResult aggregation = AggregationResultParser.parseBuckets(response);
 
         // then
-        assertThat(aggregation.getNestedAggregations(), nullValue());
+        assertThat(aggregation.getNestedAggregations(), is(emptyMap()));
         assertThat(aggregation.getBuckets(), hasSize(2));
         assertThat(aggregation.getBuckets().get(0).getKey(), is("someKey"));
         assertThat(aggregation.getBuckets().get(0).getDocCount(), is(1L));
@@ -59,7 +61,7 @@ public class AggregationResultParserTest {
         AggregationResult aggregation = AggregationResultParser.parseBuckets(response);
 
         // then
-        assertThat(aggregation.getNestedAggregations(), nullValue());
+        assertThat(aggregation.getNestedAggregations(), is(emptyMap()));
         assertThat(aggregation.getBuckets(), hasSize(0));
     }
 
@@ -73,7 +75,7 @@ public class AggregationResultParserTest {
         AggregationResult aggregation = AggregationResultParser.parseSubAggregations(response, asList(new TermsBuilder("someName").field("someField")));
 
         // then
-        assertThat(aggregation.getBuckets(), nullValue());
+        assertThat(aggregation.getBuckets(), is(emptyList()));
         List<Bucket> buckets = aggregation.getNestedAggregations().get("someName").getBuckets();
         assertThat(buckets, hasSize(1));
         assertThat(buckets.get(0).getKey(), is("someKey"));
@@ -91,7 +93,7 @@ public class AggregationResultParserTest {
                 .withReverseNestedFieldName("fieldPerProduct")));
 
         // then
-        assertThat(aggregation.getBuckets(), nullValue());
+        assertThat(aggregation.getBuckets(), is(emptyList()));
         List<Bucket> buckets = aggregation.getNestedAggregations().get("someName").getBuckets();
         assertThat(buckets, hasSize(1));
         assertThat(buckets.get(0).getKey(), is("someKey"));
