@@ -36,7 +36,7 @@ public class NestedAggregationBuilderTest {
         assertThat(nestedAggregationBuilder.build(), is(expectedJson));
     }
 
-    @Test(enabled = false)
+    @Test
     public void shouldBuildNestedRangeAggregation() throws Exception {
         //given
         NestedAggregationBuilder nestedAggregationBuilder = new NestedAggregationBuilder("nested_fieldname")
@@ -67,40 +67,6 @@ public class NestedAggregationBuilderTest {
         JsonObject expectedJson = new Gson().fromJson(expected, JsonObject.class);
 
         assertThat(nestedAggregationBuilder.build(), is(expectedJson));
-    }
-
-    @Test
-    public void shouldBuildReverseNestedAggregationForSaleProperty() throws Exception {
-        //given/when
-        ReverseNestedTermBuilder nestedAggregationBuilder = new ReverseNestedTermBuilder("is_sale")
-                .withTermsBuilder(new TermsBuilder("termsBuilder").field("variations.sale"))
-                .withReverseNestedFieldName("is_sale_per_product");
-
-        NestedAggregationBuilder reverseNestedSaleAggregation = new NestedAggregationBuilder("nestedAggBuilder")
-                .path("variations")
-                .subAggregation(nestedAggregationBuilder);
-
-        //then
-        String expected = "{\n" +
-                "      \"nested\": {\n" +
-                "        \"path\": \"variations\"\n" +
-                "      },\n" +
-                "      \"aggregations\": {\n" +
-                "        \"is_sale\": {\n" +
-                "          \"terms\": {\n" +
-                "            \"field\": \"variations.sale\"\n" +
-                "          },\n" +
-                "          \"aggs\": {\n" +
-                "            \"is_sale_per_product\": {\n" +
-                "              \"reverse_nested\": {}\n" +
-                "            }\n" +
-                "          }\n" +
-                "        }\n" +
-                "      }\n" +
-                "    }";
-        JsonObject expectedJson = new Gson().fromJson(expected, JsonObject.class);
-
-        assertThat(reverseNestedSaleAggregation.build(), is(expectedJson));
     }
 
     @Test

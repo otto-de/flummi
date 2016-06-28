@@ -81,22 +81,4 @@ public class AggregationResultParserTest {
         assertThat(buckets.get(0).getKey(), is("someKey"));
         assertThat(buckets.get(0).getDocCount(), is(1L));
     }
-
-    @Test
-    public void shouldParseResponseWithReverseNestedTermsQuery() {
-        // given
-        JsonObject response = object("someName", object("buckets", array(object("key", new JsonPrimitive("someKey"), "fieldPerProduct", object("doc_count", new JsonPrimitive(2))))));
-
-        // when
-        AggregationResult aggregation = AggregationResultParser.parseSubAggregations(response, asList(new ReverseNestedTermBuilder("someName")
-                .withTermsBuilder(new TermsBuilder("someName").field("someField"))
-                .withReverseNestedFieldName("fieldPerProduct")));
-
-        // then
-        assertThat(aggregation.getBuckets(), is(emptyList()));
-        List<Bucket> buckets = aggregation.getNestedAggregations().get("someName").getBuckets();
-        assertThat(buckets, hasSize(1));
-        assertThat(buckets.get(0).getKey(), is("someKey"));
-        assertThat(buckets.get(0).getDocCount(), is(2L));
-    }
 }
