@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutionException;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class IndicesExistsRequestBuilder {
+public class IndicesExistsRequestBuilder implements RequestBuilder<Boolean> {
     private final String indexName;
 
     public static final Logger LOG = getLogger(IndicesExistsRequestBuilder.class);
@@ -23,7 +23,7 @@ public class IndicesExistsRequestBuilder {
         this.httpClient = httpClient;
     }
 
-    public boolean execute() {
+    public Boolean execute() {
         try {
             Response response = httpClient.prepareHead("/" + indexName).execute().get();
             int statusCode = response.getStatusCode();

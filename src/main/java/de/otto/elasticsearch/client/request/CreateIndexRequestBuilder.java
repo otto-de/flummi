@@ -14,7 +14,7 @@ import java.util.concurrent.ExecutionException;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class CreateIndexRequestBuilder {
+public class CreateIndexRequestBuilder implements RequestBuilder<Void> {
     private final Gson gson;
     private final String indexName;
     private JsonObject settings;
@@ -39,7 +39,7 @@ public class CreateIndexRequestBuilder {
         return this;
     }
 
-    public void execute() {
+    public Void execute() {
 
         JsonObject jsonObject = new JsonObject();
         if (settings != null) {
@@ -58,7 +58,7 @@ public class CreateIndexRequestBuilder {
             if (!responseObject.has("acknowledged") || !responseObject.get("acknowledged").getAsBoolean()) {
                 throw new InvalidElasticsearchResponseException("Invalid reply from Elastic Search: " + jsonString);
             }
-            return;
+            return null;
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         } catch (InterruptedException e) {

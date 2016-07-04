@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutionException;
 import static de.otto.elasticsearch.client.RequestBuilderUtil.buildUrl;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class DeleteRequestBuilder {
+public class DeleteRequestBuilder implements RequestBuilder<Void> {
     private final HttpClientWrapper httpClient;
     private String indexName;
     private String documentType;
@@ -39,7 +39,7 @@ public class DeleteRequestBuilder {
         return this;
     }
 
-    public void execute() {
+    public Void execute() {
         try {
             if (indexName==null || indexName.isEmpty()) {
                 throw new RuntimeException("missing property 'indexName'");
@@ -55,7 +55,7 @@ public class DeleteRequestBuilder {
             if (response.getStatusCode() >= 300) {
                 throw RequestBuilderUtil.toHttpServerErrorException(response);
             }
-            return;
+            return null;
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {

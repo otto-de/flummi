@@ -16,7 +16,7 @@ import java.util.concurrent.ExecutionException;
 import static de.otto.elasticsearch.client.RequestBuilderUtil.toHttpServerErrorException;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class ClusterHealthRequestBuilder {
+public class ClusterHealthRequestBuilder implements RequestBuilder<ClusterHealthResponse> {
     private final String[] indexNames;
     private final Gson gson;
     private boolean waitForYellowStatus;
