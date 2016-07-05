@@ -9,7 +9,7 @@ public interface SearchHits extends Iterable<SearchHit> {
     long getTotalHits();
 
     /**
-     * The maximum score of this query.
+     * @return The maximum score of this query.
      */
     Float getMaxScore();
 
