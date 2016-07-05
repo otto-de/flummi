@@ -1,7 +1,7 @@
 Flummi Elastic Search HTTP Client
 =================================
 
-Flummi is a client library for Elastic Search 2.3. It has a comprehensive query DSL API in Java and communicates with
+Flummi is a client library for Elastic Search 2.3. It provides a comprehensive Java query DSL API and communicates with
 the Elastic Search Cluster via HTTP/JSON. It is licensed under the [Apache 2 License](http://www.apache.org/licenses/LICENSE-2.0.html).
 
 
@@ -70,34 +70,112 @@ initialization and then autowire Flummi in your beans.
        }
     }
 
+### Creating an index
+
+The following example creates a products index with a customized analyzer for the name property.
+
+    JsonObject settings = GsonHelper.object(
+        "analysis", GsonHelper.object(
+            "analyzer", GsonHelper.object(
+                "lowercase-analyzer", GsonHelper.object(
+                    "tokenizer", "keyword-tokenizer",
+                    "filter", "lowercase-filter"
+                )
+            ),
+            "tokenizer", GsonHelper.object(
+                "keyword-tokenizer", GsonHelper.object(
+                    "type", "keyword"
+                )
+            ),
+            "filter", GsonHelper.object(
+                "lowercase-filter", GsonHelper.object(
+                    "type", "lowercase"
+                )
+            )
+        )
+    );
+    JsonObject mappings = GsonHelper.object(
+        "products", GsonHelper.object(
+            "properties", GsonHelper.object(
+                "name", GsonHelper.object(
+                    "type", "string",
+                    "store", "yes",
+                    "analyzer", "lowercase-analyzer",
+                    "fields", GsonHelper.object(
+                        "raw", GsonHelper.object(
+                          "type", "string",
+                          "index", "not_analyzed"
+                        )
+                    )
+                ),
+                "color", GsonHelper.object(
+                    "type", "string",
+                    "store", "no",
+                    "index", "not_analyzed"
+                )
+            )
+        )
+    );
+
+    flummi.admin().indices()
+       .prepareCreate("products")
+       .setSettings(settings)
+       .setMappings(mappings)
+       .execute();
+
 
 ### Indexing documents
 
-A simple example that adds some products to the product index using a Bulk Request
+A simple example that adds a product to the products index
+
+    JsonObject bouncingBall1 = GsonHelper.object(
+       "name", "Bouncing Ball small",
+       "color", "green"
+       );
+
+    flummi.prepareIndex()
+        .setId("bblsml-4710")
+        .setSource(bouncingBall1)
+        .setIndexName("products")
+        .setDocumentType("product")
+        .execute();
 
 
-    JsonObject bouncingBall1 = gson.fromJson("{\"name\": \"Bouncing Ball small\", \"color\": \"yellow\"}", JsonObject.class);
-    JsonObject bouncingBall2 = gson.fromJson("{\"name\": \"Bouncing Ball XL extra bouncy\", \"color\": \"transparent\"}", JsonObject.class);
+### Bulk Requests
+
+A [bulk request](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-bulk.html)
+is a single HTTP request that contains multiple actions. For indexing large amounts of data, this is
+much more efficient than sending one request for every document. The following simple example adds some products to the
+product index using a Bulk Request
+
+    JsonObject bouncingBall1 = GsonHelper.object(
+       "name", "Bouncing Ball with smiley",
+       "color", "yellow"
+       );
+    JsonObject bouncingBall2 = GsonHelper.object(
+       "name", "Bouncing Ball XL extra bouncy",
+       "color", "transparent"
+       );
 
     flummi.prepareBulk()
         .add(
            new IndexActionBuilder("products")
-               .setSource(source)
-               .setId("bblsml-4711")
+               .setSource(bouncingBall1)
+               .setId("bblsmly-4711")
                .setType("product")
                )
         .add(
            new IndexActionBuilder("products")
-               .setSource(source)
-               .setId("bblsml-4712")
+               .setSource(bouncingBall2)
+               .setId("bblxlxb-4712")
                .setType("product")
                )
         .execute();
 
 
-### Executing queries
+### Executing Queries
 
-A simple example that finds up to 10 yellow-colored products in a product index:
+A simple example that finds up to 10 yellow-colored products in the products index:
 
     SearchRequestBuilder searchRequestBuilder = flummi
        .prepareSearch("products")
@@ -121,8 +199,8 @@ A simple example that finds up to 10 yellow-colored products in a product index:
 
 For streaming large result sets, Flummi uses the
 [Elastic Search Scroll API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-scroll.html)
-to split the result set into smaller pages and thus reduce memory usage and network bandwidth. To use it, simply call
-`setScroll("1m")` on your `SearchRequestBuilder`.
+to split the result set into smaller pages and thus reduce memory usage and network bandwidth. To use it, simply
+`setScroll("1m")` on your `SearchRequestBuilder` before calling `execute()`.
 
 
 ### Aggregation queries
