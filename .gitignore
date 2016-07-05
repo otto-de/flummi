@@ -1,6 +1,6 @@
-elasticsearch-http-client.iml
-elasticsearch-http-client.ipr
-elasticsearch-http-client.iws
+flummi.iml
+flummi.ipr
+flummi.iws
 build
 out
 .gradle
