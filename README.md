@@ -2,7 +2,7 @@ Flummi Elastic Search HTTP Client
 =================================
 
 Flummi is a client library for Elastic Search 2.3. It has a comprehensive query DSL API in Java and communicates with
-the Elastic Search Cluster via HTTP/JSON. It is licensed under the Apache 2 License.
+the Elastic Search Cluster via HTTP/JSON. It is licensed under the [Apache 2 License](http://www.apache.org/licenses/LICENSE-2.0.html).
 
 
 Why should I use Flummi?
@@ -30,9 +30,6 @@ How to use Flummi
 
 You can simply include Flummi in your Maven or Gradle build as follows.
 
-
-### Getting started
-
 For Maven users:
 
     <dependency>
@@ -46,7 +43,7 @@ For gradle users:
     compile "de.otto:flummi:0.2.0"
 
 
-### Basic setup
+### Getting started
 
 For using Flummi in a Java application, initialize it as follows.
 
@@ -74,7 +71,7 @@ initialization and then autowire Flummi in your beans.
     }
 
 
-### Indexing example
+### Indexing documents
 
 A simple example that adds some products to the product index using a Bulk Request
 
@@ -98,7 +95,7 @@ A simple example that adds some products to the product index using a Bulk Reque
         .execute();
 
 
-### A simple query example
+### Executing queries
 
 A simple example that finds up to 10 yellow-colored products in a product index:
 
@@ -120,12 +117,32 @@ A simple example that finds up to 10 yellow-colored products in a product index:
        .forEach(name -> System.out.println("Name: " + name));
 
 
-### Streaming large result sets with the Scroll API
+#### Streaming large result sets with the Scroll API
 
 For streaming large result sets, Flummi uses the
 [Elastic Search Scroll API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-scroll.html)
 to split the result set into smaller pages and thus reduce memory usage and network bandwidth. To use it, simply call
 `setScroll("1m")` on your `SearchRequestBuilder`.
+
+
+### Aggregation queries
+
+    SearchRequestBuilder searchRequestBuilder = flummi
+       .prepareSearch("products")
+       .setTypes("product")
+       .setSize(10)
+       .setQuery(
+          QueryBuilders.termQuery("color", "yellow")
+            .build()
+       )
+       .addAggregation(;
+
+    SearchResponse searchResponse = searchRequestBuilder.execute()
+
+    System.out.println("Found " + searchResponse.getHits().getTotalHits() + " products");
+    searchResponse.getHits()
+       .stream().map(hit -> hit.getSource().get("name").getAsString())
+       .forEach(name -> System.out.println("Name: " + name));
 
 
 Contribution Guide
