@@ -205,22 +205,24 @@ to split the result set into smaller pages and thus reduce memory usage and netw
 
 ### Aggregation queries
 
+The following example shows how to do simple terms bucket aggregations.
+
     SearchRequestBuilder searchRequestBuilder = flummi
        .prepareSearch("products")
        .setTypes("product")
        .setSize(10)
        .setQuery(
-          QueryBuilders.termQuery("color", "yellow")
-            .build()
+          QueryBuilders.matchAll().build()
        )
-       .addAggregation(;
+       .addAggregation(
+          new TermsBuilder("Colors").field("color").size(0)
+       );
 
     SearchResponse searchResponse = searchRequestBuilder.execute()
 
-    System.out.println("Found " + searchResponse.getHits().getTotalHits() + " products");
-    searchResponse.getHits()
-       .stream().map(hit -> hit.getSource().get("name").getAsString())
-       .forEach(name -> System.out.println("Name: " + name));
+    AggregationResult colors = searchResponse.getAggregations().get("Colors");
+    colors.getBuckets().forEach(bucket -> System.out.println(
+       "Found " + bucket.getDocCount() + " " + bucket.getKey() + " products"));
 
 
 Contribution Guide
@@ -231,10 +233,10 @@ You want to contribute new features to Flummi? Great!
 Flummi is built using the gradle wrapper `gradlew`. After cloning the git repository, you can create an IntelliJ Idea
 project file with the following command
 
-    ./gradlew idea
+    ./bin/gradlew idea
 
 Before you push, you might want to run all the unit tests with the following command
 
-    ./gradlew clean check
+    ./bin/gradlew clean check
 
 And don't forget to send us your pull request!
