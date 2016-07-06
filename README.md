@@ -1,6 +1,8 @@
 Flummi Elastic Search HTTP Client
 =================================
 
+<a href="https://travis-ci.org/otto-de/flummi"><img src="https://travis-ci.org/otto-de/flummi.svg?branch=master"></img></a>
+
 Flummi is a client library for Elastic Search 2.3. It provides a comprehensive Java query DSL API and communicates with
 the Elastic Search Cluster via HTTP/JSON. It is licensed under the [Apache 2 License](http://www.apache.org/licenses/LICENSE-2.0.html).
 
