@@ -1,15 +1,19 @@
 package de.otto.flummi.query;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+
+import java.util.List;
+
+import static de.otto.flummi.GsonCollectors.toJsonArray;
 
 public class TermsQueryBuilder implements QueryBuilder{
     private final String name;
-    private final JsonElement value;
+    private final List<String> terms;
 
-    public TermsQueryBuilder(String name, JsonElement value) {
+    public TermsQueryBuilder(String name, List<String> terms) {
         this.name = name;
-        this.value = value;
+        this.terms = terms;
     }
 
     @Override
@@ -17,13 +21,13 @@ public class TermsQueryBuilder implements QueryBuilder{
         if (name==null || name.isEmpty()) {
             throw new RuntimeException("missing property 'name'");
         }
-        if (value == null) {
-            throw new RuntimeException("missing property 'value'");
+        if (terms == null || terms.isEmpty()) {
+            throw new RuntimeException("missing property 'terms'");
         }
         JsonObject jsonObject = new JsonObject();
-        JsonObject terms = new JsonObject();
-        jsonObject.add("terms", terms);
-        terms.add(name, value);
+        JsonObject termsObject = new JsonObject();
+        jsonObject.add("terms", termsObject);
+        termsObject.add(name, terms.stream().map(JsonPrimitive::new).collect(toJsonArray()));
         return jsonObject;
     }
 

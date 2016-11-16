@@ -1,12 +1,12 @@
 package de.otto.flummi.query;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import java.util.List;
 
 import static de.otto.flummi.request.GsonHelper.object;
+import static java.util.Arrays.asList;
 
 public class QueryBuilders {
 
@@ -29,16 +29,16 @@ public class QueryBuilders {
         };
     }
 
-    public static TermsQueryBuilder termsQuery(String name, JsonElement value) {
-        return new TermsQueryBuilder(name, value);
+    public static TermsQueryBuilder termsQuery(String name, String... values) {
+        return new TermsQueryBuilder(name, asList(values));
+    }
+
+    public static TermsQueryBuilder termsQuery(String name, List<String> values) {
+        return new TermsQueryBuilder(name, values);
     }
 
     public static TermQueryBuilder termQuery(String name, String value) {
-        return termQuery(name, new JsonPrimitive(value));
-    }
-
-    public static TermQueryBuilder termQuery(String name, JsonElement value) {
-        return new TermQueryBuilder(name, value);
+        return new TermQueryBuilder(name, new JsonPrimitive(value));
     }
 
     public static BoolQueryBuilder bool() {

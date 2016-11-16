@@ -26,20 +26,20 @@ public class QueryBuildersTest {
     }
 
     @Test
-    public void shouldCreateTermsQuery() {
-        TermsQueryBuilder termsQueryBuilder = QueryBuilders.termsQuery("someName", new JsonPrimitive("someValue"));
-        assertThat(termsQueryBuilder.build(), is(object("terms", object("someName", "someValue"))));
+    public void shouldCreateTermsQueryFromArray() {
+        TermsQueryBuilder termsQueryBuilder = QueryBuilders.termsQuery("someName", "someValue", "someOtherValue");
+        assertThat(termsQueryBuilder.build(), is(object("terms", object("someName", array(new JsonPrimitive("someValue"), new JsonPrimitive("someOtherValue"))))));
     }
+
+	@Test
+	public void shouldCreateTermsQueryFromList() {
+		TermsQueryBuilder termsQueryBuilder = QueryBuilders.termsQuery("someName", asList("someValue"));
+		assertThat(termsQueryBuilder.build(), is(object("terms", object("someName", array(new JsonPrimitive("someValue"))))));
+	}
 
     @Test
     public void shouldCreateTermQuery() {
         TermQueryBuilder termQueryBuilder = QueryBuilders.termQuery("someName", "someValue");
-        assertThat(termQueryBuilder.build(), is(object("term", object("someName", "someValue"))));
-    }
-
-    @Test
-    public void shouldCreateTermQuery2() {
-        TermQueryBuilder termQueryBuilder = QueryBuilders.termQuery("someName", new JsonPrimitive("someValue"));
         assertThat(termQueryBuilder.build(), is(object("term", object("someName", "someValue"))));
     }
 
