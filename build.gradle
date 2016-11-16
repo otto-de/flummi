@@ -19,6 +19,10 @@ archivesBaseName='flummi'
 version='0.20.0'
 
 
+task wrapper(type: Wrapper) {
+     gradleVersion = '2.0'
+}
+
 repositories {
     mavenCentral()
     maven { url "https://oss.sonatype.org/content/repositories/releases/" }
