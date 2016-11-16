@@ -3,7 +3,8 @@ Flummi Elastic Search HTTP Client
 
 <a href="https://travis-ci.org/otto-de/flummi"><img src="https://travis-ci.org/otto-de/flummi.svg?branch=master"></img></a>
 
-Flummi is a client library for Elastic Search 2.3. It provides a comprehensive Java query DSL API and communicates with
+Flummi is a client library for Elastic Search. It has been successfully tested with Elastic Search versions 2.3 and 2.4.
+It provides a comprehensive Java query DSL API and communicates with
 the Elastic Search Cluster via HTTP/JSON. It is licensed under the [Apache 2 License](http://www.apache.org/licenses/LICENSE-2.0.html).
 
 
@@ -225,6 +226,12 @@ The following example shows how to do simple terms bucket aggregations.
     AggregationResult colors = searchResponse.getAggregations().get("Colors");
     colors.getBuckets().forEach(bucket -> System.out.println(
        "Found " + bucket.getDocCount() + " " + bucket.getKey() + " products"));
+
+
+Compatibility
+-------------
+
+Flummi is compatible with Elastic Search 2.3 and 2.4. It probably also works with 5.0 but we haven't tested this comprehensively yet.
 
 
 Contribution Guide
