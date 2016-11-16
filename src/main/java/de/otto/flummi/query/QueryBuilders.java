@@ -4,6 +4,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+import java.util.List;
+
 import static de.otto.flummi.request.GsonHelper.object;
 
 public class QueryBuilders {
@@ -76,8 +78,11 @@ public class QueryBuilders {
         return jsonObject;
     }
 
-    public static AndQueryBuilder andFilter(QueryBuilder... filters) {
-        return new AndQueryBuilder(filters);
+    public static AndQueryBuilder andQuery(QueryBuilder... queries) {
+        return new AndQueryBuilder(queries);
+    }
+    public static AndQueryBuilder andQuery(List<QueryBuilder> queries) {
+        return new AndQueryBuilder(queries);
     }
 
     public static NumberRangeQueryBuilder numberRangeFilter(String fieldName) {

@@ -43,7 +43,7 @@ public class AndQueryBuilderTest {
             new AndQueryBuilder().build();
 
         } catch (RuntimeException e) {
-            assertThat(e.getMessage(), is("missing property 'filters'"));
+            assertThat(e.getMessage(), is("missing property 'queries'"));
         }
     }
 }

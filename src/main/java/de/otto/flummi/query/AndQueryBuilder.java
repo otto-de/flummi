@@ -3,23 +3,30 @@ package de.otto.flummi.query;
 import com.google.gson.JsonObject;
 import de.otto.flummi.GsonCollectors;
 
+import java.util.List;
+
+import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 
 public class AndQueryBuilder implements QueryBuilder {
 
-    private final QueryBuilder[] filters;
+    private final List<QueryBuilder> queries;
 
-    public AndQueryBuilder(QueryBuilder... filters) {
-        this.filters = filters;
+    public AndQueryBuilder(QueryBuilder... queries) {
+        this(asList(queries));
+    }
+
+    public AndQueryBuilder(List<QueryBuilder> queries) {
+        this.queries = queries;
     }
 
     @Override
     public JsonObject build() {
-        if (filters == null || filters.length == 0) {
-            throw new RuntimeException("missing property 'filters'");
+        if (queries == null || queries.isEmpty()) {
+            throw new RuntimeException("missing property 'queries'");
         }
         JsonObject jsonObject = new JsonObject();
-        jsonObject.add("and", stream(filters)
+        jsonObject.add("and", queries.stream()
                 .map(filter -> filter.build())
                 .collect(GsonCollectors.toJsonArray()));
         return jsonObject;

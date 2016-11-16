@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 
 import static de.otto.flummi.request.GsonHelper.array;
 import static de.otto.flummi.request.GsonHelper.object;
+import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
@@ -64,11 +65,30 @@ public class QueryBuildersTest {
         assertThat(jsonObject, is(object("exists", object("field", "someField"))));
     }
 
-    @Test
-    public void shouldCreateAndFilter() {
-        JsonObject jsonObject = QueryBuilders.andFilter(new TermQueryBuilder("someName", new JsonPrimitive("someValue"))).build();
-        assertThat(jsonObject, is(object("and", array(object("term", object("someName", "someValue"))))));
-    }
+	@Test
+	public void shouldCreateAndQueryFromArray() {
+		JsonObject jsonObject = QueryBuilders.andQuery(asList(
+				new TermQueryBuilder("someName", new JsonPrimitive("someValue")),
+				new TermQueryBuilder("someOtherName", new JsonPrimitive("someOtherValue"))
+				)
+		).build();
+		assertThat(jsonObject, is(object("and", array(
+				object("term", object("someName", "someValue")),
+				object("term", object("someOtherName", "someOtherValue"))
+		))));
+	}
+
+	@Test
+	public void shouldCreateAndQueryFromList() {
+		JsonObject jsonObject = QueryBuilders.andQuery(
+				new TermQueryBuilder("someName", new JsonPrimitive("someValue")),
+				new TermQueryBuilder("someOtherName", new JsonPrimitive("someOtherValue"))
+		).build();
+		assertThat(jsonObject, is(object("and", array(
+				object("term", object("someName", "someValue")),
+				object("term", object("someOtherName", "someOtherValue"))
+		))));
+	}
 
     @Test
     public void shouldCreateNumberRangeFilter() {
