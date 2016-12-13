@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import de.otto.flummi.SortOrder;
 import de.otto.flummi.response.AggregationResult;
-import javafx.util.Pair;
+import de.otto.flummi.util.Pair;
 
 import java.util.ArrayList;
 
