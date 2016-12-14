@@ -16,7 +16,7 @@ apply plugin: 'idea'
 
 group = 'de.otto'
 archivesBaseName='flummi'
-version='0.20.1'
+version='0.20.2'
 
 
 task wrapper(type: Wrapper) {
