@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.Response;
+import de.otto.flummi.domain.index.Index;
 import de.otto.flummi.util.HttpClientWrapper;
 import org.slf4j.Logger;
 
@@ -21,11 +22,13 @@ public class IndexRequestBuilder implements RequestBuilder<Void> {
     private JsonPrimitive id;
     private String indexName;
     private String documentType;
+    @Deprecated
     private JsonObject source;
     private String parent;
 
     public static final Logger LOG = getLogger(IndexRequestBuilder.class);
     private HttpClientWrapper httpClient;
+    private Index index;
 
     public IndexRequestBuilder(HttpClientWrapper httpClient) {
         this.httpClient = httpClient;
@@ -52,8 +55,14 @@ public class IndexRequestBuilder implements RequestBuilder<Void> {
         return this;
     }
 
+    @Deprecated
     public IndexRequestBuilder setSource(JsonObject source) {
         this.source = source;
+        return this;
+    }
+
+    public IndexRequestBuilder setIndex(Index index) {
+        this.index = index;
         return this;
     }
 
@@ -64,6 +73,15 @@ public class IndexRequestBuilder implements RequestBuilder<Void> {
 
     @Override
     public Void execute() {
+        if (source == null) {
+            if (index == null) {
+                throw new IllegalStateException("either source or indexSettings must exist");
+            }
+        } else {
+            if (index != null) {
+                throw new IllegalStateException("either source or indexSettings is allowed to specified");
+            }
+        }
         try {
             AsyncHttpClient.BoundRequestBuilder reqBuilder;
             if (id != null) {
@@ -76,7 +94,9 @@ public class IndexRequestBuilder implements RequestBuilder<Void> {
             if (parent != null) {
                 reqBuilder.addQueryParam("parent", parent);
             }
-            Response response = reqBuilder.setBody(gson.toJson(source)).setBodyEncoding("UTF-8").execute().get();
+
+            String body = createBody();
+            Response response = reqBuilder.setBody(body).setBodyEncoding("UTF-8").execute().get();
             if (response.getStatusCode() >= 300) {
                 throw toHttpServerErrorException(response);
             }
@@ -88,6 +108,18 @@ public class IndexRequestBuilder implements RequestBuilder<Void> {
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private String createBody() {
+        if (source != null) {
+            return gson.toJson(source);
+        }
+        if (index != null) {
+            return gson.toJson(index);
+        }
+        throw new IllegalStateException();
+
+
     }
 
 }
