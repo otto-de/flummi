@@ -20,7 +20,9 @@ version='0.20.2'
 
 
 task wrapper(type: Wrapper) {
-     gradleVersion = '2.0'
+    gradleVersion = '3.2.1'
+    scriptFile = "${project.projectDir}/bin/gradlew"
+    jarFile = "${project.projectDir}/bin/gradle/wrapper/gradle-wrapper.jar"
 }
 
 repositories {
