@@ -5,6 +5,7 @@ import de.otto.flummi.IndicesAdminClient;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import static java.util.stream.Collectors.toSet;
@@ -15,12 +16,18 @@ public class RollingIndexBehavior {
     private final String aliasName;
     private final String indexPrefixName;
     private final int survivor;
+    private final Function<String, String> indexNameFunction;
 
-    public RollingIndexBehavior(IndicesAdminClient client, String aliasName, String indexPrefixName, int survivor) {
+    public RollingIndexBehavior(IndicesAdminClient client, String aliasName, String indexPrefixName, int survivor, Function<String, String> indexNameFunction) {
         this.client = client;
         this.aliasName = aliasName;
         this.indexPrefixName = indexPrefixName;
         this.survivor = survivor;
+        this.indexNameFunction = indexNameFunction;
+    }
+
+    public RollingIndexBehavior(IndicesAdminClient client, String aliasName, String indexPrefixName, int survivor) {
+        this(client, aliasName, indexPrefixName, survivor, (s) -> s+"_"+System.currentTimeMillis());
     }
 
     public String createNewIndex() {
@@ -39,7 +46,7 @@ public class RollingIndexBehavior {
     }
 
     private String newIndexName() {
-        return indexPrefixName+"_"+System.currentTimeMillis();
+        return indexNameFunction.apply(indexPrefixName);
     }
 
     Set<String> deleteOldIndices(String alias, String prefix, int survivor) {
