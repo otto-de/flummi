@@ -1,5 +1,6 @@
 package de.otto.flummi.extensions;
 
+import com.google.gson.JsonObject;
 import de.otto.flummi.IndicesAdminClient;
 
 import java.util.Comparator;
@@ -28,6 +29,15 @@ public class RollingIndexBehavior {
 
     public RollingIndexBehavior(IndicesAdminClient client, String aliasName, String indexPrefixName, int survivor) {
         this(client, aliasName, indexPrefixName, survivor, (s) -> s+"_"+System.currentTimeMillis());
+    }
+
+    public String createNewIndex(JsonObject settings, JsonObject mappings) {
+        String indexName = newIndexName();
+        client.prepareCreate(indexName)
+                .setSettings(settings)
+                .setMappings(mappings)
+                .execute();
+        return indexName;
     }
 
     public String createNewIndex() {
