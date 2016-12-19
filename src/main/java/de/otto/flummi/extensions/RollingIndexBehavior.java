@@ -73,7 +73,9 @@ public class RollingIndexBehavior {
                         .skip(survivor)
                         .filter(skipAlias(aliasToIndex))
                         .collect(toSet());
-        client.prepareDelete(names.stream()).execute();
+        if (!names.isEmpty()) {
+            client.prepareDelete(names.stream()).execute();
+        }
         return names;
     }
 

@@ -65,6 +65,23 @@ public class RollingIndexBehaviorTest {
         assertEquals(result, asSet("prefix_1", "prefix_2", "prefix_3", "prefix_4", "prefix_5"));
     }
 
+    @Test
+    public void shouldPointAliasButNotDeleteOldIndices() throws Exception {
+        // given
+        String newIndexName = "prefix_8";
+
+        when(client.getIndexNameForAlias("alias")).thenReturn(Optional.of("prefix_7"));
+        when(client.getAllIndexNames()).thenReturn(asList());
+        // when
+        Set<String> result = behavior.commit(newIndexName);
+
+        // then
+        verify(client).pointAliasToCurrentIndex("alias", newIndexName);
+        verify(client, never()).prepareDelete(any(Stream.class));
+        assertEquals(result, asSet());
+    }
+
+
     private <T> Set<T> asSet(T ... values) {
         return new HashSet<>(Arrays.asList(values));
     }
