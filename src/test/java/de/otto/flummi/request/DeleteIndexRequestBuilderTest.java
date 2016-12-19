@@ -11,6 +11,7 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -28,7 +29,7 @@ public class DeleteIndexRequestBuilderTest {
 
     @Test
     public void shouldDeleteIndex() {
-        testee = new DeleteIndexRequestBuilder(httpClient, "someIndexName");
+        testee = new DeleteIndexRequestBuilder(httpClient, Stream.of("someIndexName"));
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
 
         when(httpClient.prepareDelete("/someIndexName")).thenReturn(boundRequestBuilderMock);
@@ -39,7 +40,7 @@ public class DeleteIndexRequestBuilderTest {
 
     @Test
     public void shouldDeleteMultipleIndices() throws Exception {
-        testee = new DeleteIndexRequestBuilder(httpClient, "someIndexName", "someOtherIndex");
+        testee = new DeleteIndexRequestBuilder(httpClient, Stream.of("someIndexName", "someOtherIndex"));
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
 
         when(httpClient.prepareDelete("/someIndexName,someOtherIndex")).thenReturn(boundRequestBuilderMock);
@@ -50,7 +51,7 @@ public class DeleteIndexRequestBuilderTest {
 
     @Test(expectedExceptions = HttpServerErrorException.class)
     public void shouldThrowExceptionIfStatusCodeNotOk() {
-        testee = new DeleteIndexRequestBuilder(httpClient, "someIndexName");
+        testee = new DeleteIndexRequestBuilder(httpClient, Stream.of("someIndexName"));
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
         when(httpClient.prepareDelete("/someIndexName")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(400, "not ok", "")));
