@@ -138,7 +138,7 @@ uploadArchives {
 }
 
 artifactory {
-    contextUrl = artifactoryUrl
+    contextUrl = project.properties["artifactoryUrl"]
     //The base Artifactory URL if not overridden by the publisher/resolver
     publish {
         repository {
@@ -147,8 +147,8 @@ artifactory {
             } else {
                 repoKey = 'maven-san-releases-local'
             }
-            username = artifactoryUsername
-            password = artifactoryPassword
+            username = project.properties["artifactoryUsername"]
+            password = project.properties["artifactoryPassword"]
         }
         defaults {
             // Reference to Gradle publications defined in the build script.
