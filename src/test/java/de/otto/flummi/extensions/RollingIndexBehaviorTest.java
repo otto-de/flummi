@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import static de.otto.flummi.extensions.RollingIndexBehaviorBuilder.builder;
 import static java.util.Arrays.asList;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
@@ -23,7 +24,7 @@ public class RollingIndexBehaviorTest {
     @BeforeMethod
     public void setUp() throws Exception {
         client = mock(IndicesAdminClient.class, RETURNS_DEEP_STUBS);
-        behavior = new RollingIndexBehavior(client, "alias", "prefix", 3);
+        behavior = builder(client, "alias", "prefix", 3).build();
     }
 
     @Test

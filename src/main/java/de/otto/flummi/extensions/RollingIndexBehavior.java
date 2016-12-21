@@ -19,16 +19,12 @@ public class RollingIndexBehavior {
     private final int survivor;
     private final Function<String, String> indexNameFunction;
 
-    public RollingIndexBehavior(IndicesAdminClient client, String aliasName, String indexPrefixName, int survivor, Function<String, String> indexNameFunction) {
+    RollingIndexBehavior(IndicesAdminClient client, String aliasName, String indexPrefixName, int survivor, Function<String, String> indexNameFunction) {
         this.client = client;
         this.aliasName = aliasName;
         this.indexPrefixName = indexPrefixName;
         this.survivor = survivor;
         this.indexNameFunction = indexNameFunction;
-    }
-
-    public RollingIndexBehavior(IndicesAdminClient client, String aliasName, String indexPrefixName, int survivor) {
-        this(client, aliasName, indexPrefixName, survivor, (s) -> s+"_"+System.currentTimeMillis());
     }
 
     public String createNewIndex(JsonObject settings, JsonObject mappings) {
@@ -69,9 +65,9 @@ public class RollingIndexBehavior {
                 client.getAllIndexNames()
                         .stream()
                         .filter(startsWith(prefix))
-                        .sorted(Comparator.reverseOrder()) // TODO: here we should have Index objects and sort by created date value
+                        .sorted(Comparator.reverseOrder()) // TODO: here we should have Index objects and sort by created date value (Comparator.reverseOrder implies !Comparator.naturalOrder())
                         .skip(survivor)
-                        .filter(skipAlias(aliasToIndex))
+                        .filter(skipAlias(aliasToIndex)) // never delete current aliased index
                         .collect(toSet());
         if (!names.isEmpty()) {
             client.prepareDelete(names.stream()).execute();
@@ -79,11 +75,13 @@ public class RollingIndexBehavior {
         return names;
     }
 
-    private static Predicate<? super String> startsWith(String prefix) {
+    private static Predicate<String> startsWith(String prefix) {
         return (s) -> s.startsWith(prefix);
     }
 
     private static Predicate<String> skipAlias(Optional<String> indexName) {
         return (s) -> !(indexName.isPresent() && s.equals(indexName.get()));
     }
+
+
 }
