@@ -2,6 +2,8 @@ package de.otto.flummi.extensions;
 
 import com.google.gson.JsonObject;
 import de.otto.flummi.IndicesAdminClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Comparator;
 import java.util.Optional;
@@ -12,6 +14,8 @@ import java.util.function.Predicate;
 import static java.util.stream.Collectors.toSet;
 
 public class RollingIndexBehavior {
+
+    private static final Logger LOG = LoggerFactory.getLogger(RollingIndexBehavior.class);
 
     private final IndicesAdminClient client;
     private final String aliasName;
@@ -39,15 +43,19 @@ public class RollingIndexBehavior {
     public String createNewIndex() {
         String indexName = newIndexName();
         client.prepareCreate(indexName).execute();
+        LOG.info("Index created {}", indexName);
         return indexName;
     }
 
     public void abort(String newIndexName) {
         client.prepareDelete(newIndexName).execute();
+        LOG.warn("Index deleted {}", newIndexName);
+
     }
 
-    public Set<String> commit(String name) {
-        client.pointAliasToCurrentIndex(aliasName, name);
+    public Set<String> commit(String indexName) {
+        client.pointAliasToCurrentIndex(aliasName, indexName);
+        LOG.info("Alias switched to index name {}", indexName);
         return this.deleteOldIndices(aliasName, indexPrefixName, survivor);
     }
 
@@ -72,6 +80,7 @@ public class RollingIndexBehavior {
         if (!names.isEmpty()) {
             client.prepareDelete(names.stream()).execute();
         }
+        LOG.info("Indices deleted {}", names);
         return names;
     }
 
