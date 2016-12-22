@@ -107,15 +107,15 @@ uploadArchives {
             }
 
             pom.project {
-                name 'togglz'
+                name 'flummi'
                 packaging 'jar'
-                description 'Status library of the edison-microservice project.'
-                url 'http://github.com/otto-de/edison-microservice'
+                description 'Helper library for elasticsearch'
+                url 'http://github.com/otto-de/flummi'
 
                 scm {
-                    url 'scm:git@github.com:otto-de/edison-microservice.git'
-                    connection 'scm:git@github.com:otto-de/edison-microservice.git'
-                    developerConnection 'scm:git@github.com:otto-de/edison-microservice.git'
+                    url 'scm:git@github.com:otto-de/flummi.git'
+                    connection 'scm:git@github.com:otto-de/flummi.git'
+                    developerConnection 'scm:git@github.com:otto-de/flummi.git'
                 }
 
                 licenses {
