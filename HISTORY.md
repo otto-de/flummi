@@ -1,5 +1,8 @@
 # Release History
 
+## release 0.21.0
+* rolling indexing behaviour introduced.
+
 ## release 0.20.2
 * Added regex and wildcard query builders
 * Implemented Pair object to get rid of JavaFX dependency
