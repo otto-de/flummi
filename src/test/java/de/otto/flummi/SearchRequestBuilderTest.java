@@ -70,7 +70,7 @@ public class SearchRequestBuilderTest {
     }
 
     @Test
-    public void shouldBuilderQueryWithOneField() throws Exception {
+    public void shouldBuilderQueryWithStoredField() throws Exception {
         // given
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
         when(httpClient.preparePost("/some-index/_search")).thenReturn(boundRequestBuilderMock);
@@ -79,10 +79,27 @@ public class SearchRequestBuilderTest {
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", EMPTY_SEARCH_RESPONSE)));
 
         // when
-        SearchResponse response = searchRequestBuilder.setQuery(createSampleQuery()).addField("someField").execute();
+        SearchResponse response = searchRequestBuilder.setQuery(createSampleQuery()).addStoredField("someField").execute();
 
         //then
-        verify(boundRequestBuilderMock).setBody("{\"query\":{\"term\":{\"someField\":\"someValue\"}},\"fields\":[\"someField\"]}");
+        verify(boundRequestBuilderMock).setBody("{\"query\":{\"term\":{\"someField\":\"someValue\"}},\"stored_fields\":[\"someField\"]}");
+        verify(httpClient).preparePost("/some-index/_search");
+    }
+
+    @Test
+    public void shouldBuilderQueryWithSourceFilter() throws Exception {
+        // given
+        AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
+        when(httpClient.preparePost("/some-index/_search")).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.setBodyEncoding(anyString())).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", EMPTY_SEARCH_RESPONSE)));
+
+        // when
+        SearchResponse response = searchRequestBuilder.setQuery(createSampleQuery()).addSourceFilter("someField").execute();
+
+        //then
+        verify(boundRequestBuilderMock).setBody("{\"query\":{\"term\":{\"someField\":\"someValue\"}},\"_source\":[\"someField\"]}");
         verify(httpClient).preparePost("/some-index/_search");
     }
 

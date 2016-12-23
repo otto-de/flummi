@@ -34,7 +34,8 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
     private Integer size;
     private Integer timeoutMillis;
     private JsonArray sorts;
-    private JsonArray fields;
+    private JsonArray storedFields;
+    private JsonArray sourceFilters;
     private String scroll;
     private QueryBuilder postFilter;
     private List<AggregationBuilder> aggregations;
@@ -100,11 +101,19 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
         return this;
     }
 
-    public SearchRequestBuilder addField(String fieldName) {
-        if (fields == null) {
-            fields = new JsonArray();
+    public SearchRequestBuilder addStoredField(String fieldName) {
+        if (storedFields == null) {
+            storedFields = new JsonArray();
         }
-        fields.add(new JsonPrimitive(fieldName));
+        storedFields.add(new JsonPrimitive(fieldName));
+        return this;
+    }
+
+    public SearchRequestBuilder addSourceFilter(String filter) {
+        if (sourceFilters == null) {
+            sourceFilters = new JsonArray();
+        }
+        sourceFilters.add(new JsonPrimitive(filter));
         return this;
     }
 
@@ -121,8 +130,11 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
             if (query != null) {
                 body.add("query", query);
             }
-            if (fields != null) {
-                body.add("fields", fields);
+            if (storedFields != null) {
+                body.add("stored_fields", storedFields);
+            }
+            if(sourceFilters!=null) {
+                body.add("_source", sourceFilters);
             }
             if (from != null) {
                 body.add("from", new JsonPrimitive(from));
