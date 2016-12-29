@@ -40,6 +40,12 @@ public class QueryBuilders {
     public static TermQueryBuilder termQuery(String name, String value) {
         return new TermQueryBuilder(name, new JsonPrimitive(value));
     }
+    public static TermQueryBuilder termQuery(String name, Boolean value) {
+        return new TermQueryBuilder(name, new JsonPrimitive(value));
+    }
+    public static TermQueryBuilder termQuery(String name, Number value) {
+        return new TermQueryBuilder(name, new JsonPrimitive(value));
+    }
 
     public static BoolQueryBuilder bool() {
         return new BoolQueryBuilder();
