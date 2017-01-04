@@ -1,5 +1,9 @@
 # Release History
 
+## release 0.22.0
+* Add term query builder for types other than string
+* Add support for Elasticsearch 5.x stored fields and source filters
+
 ## release 0.21.0
 * rolling indexing behaviour introduced.
 
