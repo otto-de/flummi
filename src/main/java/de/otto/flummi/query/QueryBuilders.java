@@ -1,5 +1,6 @@
 package de.otto.flummi.query;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
@@ -45,6 +46,22 @@ public class QueryBuilders {
     }
     public static TermQueryBuilder termQuery(String name, Number value) {
         return new TermQueryBuilder(name, new JsonPrimitive(value));
+    }
+
+    public static WildcardQueryBuilder wildcardQuery(String name, String value) {
+        return wildcardQuery(name, new JsonPrimitive(value));
+    }
+
+    public static WildcardQueryBuilder wildcardQuery(String name, JsonElement value) {
+        return new WildcardQueryBuilder(name, value);
+    }
+
+    public static RegexpQueryBuilder regexpQuery(String name, String value) {
+        return regexpQuery(name, new JsonPrimitive(value));
+    }
+
+    public static RegexpQueryBuilder regexpQuery(String name, JsonElement value) {
+        return new RegexpQueryBuilder(name, value);
     }
 
     public static BoolQueryBuilder bool() {
