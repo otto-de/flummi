@@ -1,5 +1,9 @@
 # Release History
 
+## release 5.0.23.0
+* use new version schema, 5 is for es 5.x support
+* Upgrade dependencies
+
 ## release 0.22.0
 * Add term query builder for types other than string
 * Add support for Elasticsearch 5.x stored fields and source filters
