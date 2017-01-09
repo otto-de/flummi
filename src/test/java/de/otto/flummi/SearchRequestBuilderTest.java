@@ -87,6 +87,23 @@ public class SearchRequestBuilderTest {
     }
 
     @Test
+    public void shouldCreateQueryWithoutAnyFieldsSelectedAfterResetFields() throws Exception {
+        // given
+        AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
+        when(httpClient.preparePost("/some-index/_search")).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.setBodyEncoding(anyString())).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", EMPTY_SEARCH_RESPONSE)));
+
+        // when
+        SearchResponse response = searchRequestBuilder.setQuery(createSampleQuery()).resetFields().execute();
+
+        //then
+        verify(boundRequestBuilderMock).setBody("{\"query\":{\"term\":{\"someField\":\"someValue\"}},\"fields\":[]}");
+        verify(httpClient).preparePost("/some-index/_search");
+    }
+
+    @Test
     public void shouldParseSearchResponseWithFullDocuments() throws Exception {
         // given
         AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
