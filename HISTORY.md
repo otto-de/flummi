@@ -1,5 +1,8 @@
 # Release History
 
+## release 2.0.21.0
+* use new version schema, first '2' is for elastic search 2.x support
+
 ## release 0.21.0
 * rolling indexing behaviour introduced.
 
