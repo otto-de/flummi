@@ -108,6 +108,11 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
         return this;
     }
 
+    public SearchRequestBuilder resetFields() {
+        fields = new JsonArray();
+        return this;
+    }
+
     public SearchRequestBuilder setTimeoutMillis(Integer timeoutMillis) {
         this.timeoutMillis = timeoutMillis;
         return this;
