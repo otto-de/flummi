@@ -15,9 +15,11 @@ import org.slf4j.Logger;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import static de.otto.flummi.GsonCollectors.toJsonArray;
 import static de.otto.flummi.RequestBuilderUtil.toHttpServerErrorException;
 import static de.otto.flummi.response.SearchResponse.emptyResponse;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -30,6 +32,7 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
     private final Gson gson;
     private String[] types;
     private JsonObject query;
+    private List<String> fields;
     private Integer from;
     private Integer size;
     private Integer timeoutMillis;
@@ -60,6 +63,11 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
 
     public SearchRequestBuilder setQuery(JsonObject query) {
         this.query = query;
+        return this;
+    }
+
+    public SearchRequestBuilder setFields(String... fields) {
+        this.fields = Arrays.asList(fields);
         return this;
     }
 
@@ -129,6 +137,9 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
             JsonObject body = new JsonObject();
             if (query != null) {
                 body.add("query", query);
+            }
+            if (fields != null) {
+                body.add("fields", fields.stream().map(JsonPrimitive::new).collect(toJsonArray()));
             }
             if (storedFields != null) {
                 body.add("stored_fields", storedFields);
