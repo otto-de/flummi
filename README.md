@@ -1,12 +1,12 @@
 Flummi Elastic Search HTTP Client
 =================================
 
-<a href="https://travis-ci.org/otto-de/flummi"><img src="https://travis-ci.org/otto-de/flummi.svg?branch=master"></img></a>
+<a href="https://travis-ci.org/otto-de/flummi"><img src="https://api.travis-ci.org/otto-de/flummi.svg?branch=elasticsearch-2.x"></img></a>
 
 Flummi is a client library for Elastic Search. It has been successfully tested with Elastic Search versions 2.3 and 2.4.
 It provides a comprehensive Java query DSL API and communicates with
 the Elastic Search Cluster via HTTP/JSON. It is licensed under the [Apache 2 License](http://www.apache.org/licenses/LICENSE-2.0.html).
-
+The branch 'elasticsearch-2.x' is intended for use with elastic search 2.x
 
 Why should I use Flummi?
 ------------------------
@@ -38,12 +38,14 @@ For Maven users:
     <dependency>
         <groupId>de.otto</groupId>
         <artifactId>flummi</artifactId>
-        <version>0.20.2</version>
+        <version>2.0.22.2</version>
     </dependency>
 
 For gradle users:
 
-    compile "de.otto:flummi:0.20.2"
+    compile "de.otto:flummi:2.0.22.2"
+
+Flummi versions starting with 5.x are intended for use with Elastic Search 5.x, flummi versions starting with 2.x should be used with elastic 2.x.
 
 
 ### Getting started
