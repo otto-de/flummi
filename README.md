@@ -13,7 +13,7 @@ Why should I use Flummi?
 
 * Flummi uses HTTP and JSON for communication with Elastic Search. Its only dependencies are Gson and AsyncHttpClient, so
   it is good for you if you don't want to have your application depend on the full ElasticSearch JAR.
-* Flummi's API is as close as possible to the original Elastic Search transport client API. This makes it very easy to
+* Flummi's API is as close as possible to the original Elmastic Search transport client API. This makes it very easy to
   port existing client code to Flummi.
 * Flummi uses the Elastic Search Scroll API for downloading large result sets as a stream of smaller pages.
 * It supports parent-child relationships
