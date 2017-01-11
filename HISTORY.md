@@ -1,5 +1,9 @@
 # Release History
 
+## release 5.0.24.0
+* update gson dependency
+* refactor TermsQuery api
+
 ## release 5.0.23.0
 * use new version schema, 5 is for es 5.x support
 * Upgrade dependencies
