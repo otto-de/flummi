@@ -4,10 +4,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+import java.util.Arrays;
 import java.util.List;
 
+import static de.otto.flummi.GsonCollectors.toJsonArray;
 import static de.otto.flummi.request.GsonHelper.object;
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 
 public class QueryBuilders {
 
@@ -30,15 +33,39 @@ public class QueryBuilders {
         };
     }
 
-    public static TermsQueryBuilder termsQuery(String name, String... values) {
-        return new TermsQueryBuilder(name, asList(values));
-    }
-
-    public static TermsQueryBuilder termsQuery(String name, List<String> values) {
+    public static TermsQueryBuilder termsQuery(String name, JsonElement values) {
         return new TermsQueryBuilder(name, values);
     }
 
+    public static TermsQueryBuilder termsQuery(String name, String... values) {
+        return new TermsQueryBuilder(name, Arrays.stream(values).map(JsonPrimitive::new).collect(toJsonArray()));
+    }
+
+    public static TermsQueryBuilder termsQuery(String name, Boolean... values) {
+        return new TermsQueryBuilder(name, Arrays.stream(values).map(JsonPrimitive::new).collect(toJsonArray()));
+    }
+
+    public static TermsQueryBuilder termsQuery(String name, Number... values) {
+        return new TermsQueryBuilder(name, Arrays.stream(values).map(JsonPrimitive::new).collect(toJsonArray()));
+    }
+
+    public static TermsQueryBuilder termsQuery(String name, List<String> values) {
+        return new TermsQueryBuilder(name, values.stream().map(JsonPrimitive::new).collect(toJsonArray()));
+    }
+
+    public static TermQueryBuilder termQuery(String name, JsonElement value) {
+        return new TermQueryBuilder(name, value);
+    }
+
     public static TermQueryBuilder termQuery(String name, String value) {
+        return new TermQueryBuilder(name, new JsonPrimitive(value));
+    }
+
+    public static TermQueryBuilder termQuery(String name, Boolean value) {
+        return new TermQueryBuilder(name, new JsonPrimitive(value));
+    }
+
+    public static TermQueryBuilder termQuery(String name, Number value) {
         return new TermQueryBuilder(name, new JsonPrimitive(value));
     }
 
@@ -98,6 +125,7 @@ public class QueryBuilders {
     public static AndQueryBuilder andQuery(QueryBuilder... queries) {
         return new AndQueryBuilder(queries);
     }
+
     public static AndQueryBuilder andQuery(List<QueryBuilder> queries) {
         return new AndQueryBuilder(queries);
     }

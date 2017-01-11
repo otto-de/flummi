@@ -9,6 +9,8 @@ import java.time.format.DateTimeFormatter;
 
 import static de.otto.flummi.request.GsonHelper.array;
 import static de.otto.flummi.request.GsonHelper.object;
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -31,6 +33,28 @@ public class QueryBuildersTest {
         assertThat(termsQueryBuilder.build(), is(object("terms", object("someName", array(new JsonPrimitive("someValue"), new JsonPrimitive("someOtherValue"))))));
     }
 
+    @Test
+    public void shouldCreateTermsQuery() {
+        TermsQueryBuilder termsQueryBuilder = QueryBuilders.termsQuery("someName", new JsonPrimitive("someValue"));
+        assertThat(termsQueryBuilder.build(), is(object("terms", object("someName", "someValue"))));
+    }
+
+    @Test
+    public void shouldCreateTermQueryFromMultipleBooleans() {
+        TermsQueryBuilder queryBuilder = QueryBuilders.termsQuery("someName", TRUE, FALSE);
+        JsonObject query = queryBuilder.build();
+        assertThat(query.get("terms").getAsJsonObject().get("someName").getAsJsonArray().get(0).getAsBoolean(), is(true));
+        assertThat(query.get("terms").getAsJsonObject().get("someName").getAsJsonArray().get(1).getAsBoolean(), is(false));
+    }
+
+    @Test
+    public void shouldCreateTermQueryFromMultipleNumbers() {
+        TermsQueryBuilder queryBuilder = QueryBuilders.termsQuery("someName", 1, 2);
+        JsonObject query = queryBuilder.build();
+        assertThat(query.get("terms").getAsJsonObject().get("someName").getAsJsonArray().get(0).getAsInt(), is(1));
+        assertThat(query.get("terms").getAsJsonObject().get("someName").getAsJsonArray().get(1).getAsInt(), is(2));
+    }
+
 	@Test
 	public void shouldCreateTermsQueryFromList() {
 		TermsQueryBuilder termsQueryBuilder = QueryBuilders.termsQuery("someName", asList("someValue"));
@@ -41,6 +65,24 @@ public class QueryBuildersTest {
     public void shouldCreateTermQuery() {
         TermQueryBuilder termQueryBuilder = QueryBuilders.termQuery("someName", "someValue");
         assertThat(termQueryBuilder.build(), is(object("term", object("someName", "someValue"))));
+    }
+
+    @Test
+    public void shouldCreateTermQueryFromBoolean() {
+        TermQueryBuilder termQueryBuilder = QueryBuilders.termQuery("someName", TRUE);
+        assertThat(termQueryBuilder.build(), is(object("term", object("someName", true))));
+    }
+
+    @Test
+    public void shouldCreateTermQueryFromNumber() {
+        TermQueryBuilder termQueryBuilder = QueryBuilders.termQuery("someName", 1L);
+        assertThat(termQueryBuilder.build(), is(object("term", object("someName", 1))));
+    }
+
+    @Test
+    public void shouldCreateTermQueryFromJsonElement() {
+        TermQueryBuilder termQueryBuilder = QueryBuilders.termQuery("someName", new JsonPrimitive(2));
+        assertThat(termQueryBuilder.build(), is(object("term", object("someName", 2))));
     }
 
     @Test
