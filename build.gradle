@@ -83,7 +83,7 @@ if (!project.hasProperty('isSnapshot')) {
 }
 
 dependencies {
-    compile "com.google.code.gson:gson:2.7"
+    compile "com.google.code.gson:gson:2.8.0"
     compile "com.ning:async-http-client:1.9.40"
     compile "org.slf4j:slf4j-api:1.7.22"
 
