@@ -45,12 +45,15 @@ For Maven users:
     <dependency>
         <groupId>de.otto</groupId>
         <artifactId>flummi</artifactId>
-        <version>0.22.0</version>
+        <version>5.0.23.0</version>
     </dependency>
 
 For gradle users:
 
-    compile "de.otto:flummi:0.22.0"
+    compile "de.otto:flummi:5.0.23.0"
+
+
+Flummi versions starting with 5.x are intended for use with Elastic Search 5.x, flummi versions starting with 2.x should be used with elastic 2.x.
 
 
 ### Getting started
