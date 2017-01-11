@@ -108,6 +108,12 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
         return this;
     }
 
+    /**
+     * This allows to issue a query without any fields selected, useful
+     * if you only need hit metadata like hit ID and don't want to transfer
+     * entire document data over the network
+     * @return SearchRequestBuilder
+     */
     public SearchRequestBuilder resetFields() {
         fields = new JsonArray();
         return this;

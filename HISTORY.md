@@ -1,5 +1,9 @@
 # Release History
 
+## release 2.0.22.0
+* Added support for resetting selected fields
+* update dependencies
+
 ## release 2.0.21.0
 * use new version schema, first '2' is for elastic search 2.x support
 
