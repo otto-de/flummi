@@ -1,5 +1,8 @@
 # Release History
 
+## release 2.0.23.0
+* refactor TermsBuilder
+
 ## release 2.0.22.0
 * Added support for resetting selected fields
 * update dependencies
