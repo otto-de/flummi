@@ -1,7 +1,10 @@
 package de.otto.flummi.query;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import org.testng.annotations.Test;
+
+import java.util.List;
 
 import static de.otto.flummi.request.GsonHelper.array;
 import static de.otto.flummi.request.GsonHelper.object;
@@ -13,7 +16,7 @@ import static org.hamcrest.Matchers.is;
 public class TermsQueryBuilderTest {
 
     @Test
-    public void shouldCreateTerms() {
+    public void shouldCreateTermsFromStringList() {
         TermsQueryBuilder termsQueryBuilder = new TermsQueryBuilder("someName", asList("someValue", "someOtherValue"));
         assertThat(termsQueryBuilder.build(), is(object("terms", object("someName", array(
                 new JsonPrimitive("someValue"),
@@ -22,7 +25,7 @@ public class TermsQueryBuilderTest {
     }
 
     @Test
-    public void shouldThrowexceptionIfNameIsMissing() {
+    public void shouldThrowexceptionIfNameIsMissingForStringList() {
         try {
             new TermsQueryBuilder(null, asList("someValue")).build();
         } catch (RuntimeException e) {
@@ -31,7 +34,7 @@ public class TermsQueryBuilderTest {
     }
 
     @Test
-    public void shouldThrowexceptionIfNameIsEmpty() {
+    public void shouldThrowexceptionIfNameIsEmptyForStringList() {
         try {
             new TermsQueryBuilder("", asList("someValue")).build();
         } catch (RuntimeException e) {
@@ -40,9 +43,44 @@ public class TermsQueryBuilderTest {
     }
 
     @Test
-    public void shouldThrowexceptionIfValueIsNull() {
+    public void shouldCreateTermsFromJsonElement() {
+        TermsQueryBuilder termsQueryBuilder = new TermsQueryBuilder("someName", new JsonPrimitive("someValue"));
+        assertThat(termsQueryBuilder.build(), is(object("terms", object("someName", "someValue"))));
+    }
+
+    @Test
+    public void shouldThrowexceptionIfNameIsMissingForJsonElement() {
         try {
-            new TermsQueryBuilder("someName", null).build();
+            new TermsQueryBuilder(null, new JsonPrimitive("someValue")).build();
+        } catch (RuntimeException e) {
+            assertThat(e.getMessage(), is("missing property 'name'"));
+        }
+    }
+
+    @Test
+    public void shouldThrowexceptionIfNameIsEmptyForElement() {
+        try {
+            new TermsQueryBuilder("", new JsonPrimitive("someValue")).build();
+        } catch (RuntimeException e) {
+            assertThat(e.getMessage(), is("missing property 'name'"));
+        }
+    }
+
+    @Test
+    public void shouldThrowExceptionIfListValueIsNull() {
+        List<String> testList = null;
+        try {
+            new TermsQueryBuilder("someName", testList).build();
+        } catch (RuntimeException e) {
+            assertThat(e.getMessage(), is("missing property 'terms'"));
+        }
+    }
+
+    @Test
+    public void shouldThrowExceptionIfJsonValueIsNull() {
+        JsonElement testElement = null;
+        try {
+            new TermsQueryBuilder("someName", testElement).build();
         } catch (RuntimeException e) {
             assertThat(e.getMessage(), is("missing property 'terms'"));
         }
