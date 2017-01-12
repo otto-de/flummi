@@ -7,6 +7,7 @@ import de.otto.flummi.RequestBuilderUtil;
 import de.otto.flummi.SortOrder;
 import de.otto.flummi.aggregations.AggregationBuilder;
 import de.otto.flummi.query.QueryBuilder;
+import de.otto.flummi.query.sort.FieldSortBuilder;
 import de.otto.flummi.query.sort.SortBuilder;
 import de.otto.flummi.response.*;
 import de.otto.flummi.util.HttpClientWrapper;
@@ -72,15 +73,7 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
     }
 
     public SearchRequestBuilder addSort(String key, SortOrder order) {
-        if (sorts == null) {
-            sorts = new JsonArray();
-        }
-        JsonObject element = new JsonObject();
-        JsonObject orderObj = new JsonObject();
-        element.add(key, orderObj);
-        orderObj.add("order", new JsonPrimitive(order.toString()));
-        sorts.add(element);
-        return this;
+        return this.addSort(new FieldSortBuilder(key).setOrder(order));
     }
 
     public SearchRequestBuilder addSort(SortBuilder builder){

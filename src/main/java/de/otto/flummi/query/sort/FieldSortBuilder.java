@@ -44,7 +44,10 @@ public class FieldSortBuilder implements SortBuilder {
 
     @Override
     public JsonObject build() {
-        JsonObject sortObject = object("order", order.toString(), "mode", sortMode.key());
+        JsonObject sortObject = object("order", order.toString());
+        if(sortMode != null) {
+            sortObject.addProperty("mode", sortMode.key());
+        }
         if(nestedFilter!=null) {
             sortObject.add("nested_filter", nestedFilter.build());
         }
