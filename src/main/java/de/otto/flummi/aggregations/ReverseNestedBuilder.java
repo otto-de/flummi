@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import de.otto.flummi.response.AggregationResult;
 import de.otto.flummi.response.Bucket;
+import de.otto.flummi.response.BucketAggregationResult;
 
 import java.util.ArrayList;
 
@@ -15,11 +16,11 @@ import static de.otto.flummi.request.GsonHelper.object;
  * Simplified ReverseNestedAggregationBuilder for cases where each outer bucket has only
  * one inner bucket
  */
-public class ReverseNestedBuilder extends AggregationBuilder<ReverseNestedBuilder> {
-    private final AggregationBuilder<?> innerAggregation;
+public class ReverseNestedBuilder extends SubAggregationBuilder<ReverseNestedBuilder> {
+    private final SubAggregationBuilder<?> innerAggregation;
     private NestedAggregationBuilder nestedAggregation;
 
-    public ReverseNestedBuilder(String name, String nestedPath, AggregationBuilder<?> innerAggregation) {
+    public ReverseNestedBuilder(String name, String nestedPath, SubAggregationBuilder<?> innerAggregation) {
         super(name);
         this.innerAggregation = innerAggregation;
         this.nestedAggregation = new NestedAggregationBuilder(name).path(nestedPath).subAggregation(innerAggregation);
@@ -54,7 +55,7 @@ public class ReverseNestedBuilder extends AggregationBuilder<ReverseNestedBuilde
                 }
                 bucketList.add(new Bucket(outerBucket.get("key").getAsString(), innerBucket.get("doc_count").getAsLong()));
             }
-            aggregation = new AggregationResult(bucketList);
+            aggregation = new BucketAggregationResult(bucketList);
         }
         return aggregation;
     }

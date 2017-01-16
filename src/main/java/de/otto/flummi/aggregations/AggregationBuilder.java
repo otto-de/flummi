@@ -3,30 +3,11 @@ package de.otto.flummi.aggregations;
 import com.google.gson.JsonObject;
 import de.otto.flummi.response.AggregationResult;
 
-import java.util.ArrayList;
-import java.util.List;
+public interface AggregationBuilder {
 
-public abstract class AggregationBuilder<T extends AggregationBuilder<T>> {
-    private final String name;
-    protected List<AggregationBuilder<?>> subAggregations;
+    String getName();
 
-    protected AggregationBuilder(String name) {
-        this.name = name;
-    }
+    JsonObject build();
 
-    public T subAggregation(AggregationBuilder subAggregation) {
-        if (subAggregations == null) {
-            subAggregations = new ArrayList<>();
-        }
-        subAggregations.add(subAggregation);
-
-        return (T) this;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public abstract JsonObject build();
-    public abstract AggregationResult parseResponse(JsonObject jsonObject);
+    AggregationResult parseResponse(JsonObject jsonObject);
 }

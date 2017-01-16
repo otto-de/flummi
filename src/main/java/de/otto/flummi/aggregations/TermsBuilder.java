@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 import static de.otto.flummi.aggregations.AggregationResultParser.parseBuckets;
 
-public class TermsBuilder extends AggregationBuilder<TermsBuilder> {
+public class TermsBuilder extends SubAggregationBuilder<TermsBuilder> {
     private String fieldName;
     private Integer size;
     private ArrayList<Pair<String, SortOrder>> orders;

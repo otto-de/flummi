@@ -1,14 +1,12 @@
 package de.otto.flummi.aggregations;
 
 import com.google.gson.JsonObject;
-import de.otto.flummi.aggregations.AggregationBuilder;
-import de.otto.flummi.aggregations.AggregationResultParser;
 import de.otto.flummi.query.QueryBuilder;
 import de.otto.flummi.response.AggregationResult;
 
 import static de.otto.flummi.request.GsonHelper.object;
 
-public class FilterAggregationBuilder extends AggregationBuilder<FilterAggregationBuilder> {
+public class FilterAggregationBuilder extends SubAggregationBuilder<FilterAggregationBuilder> {
 
     private QueryBuilder filter;
 

@@ -13,7 +13,6 @@ public class SearchResponse {
     private final SearchHits hits;
     private final Map<String,AggregationResult> aggregations;
 
-
     public SearchResponse(long tookInMillis, String scrollId, SearchHits hits, Map<String, AggregationResult> aggregations) {
         this.tookInMillis = tookInMillis;
         this.scrollId = scrollId;

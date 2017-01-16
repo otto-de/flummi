@@ -18,6 +18,7 @@ import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collector;
 
 import static de.otto.flummi.RequestBuilderUtil.toHttpServerErrorException;
 import static de.otto.flummi.response.SearchResponse.emptyResponse;
@@ -64,11 +65,11 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
         return this;
     }
 
-    public SearchRequestBuilder addAggregation(AggregationBuilder aggregationBuilder) {
+    public SearchRequestBuilder addAggregation(AggregationBuilder AggregationBuilder) {
         if (aggregations == null) {
             aggregations = new ArrayList<>();
         }
-        aggregations.add(aggregationBuilder);
+        aggregations.add(AggregationBuilder);
         return this;
     }
 
@@ -142,10 +143,13 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
                 body.add("post_filter", postFilter.build());
             }
             if (aggregations != null) {
-                JsonObject jsonObject = new JsonObject();
-                aggregations.stream()
-                        .forEach(a ->
-                                jsonObject.add(a.getName(), a.build()));
+                JsonObject jsonObject = aggregations
+                        .stream()
+                        .collect(toJsonObject());
+//                JsonObject jsonObject = new JsonObject();
+//
+//                aggregations.forEach(a ->
+//                                jsonObject.add(a.getName(), a.build()));
                 body.add("aggregations", jsonObject);
             }
             AsyncHttpClient.BoundRequestBuilder boundRequestBuilder = httpClient
@@ -195,6 +199,12 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static Collector<AggregationBuilder, JsonObject, JsonObject> toJsonObject() {
+        return Collector.of(JsonObject::new,
+                (json, a) -> json.add(a.getName(), a.build()),
+                (left, right) -> left);
     }
 
     public static SearchResponse.Builder parseResponse(JsonObject jsonObject, String scroll, HttpClientWrapper client) {

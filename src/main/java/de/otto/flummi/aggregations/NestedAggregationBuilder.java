@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import de.otto.flummi.response.AggregationResult;
 
-public class NestedAggregationBuilder extends AggregationBuilder<NestedAggregationBuilder> {
+public class NestedAggregationBuilder extends SubAggregationBuilder<NestedAggregationBuilder> {
     private String path;
 
     public NestedAggregationBuilder(String name) {

@@ -11,10 +11,10 @@ import static de.otto.flummi.GsonCollectors.toJsonArray;
 import static de.otto.flummi.aggregations.AggregationResultParser.parseBuckets;
 import static de.otto.flummi.request.GsonHelper.object;
 
-public class RangeBuilder extends AggregationBuilder<RangeBuilder> {
+public class RangeBuilder extends SubAggregationBuilder<RangeBuilder> {
 
     private String fieldName;
-    private final List<Range> ranges = new ArrayList();
+    private final List<Range> ranges = new ArrayList<>();
 
     public RangeBuilder(String name) {
         super(name);
@@ -24,7 +24,7 @@ public class RangeBuilder extends AggregationBuilder<RangeBuilder> {
     public JsonObject build() {
         JsonObject rangeAggregatorObject = object(
                 "field", new JsonPrimitive(fieldName),
-                "ranges", ranges.stream().map(r -> rangeToJson(r)).collect(toJsonArray()));
+                "ranges", ranges.stream().map(this::rangeToJson).collect(toJsonArray()));
         return object("range", rangeAggregatorObject);
     }
 
