@@ -1,5 +1,9 @@
 # Release History
 
+## release 5.0.25.0
+* prevent NPE in FieldSortBuilder if no sort order exists
+* SumAggregationBuilder introduced
+
 ## release 5.0.24.0
 * update gson dependency
 * refactor TermsQuery api
