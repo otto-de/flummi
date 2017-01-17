@@ -16,7 +16,7 @@ public class SumAggregationBuilderTest {
         SumAggregationBuilder aggregationBuilder = new SumAggregationBuilder("mySumAggregation", "f1");
 
         // then
-        assertThat(aggregationBuilder.build(), is(object("aggs", object("mySumAggregation", object("sum", object("field", "f1"))))));
+        assertThat(aggregationBuilder.build(), is(object("sum", object("field", "f1"))));
     }
 
     @Test
@@ -25,6 +25,6 @@ public class SumAggregationBuilderTest {
         SumAggregationBuilder aggregationBuilder = new SumAggregationBuilder("mySumAggregation", "f1");
 
         // then
-        assertThat(aggregationBuilder.parseResponse(object("mySumAggregation", object("value", new JsonPrimitive(2.99)))), is(new SumAggregationResult(2.99)));
+        assertThat(aggregationBuilder.parseResponse(object("value", new JsonPrimitive(2.99))), is(new SumAggregationResult(2.99)));
     }
 }
