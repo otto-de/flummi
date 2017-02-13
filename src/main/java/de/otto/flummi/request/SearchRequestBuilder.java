@@ -77,7 +77,7 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
         return this.addSort(new FieldSortBuilder(key).setOrder(order));
     }
 
-    public SearchRequestBuilder addSort(SortBuilder builder){
+    public SearchRequestBuilder addSort(SortBuilder builder) {
         if (sorts == null) {
             sorts = new JsonArray();
         }
@@ -127,7 +127,7 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
             if (storedFields != null) {
                 body.add("stored_fields", storedFields);
             }
-            if(sourceFilters!=null) {
+            if (sourceFilters != null) {
                 body.add("_source", sourceFilters);
             }
             if (from != null) {
@@ -234,7 +234,7 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
                     score);
             searchHitsCurrentPage.add(hit);
         }
-        if(scroll!=null) {
+        if (scroll != null && scroll_id != null) {
             searchResponse.setHits(new ScrollingSearchHits(totalHits, maxScore, scroll_id.getAsString(), scroll, searchHitsCurrentPage, client));
         } else {
             searchResponse.setHits(new SimpleSearchHits(totalHits, maxScore, searchHitsCurrentPage));

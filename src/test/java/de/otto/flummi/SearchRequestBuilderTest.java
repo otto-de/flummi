@@ -20,6 +20,7 @@ import static de.otto.flummi.SortOrder.ASC;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNull.notNullValue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
@@ -337,6 +338,15 @@ public class SearchRequestBuilderTest {
 
         //then
         assertThat(response.getHits().getClass().getName(), is(ScrollingSearchHits.class.getName()));
+    }
+
+    @Test
+    public void shouldNotThrowNPExceptionIfScrollIdIsNotInSearchResponse() throws Exception {
+        Gson gson = new Gson();
+        JsonObject jsonResponse = gson.fromJson("{\"took\":3,\"timed_out\":false,\"_shards\":{\"total\":5,\"successful\":5,\"failed\":0},\"hits\":{\"total\":2,\"max_score\":1.0,\"hits\":[{\"_index\":\"salesorders\",\"_type\":\"salesorders\",\"_id\":\"AVoUU6q__Si-JRVFBPXC\",\"_score\":1.0,\"_source\":{\"quoteNumber\":\"11111111111\",\"quoteReference\":\"blablabla\",\"postCode\":\"RH41EA\"}},{\"_index\":\"salesorders\",\"_type\":\"salesorders\",\"_id\":\"AVoUU764_Si-JRVFBPXD\",\"_score\":1.0,\"_source\":{\"quoteNumber\":\"11111111111\",\"quoteReference\":\"blablabla\",\"postCode\":\"RH41EA\"}}]}}", JsonObject.class);
+        SearchResponse.Builder response = searchRequestBuilder.parseResponse(jsonResponse, "1m", null);
+        assertThat(response, is(notNullValue()));
+
     }
 
     private JsonObject createSampleQuery() {

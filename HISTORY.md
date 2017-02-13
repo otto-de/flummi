@@ -1,5 +1,8 @@
 # Release History
 
+## release 5.0.25.1
+* Fix NPE in SearchRequestBuilder https://github.com/otto-de/flummi/issues/9
+
 ## release 5.0.25.0
 * prevent NPE in FieldSortBuilder if no sort order exists
 * SumAggregationBuilder introduced
