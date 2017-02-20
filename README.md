@@ -30,9 +30,7 @@ Limitations
 Which version should I use?
 ---------------------------
 
-For Elasticsearch 2.x we recommend to use version 0.21.0.
-
-For Elasticsearch 5.x you should use the latest version.
+Flummi versions starting with 5.x are intended for use with Elastic Search 5.x, flummi versions starting with 2.x should be used with elastic 2.x.
 
 
 How to use Flummi
@@ -45,15 +43,12 @@ For Maven users:
     <dependency>
         <groupId>de.otto</groupId>
         <artifactId>flummi</artifactId>
-        <version>5.0.23.0</version>
+        <version>5.0.25.1</version>
     </dependency>
 
 For gradle users:
 
-    compile "de.otto:flummi:5.0.23.0"
-
-
-Flummi versions starting with 5.x are intended for use with Elastic Search 5.x, flummi versions starting with 2.x should be used with elastic 2.x.
+    compile "de.otto:flummi:5.0.25.1"
 
 
 ### Getting started
