@@ -144,4 +144,17 @@ public class QueryBuildersTest {
         DateRangeQueryBuilder dateRangeQueryBuilder = QueryBuilders.dateRangeFilter("someFieldName").lt(now);
         assertThat(dateRangeQueryBuilder.build(), is(object("range", object("someFieldName", object("lt", now.format(DateTimeFormatter.ISO_DATE))))));
     }
+
+    @Test
+    public void shouldCreateBoostingQuery() throws Exception {
+        JsonObject result = QueryBuilders.boostingQuery(QueryBuilders.matchAll(), QueryBuilders.termQuery("name", "hans"), 0.1).build();
+
+        assertThat(result, is(object(
+                "boosting", object(
+                        "positive", object("match_all", object()),
+                        "negative", object("term", object("name", "hans")),
+                        "negative_boost", new JsonPrimitive(0.1)
+                )
+        )));
+    }
 }
