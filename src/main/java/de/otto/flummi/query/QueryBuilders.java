@@ -145,4 +145,14 @@ public class QueryBuilders {
     public static FunctionScoreQueryBuilder functionScoreQuery(QueryBuilder innerQuery) {
         return new FunctionScoreQueryBuilder(innerQuery);
     }
+
+    public static QueryBuilder boostingQuery(QueryBuilder positive, QueryBuilder negative, double negativeBoost) {
+        return () -> object(
+                "boosting", object(
+                        "positive", positive.build(),
+                        "negative", negative.build(),
+                        "negative_boost", new JsonPrimitive(negativeBoost)
+                )
+        );
+    }
 }
