@@ -54,8 +54,6 @@ public class BoolQueryBuilderTest {
                                                 object("someName1", "someValue1")))))));
     }
 
-
-
     @Test
     public void shouldBuildMustNotBoolQuery() throws Exception {
         // given
@@ -90,6 +88,47 @@ public class BoolQueryBuilderTest {
                                                 object("someName1", "someValue1"))
                                 )))));
     }
+
+
+
+
+    @Test
+    public void shouldBuildShouldBoolQuery() throws Exception {
+        // given
+
+        // when
+        testee.should(new TermQueryBuilder("someName", new JsonPrimitive("someValue")).build());
+
+        //then
+        assertThat(testee.build(), is(
+                object("bool",
+                        object("should",
+                                object("term",
+                                        object("someName", "someValue"))))));
+    }
+
+    @Test
+    public void shouldBuildMultipleShouldBoolQuery() throws Exception {
+        // given
+
+        // when
+        testee.should(new TermQueryBuilder("someName0", new JsonPrimitive("someValue0")).build());
+        testee.should(new TermQueryBuilder("someName1", new JsonPrimitive("someValue1")).build());
+        testee.minimumShouldMatch("75%");
+
+        //then
+        assertThat(testee.build(), is(
+                object("bool",
+                        object("should",
+                                array(
+                                        object("term",
+                                                object("someName0", "someValue0")),
+                                        object("term",
+                                                object("someName1", "someValue1"))
+                                ),
+                                "minimum_should_match", new JsonPrimitive("75%")))));
+    }
+
 
     @Test
     public void shouldBuildMultipleMustNotAndMustBoolQuery() throws Exception {
