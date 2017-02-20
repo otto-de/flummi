@@ -16,6 +16,12 @@ public class TermQueryBuilderTest {
     }
 
     @Test
+    public void shouldCreateTermQueryWithBoost() throws Exception {
+        TermQueryBuilder termQueryBuilder = new TermQueryBuilder("someName", new JsonPrimitive(42)).boost(17);
+        assertThat(termQueryBuilder.build(), is(object("term", object("someName", new JsonPrimitive(42), "boost", new JsonPrimitive(17)))));
+    }
+
+    @Test
     public void shouldThrowExceptionIfNameIsMissing() throws Exception {
         try {
             new TermQueryBuilder(null, new JsonPrimitive(42)).build();
