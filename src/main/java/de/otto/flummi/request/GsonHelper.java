@@ -79,6 +79,16 @@ public final class GsonHelper {
         return result;
     }
 
+    public static final JsonObject object(String name1, JsonElement value1, String name2, JsonElement value2, String name3, JsonElement value3, String name4, JsonElement value4, String name5, JsonElement value5) {
+        JsonObject result = new JsonObject();
+        result.add(name1, value1);
+        result.add(name2, value2);
+        result.add(name3, value3);
+        result.add(name4, value4);
+        result.add(name5, value5);
+        return result;
+    }
+
     public static final JsonObject object(String name1, String value1, String name2, String value2, String name3, String value3, String name4, String value4, String name5, String value5, String name6, String value6) {
         JsonObject result = new JsonObject();
         result.add(name1, new JsonPrimitive(value1));

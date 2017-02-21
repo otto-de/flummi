@@ -155,4 +155,8 @@ public class QueryBuilders {
                 )
         );
     }
+
+    public static FuzzyQueryBuilder fuzzyQuery(String fieldName, String value) {
+        return new FuzzyQueryBuilder(fieldName, value);
+    }
 }
