@@ -1,5 +1,10 @@
 # Release History
 
+## release 5.0.26.0
+* Add boosting query builder
+* Implement boosting for term queries
+* Implement "should" filter for bool queries
+
 ## release 5.0.25.1
 * Fix NPE in SearchRequestBuilder https://github.com/otto-de/flummi/issues/9
 
