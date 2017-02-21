@@ -1,5 +1,10 @@
 # Release History
 
+## release 2.0.24.0
+* Add boosting query builder
+* Implement boosting for term queries
+* Implement "should" filter for bool queries - backport to 2.x
+
 ## release 2.0.23.0
 * refactor TermsBuilder
 
