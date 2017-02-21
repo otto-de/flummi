@@ -43,12 +43,12 @@ For Maven users:
     <dependency>
         <groupId>de.otto</groupId>
         <artifactId>flummi</artifactId>
-        <version>5.0.25.1</version>
+        <version>5.0.26.0</version>
     </dependency>
 
 For gradle users:
 
-    compile "de.otto:flummi:5.0.25.1"
+    compile "de.otto:flummi:5.0.26.0"
 
 
 ### Getting started
@@ -236,7 +236,8 @@ The following example shows how to do simple terms bucket aggregations.
 Compatibility
 -------------
 
-Flummi is compatible with Elastic Search 2.3 and 2.4. It probably also works with 5.0 but we haven't tested this comprehensively yet.
+Flummi version 2.x is compatible with Elastic Search 2.3 and 2.4.
+Flummi version 5.x is compatible with Elastic Search 5.x
 
 
 Contribution Guide
