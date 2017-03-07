@@ -1,5 +1,8 @@
 # Release History
 
+## release 2.0.24.2
+* make BoolQueryBuilder.isEmpty to not throw NPE
+
 ## release 2.0.24.1
 * add simple query to query builders
 
