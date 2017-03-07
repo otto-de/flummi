@@ -33,6 +33,14 @@ public class QueryBuilders {
         };
     }
 
+    public static QueryBuilder query(QueryBuilder query) {
+        return () -> {
+            JsonObject search = new JsonObject();
+            search.add("query", query.build());
+            return search;
+        };
+    }
+
     public static TermsQueryBuilder termsQuery(String name, JsonElement values) {
         return new TermsQueryBuilder(name, values);
     }

@@ -28,6 +28,16 @@ public class QueryBuildersTest {
     }
 
     @Test
+    public void shouldCreateQuery() {
+        TermsQueryBuilder termsQueryBuilder = QueryBuilders.termsQuery("someName", "someValue");
+
+        JsonObject jsonObject = QueryBuilders.query(termsQueryBuilder).build();
+        JsonObject filteredObject = new JsonObject();
+        filteredObject.add("terms", object("someName", array(new JsonPrimitive("someValue"))));
+        assertThat(jsonObject, is(object("query", filteredObject)));
+    }
+
+    @Test
     public void shouldCreateTermsQueryFromArray() {
         TermsQueryBuilder termsQueryBuilder = QueryBuilders.termsQuery("someName", "someValue", "someOtherValue");
         assertThat(termsQueryBuilder.build(), is(object("terms", object("someName", array(new JsonPrimitive("someValue"), new JsonPrimitive("someOtherValue"))))));
