@@ -173,4 +173,9 @@ public class BoolQueryBuilderTest {
         //then
     }
 
+    @Test
+    public void shouldReportToBeEmpty() throws Exception {
+        assertThat(testee.isEmpty(), is(true));
+    }
+
 }
