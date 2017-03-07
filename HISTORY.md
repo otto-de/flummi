@@ -1,5 +1,8 @@
 # Release History
 
+## release 2.0.24.1
+* add simple query to query builders
+
 ## release 2.0.24.0
 * Add boosting query builder
 * Implement boosting for term queries
