@@ -1,5 +1,9 @@
 # Release History
 
+## release 5.0.26.1
+* add simple query to query builders
+* make BoolQueryBuilder.isEmpty to not throw NPE
+
 ## release 5.0.26.0
 * Add boosting query builder
 * Implement boosting for term queries
