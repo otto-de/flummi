@@ -26,8 +26,8 @@ public class QueryBuilders {
         return () -> {
             JsonObject outerQuery = new JsonObject();
             JsonObject filtered = new JsonObject();
-            outerQuery.add("filtered", filtered);
-            filtered.add("query", query.build());
+            outerQuery.add("bool", filtered);
+            filtered.add("must", query.build());
             filtered.add("filter", filter);
             return outerQuery;
         };
@@ -105,7 +105,7 @@ public class QueryBuilders {
         return () -> {
             JsonObject jsonObject = new JsonObject();
             JsonObject nested = new JsonObject();
-            nested.add("filter", queryBuilder.build());
+            nested.add("query", queryBuilder.build());
             nested.add("path", new JsonPrimitive(path));
             jsonObject.add("nested", nested);
             return jsonObject;

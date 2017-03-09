@@ -22,9 +22,9 @@ public class QueryBuildersTest {
         LocalDate now = LocalDate.now();
         JsonObject jsonObject = QueryBuilders.filteredQuery(new TermQueryBuilder("someName", new JsonPrimitive("someValue")), new DateRangeQueryBuilder("someDateField").lt(now).build()).build();
         JsonObject filteredObject = new JsonObject();
-        filteredObject.add("query", object("term", object("someName", "someValue")));
+        filteredObject.add("must", object("term", object("someName", "someValue")));
         filteredObject.add("filter", object("range", object("someDateField", object("lt", new JsonPrimitive(now.format(DateTimeFormatter.ISO_DATE))))));
-        assertThat(jsonObject, is(object("filtered", filteredObject)));
+        assertThat(jsonObject, is(object("bool", filteredObject)));
     }
 
     @Test
@@ -97,11 +97,10 @@ public class QueryBuildersTest {
 
     @Test
     public void shouldCreateNestedQuery() {
-        LocalDate now = LocalDate.now();
         JsonObject jsonObject = QueryBuilders.nestedQuery("somePath", QueryBuilders.prefixFilter("someName", "somePrefix")).build();
         JsonObject nestedObject = new JsonObject();
         nestedObject.add("path", new JsonPrimitive("somePath"));
-        nestedObject.add("filter", object("prefix", object("someName", "somePrefix")));
+        nestedObject.add("query", object("prefix", object("someName", "somePrefix")));
         assertThat(jsonObject, is(object("nested", nestedObject)));
     }
 

@@ -146,10 +146,7 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
                 JsonObject jsonObject = aggregations
                         .stream()
                         .collect(toJsonObject());
-//                JsonObject jsonObject = new JsonObject();
-//
-//                aggregations.forEach(a ->
-//                                jsonObject.add(a.getName(), a.build()));
+
                 body.add("aggregations", jsonObject);
             }
             AsyncHttpClient.BoundRequestBuilder boundRequestBuilder = httpClient
@@ -194,9 +191,7 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
             return searchResponse.build();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
     }
