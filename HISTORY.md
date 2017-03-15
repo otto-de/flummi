@@ -1,5 +1,8 @@
 # Release History
 
+## release 5.0.26.3
+* Add query string as message to execution exception
+
 ## release 5.0.26.2
 * Replace filtered query with bool query because filtered is removed in ES 5.0.
 
