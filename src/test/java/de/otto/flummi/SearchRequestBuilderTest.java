@@ -3,6 +3,8 @@ package de.otto.flummi;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.ListenableFuture;
+import com.ning.http.client.Response;
 import de.otto.flummi.aggregations.NestedAggregationBuilder;
 import de.otto.flummi.aggregations.TermsBuilder;
 import de.otto.flummi.query.QueryBuilders;
@@ -12,9 +14,11 @@ import de.otto.flummi.response.ScrollingSearchHits;
 import de.otto.flummi.response.SearchHit;
 import de.otto.flummi.response.SearchResponse;
 import de.otto.flummi.util.HttpClientWrapper;
-import de.otto.flummi.SortOrder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 import static de.otto.flummi.SortOrder.ASC;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -346,6 +350,28 @@ public class SearchRequestBuilderTest {
         JsonObject jsonResponse = gson.fromJson("{\"took\":3,\"timed_out\":false,\"_shards\":{\"total\":5,\"successful\":5,\"failed\":0},\"hits\":{\"total\":2,\"max_score\":1.0,\"hits\":[{\"_index\":\"salesorders\",\"_type\":\"salesorders\",\"_id\":\"AVoUU6q__Si-JRVFBPXC\",\"_score\":1.0,\"_source\":{\"quoteNumber\":\"11111111111\",\"quoteReference\":\"blablabla\",\"postCode\":\"RH41EA\"}},{\"_index\":\"salesorders\",\"_type\":\"salesorders\",\"_id\":\"AVoUU764_Si-JRVFBPXD\",\"_score\":1.0,\"_source\":{\"quoteNumber\":\"11111111111\",\"quoteReference\":\"blablabla\",\"postCode\":\"RH41EA\"}}]}}", JsonObject.class);
         SearchResponse.Builder response = searchRequestBuilder.parseResponse(jsonResponse, "1m", null);
         assertThat(response, is(notNullValue()));
+
+    }
+
+    @Test
+    public void shouldAddQueryToException() throws Exception {
+        //given
+        AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
+        when(httpClient.preparePost("/some-index/_search")).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.setBodyEncoding(anyString())).thenReturn(boundRequestBuilderMock);
+        TimeoutException timeoutException = new TimeoutException();
+        when(boundRequestBuilderMock.execute()).thenReturn(new ListenableFuture.CompletedFailure<>(timeoutException));
+
+        //when
+        JsonObject query = createSampleQuery();
+        try {
+            searchRequestBuilder.setQuery(query).execute();
+        } catch (RuntimeException e) {
+            //then
+            assertThat(e.getCause().getCause(), is(timeoutException));
+            assertThat(e.getMessage(), is("{\"query\":" + query.toString() + "}"));
+        }
 
     }
 

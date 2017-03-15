@@ -18,6 +18,7 @@ import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 import java.util.stream.Collector;
 
 import static de.otto.flummi.RequestBuilderUtil.toHttpServerErrorException;
@@ -118,9 +119,9 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
 
     @Override
     public SearchResponse execute() {
+        JsonObject body = new JsonObject();
         try {
             String url = RequestBuilderUtil.buildUrl(indices, types, "_search");
-            JsonObject body = new JsonObject();
             if (query != null) {
                 body.add("query", query);
             }
@@ -181,9 +182,9 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
                 final JsonObject aggregationsJsonObject = aggregationsJsonElement.getAsJsonObject();
 
                 aggregations.forEach(a -> {
-                    JsonElement aggreagationElement = aggregationsJsonObject.get(a.getName());
-                    if (aggreagationElement != null) {
-                        AggregationResult aggregation = a.parseResponse(aggreagationElement.getAsJsonObject());
+                    JsonElement aggregationElement = aggregationsJsonObject.get(a.getName());
+                    if (aggregationElement != null) {
+                        AggregationResult aggregation = a.parseResponse(aggregationElement.getAsJsonObject());
                         searchResponse.addAggregation(a.getName(), aggregation);
                     }
                 });
@@ -192,7 +193,7 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         } catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(body.toString(), e);
         }
     }
 
