@@ -246,6 +246,18 @@ public class IndicesAdminClientTest {
         verify(httpClient).preparePost("/someIndexName/_refresh");
     }
 
+    @Test
+    public void shouldForceMergeOfIndex() throws ExecutionException, InterruptedException {
+        when(httpClient.preparePost(anyString())).thenReturn(boundRequestBuilder);
+        when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", "{}")));
+
+        //When
+        indicesAdminClient.forceMerge("someIndexName").execute();
+
+        //Then
+        verify(httpClient).preparePost("/someIndexName/_forcemerge");
+    }
+
     @Test(expectedExceptions = HttpServerErrorException.class)
     public void shouldFailToRefreshIndexForErrorResponse() throws ExecutionException, InterruptedException {
         when(httpClient.preparePost(anyString())).thenReturn(boundRequestBuilder);

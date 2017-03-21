@@ -5,10 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.ning.http.client.Response;
-import de.otto.flummi.request.CreateIndexRequestBuilder;
-import de.otto.flummi.request.DeleteIndexRequestBuilder;
-import de.otto.flummi.request.IndicesExistsRequestBuilder;
-import de.otto.flummi.request.RefreshRequestBuilder;
+import de.otto.flummi.request.*;
 import de.otto.flummi.util.HttpClientWrapper;
 
 import java.io.IOException;
@@ -49,6 +46,10 @@ public class IndicesAdminClient {
 
     public RefreshRequestBuilder prepareRefresh(String indexName) {
         return new RefreshRequestBuilder(httpClient, indexName);
+    }
+
+    public ForceMergeRequestBuilder forceMerge(String indexName) {
+        return new ForceMergeRequestBuilder(httpClient, indexName);
     }
 
     public JsonObject getIndexSettings() {

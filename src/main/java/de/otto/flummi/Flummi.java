@@ -46,6 +46,10 @@ public class Flummi {
         admin().indices().prepareRefresh(indexName).execute();
     }
 
+    public void forceMerge(final String indexName) {
+        admin().indices().forceMerge(indexName).execute();
+    }
+
     public SearchRequestBuilder prepareSearch(String... indices) {
         return new SearchRequestBuilder(httpClient, indices);
     }
