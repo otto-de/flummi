@@ -1,5 +1,8 @@
 # Release History
 
+## release 5.0.26.5
+* add forcemerge request to IndicesAdminClient
+
 ## release 5.0.26.4
 * add ForceMergeRequestBuilder
 
