@@ -1,5 +1,8 @@
 # Release History
 
+## release 5.0.26.4
+* add ForceMergeRequestBuilder
+
 ## release 5.0.26.3
 * Add query string as message to execution exception
 
