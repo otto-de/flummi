@@ -74,6 +74,10 @@ public class Flummi {
         return new MultiGetRequestBuilder(httpClient, indices);
     }
 
+    public AnalyzeRequestBuilder prepareAnalyze(String text) {
+        return new AnalyzeRequestBuilder(httpClient, text);
+    }
+
     public SearchScrollRequestBuilder prepareScroll() {
         return new SearchScrollRequestBuilder(httpClient);
     }
