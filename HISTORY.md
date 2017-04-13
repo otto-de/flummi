@@ -1,5 +1,8 @@
 # Release History
 
+## release 5.0.27.0
+* add support for _analyze API
+
 ## release 5.0.26.5
 * add forcemerge request to IndicesAdminClient
 
