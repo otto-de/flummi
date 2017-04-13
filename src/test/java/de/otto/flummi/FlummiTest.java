@@ -174,6 +174,27 @@ public class FlummiTest {
     }
 
     @Test
+    public void shouldPrepareAnalyze() throws ExecutionException, InterruptedException, IOException {
+        final AsyncHttpClient.BoundRequestBuilder boundRequestBuilder = mock(AsyncHttpClient.BoundRequestBuilder.class);
+        when(asyncHttpClient.prepareGet(anyString())).thenReturn(boundRequestBuilder);
+        final ListenableFuture listenableFuture = mock(ListenableFuture.class);
+        when(boundRequestBuilder.setBodyEncoding(anyString())).thenReturn(boundRequestBuilder);
+        when(boundRequestBuilder.setBody(anyString())).thenReturn(boundRequestBuilder);
+        when(boundRequestBuilder.execute()).thenReturn(listenableFuture);
+        final Response response = mock(Response.class);
+        when(response.getStatusCode()).thenReturn(200);
+        when(response.getResponseBody()).thenReturn("{ \"tokens\": [] }");
+        when(listenableFuture.get()).thenReturn(response);
+        final AnalyzeRequestBuilder analyzeRequestBuilder = client.prepareAnalyze("hello world");
+
+        //When
+        analyzeRequestBuilder.execute();
+
+        //Then
+        verify(asyncHttpClient).prepareGet("http://someHost:9200/_analyze");
+    }
+
+    @Test
     public void shouldPrepareIndex() throws ExecutionException, InterruptedException, IOException {
         //Given
         final AsyncHttpClient.BoundRequestBuilder boundRequestBuilder = mock(AsyncHttpClient.BoundRequestBuilder.class);
