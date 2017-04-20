@@ -19,6 +19,9 @@ public class DeleteIndexRequestBuilder implements RequestBuilder<Void> {
     }
 
     public Void execute() {
+        if (indexNames.length == 0) {
+            return null;
+        }
         try {
             String url = RequestBuilderUtil.buildUrl(indexNames, null, null);
             Response response = httpClient.prepareDelete(url).execute().get();
