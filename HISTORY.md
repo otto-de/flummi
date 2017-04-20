@@ -1,5 +1,8 @@
 # Release History
 
+## release 2.0.25.0
+* Add support for geo_distance queries
+
 ## release 2.0.24.2
 * make BoolQueryBuilder.isEmpty to not throw NPE
 
