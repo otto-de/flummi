@@ -165,4 +165,8 @@ public class QueryBuilders {
     public static FuzzyQueryBuilder fuzzyQuery(String fieldName, String value) {
         return new FuzzyQueryBuilder(fieldName, value);
     }
+
+    public static GeoDistanceQueryBuilder geoDistanceQuery(String name) {
+        return new GeoDistanceQueryBuilder(name);
+    }
 }
