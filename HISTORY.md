@@ -1,5 +1,9 @@
 # Release History
 
+## release 5.0.28.0
+* Add support for geo_distance queries
+* don't perform http request when no indices are given for deletion, throw Exception instead
+
 ## release 5.0.27.0
 * add support for _analyze API
 
