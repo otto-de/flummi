@@ -20,7 +20,7 @@ public class DeleteIndexRequestBuilder implements RequestBuilder<Void> {
 
     public Void execute() {
         if (indexNames.length == 0) {
-            return null;
+            throw new RuntimeException("index names are missing");
         }
         try {
             String url = RequestBuilderUtil.buildUrl(indexNames, null, null);

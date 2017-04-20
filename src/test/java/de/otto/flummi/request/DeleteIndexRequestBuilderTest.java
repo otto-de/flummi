@@ -77,7 +77,7 @@ public class DeleteIndexRequestBuilderTest {
         }
     }
 
-    @Test
+    @Test(expectedExceptions = RuntimeException.class)
     public void shouldNotInvokeHttpClientWhenNoIndicesAreGivenForDeletion() throws Exception {
         testee = new DeleteIndexRequestBuilder(httpClient, Stream.of());
         testee.execute();
