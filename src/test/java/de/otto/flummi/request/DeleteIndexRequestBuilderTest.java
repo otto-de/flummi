@@ -76,4 +76,11 @@ public class DeleteIndexRequestBuilderTest {
             throw e;
         }
     }
+
+    @Test
+    public void shouldNotInvokeHttpClientWhenNoIndicesAreGivenForDeletion() throws Exception {
+        testee = new DeleteIndexRequestBuilder(httpClient, Stream.of());
+        testee.execute();
+        verifyZeroInteractions(httpClient);
+    }
 }
