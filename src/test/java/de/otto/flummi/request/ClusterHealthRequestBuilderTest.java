@@ -5,7 +5,7 @@ import de.otto.flummi.*;
 import de.otto.flummi.CompletedFuture;
 import de.otto.flummi.MockResponse;
 import de.otto.flummi.response.HttpServerErrorException;
-import de.otto.flummi.util.HttpClientWrapper;
+ import org.elasticsearch.client.RestClient;
 import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -17,12 +17,12 @@ import static org.mockito.Mockito.mock;
 
 public class ClusterHealthRequestBuilderTest {
 
-    private HttpClientWrapper asyncHttpClient;
+    private RestClient asyncHttpClient;
     private ClusterHealthRequestBuilder testee;
 
     @BeforeMethod
     public void setUp() throws Exception {
-        asyncHttpClient = mock(HttpClientWrapper.class);
+        asyncHttpClient = mock(RestClient.class);
         testee = new ClusterHealthRequestBuilder(asyncHttpClient, new String[]{"someIndex", "someOtherIndex"});
     }
 

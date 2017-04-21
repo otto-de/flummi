@@ -4,7 +4,7 @@ import com.ning.http.client.AsyncHttpClient;
 import de.otto.flummi.CompletedFuture;
 import de.otto.flummi.MockResponse;
 import de.otto.flummi.response.HttpServerErrorException;
-import de.otto.flummi.util.HttpClientWrapper;
+ import org.elasticsearch.client.RestClient;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -19,13 +19,13 @@ public class IndexRequestBuilderTest {
 
     IndexRequestBuilder testee;
 
-    HttpClientWrapper httpClient;
+    RestClient httpClient;
 
     AsyncHttpClient.BoundRequestBuilder boundRequestBuilder;
 
     @BeforeMethod
     public void setUp() throws Exception {
-        httpClient = mock(HttpClientWrapper.class);
+        httpClient = mock(RestClient.class);
         boundRequestBuilder = mock(AsyncHttpClient.BoundRequestBuilder.class);
         when(boundRequestBuilder.setBody(any(String.class))).thenReturn(boundRequestBuilder);
         testee = new IndexRequestBuilder(httpClient);

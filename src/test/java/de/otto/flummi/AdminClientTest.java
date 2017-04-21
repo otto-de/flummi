@@ -2,10 +2,10 @@ package de.otto.flummi;
 
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.ListenableFuture;
-import com.ning.http.client.Response;
+import org.elasticsearch.client.Response;
 import de.otto.flummi.request.ClusterHealthRequestBuilder;
 import de.otto.flummi.request.CreateIndexRequestBuilder;
-import de.otto.flummi.util.HttpClientWrapper;
+ import org.elasticsearch.client.RestClient;
 import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -21,12 +21,12 @@ import static org.mockito.Mockito.*;
 public class AdminClientTest {
 
     private AdminClient adminClient;
-    private HttpClientWrapper httpClient;
+    private RestClient httpClient;
 
 
     @BeforeMethod
     public void setup() {
-        httpClient = mock(HttpClientWrapper.class);
+        httpClient = mock(RestClient.class);
         adminClient = new AdminClient(httpClient);
     }
 

@@ -1,8 +1,8 @@
 package de.otto.flummi.request;
 
-import com.ning.http.client.Response;
+import org.elasticsearch.client.Response;
 import de.otto.flummi.RequestBuilderUtil;
-import de.otto.flummi.util.HttpClientWrapper;
+ import org.elasticsearch.client.RestClient;
 import org.slf4j.Logger;
 
 import java.io.UnsupportedEncodingException;
@@ -13,14 +13,14 @@ import static de.otto.flummi.RequestBuilderUtil.buildUrl;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class DeleteRequestBuilder implements RequestBuilder<Void> {
-    private final HttpClientWrapper httpClient;
+    private final RestClient httpClient;
     private String indexName;
     private String documentType;
     private String id;
 
     public static final Logger LOG = getLogger(DeleteRequestBuilder.class);
 
-    public DeleteRequestBuilder(HttpClientWrapper httpClient) {
+    public DeleteRequestBuilder(RestClient httpClient) {
         this.httpClient = httpClient;
     }
 

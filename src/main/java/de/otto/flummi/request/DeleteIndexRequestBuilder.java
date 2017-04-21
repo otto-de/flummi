@@ -1,8 +1,8 @@
 package de.otto.flummi.request;
 
-import com.ning.http.client.Response;
+import org.elasticsearch.client.Response;
 import de.otto.flummi.RequestBuilderUtil;
-import de.otto.flummi.util.HttpClientWrapper;
+ import org.elasticsearch.client.RestClient;
 
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Stream;
@@ -10,10 +10,10 @@ import java.util.stream.Stream;
 import static java.util.stream.Collectors.toList;
 
 public class DeleteIndexRequestBuilder implements RequestBuilder<Void> {
-    private final HttpClientWrapper httpClient;
+    private final RestClient httpClient;
     private final String[] indexNames;
 
-    public DeleteIndexRequestBuilder(HttpClientWrapper httpClient, Stream<String> indexNames) {
+    public DeleteIndexRequestBuilder(RestClient httpClient, Stream<String> indexNames) {
         this.httpClient = httpClient;
         this.indexNames = toArray(indexNames);
     }

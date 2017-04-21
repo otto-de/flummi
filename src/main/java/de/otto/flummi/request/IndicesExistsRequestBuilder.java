@@ -1,9 +1,9 @@
 package de.otto.flummi.request;
 
 
-import com.ning.http.client.Response;
+import org.elasticsearch.client.Response;
 import de.otto.flummi.response.HttpServerErrorException;
-import de.otto.flummi.util.HttpClientWrapper;
+ import org.elasticsearch.client.RestClient;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -16,9 +16,9 @@ public class IndicesExistsRequestBuilder implements RequestBuilder<Boolean> {
     private final String indexName;
 
     public static final Logger LOG = getLogger(IndicesExistsRequestBuilder.class);
-    private HttpClientWrapper httpClient;
+    private RestClient httpClient;
 
-    public IndicesExistsRequestBuilder(HttpClientWrapper httpClient, String indexName) {
+    public IndicesExistsRequestBuilder(RestClient httpClient, String indexName) {
         this.indexName = indexName;
         this.httpClient = httpClient;
     }

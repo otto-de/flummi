@@ -1,17 +1,14 @@
 package de.otto.flummi.request;
 
 import com.google.gson.*;
-import com.ning.http.client.AsyncHttpClient;
-import com.ning.http.client.Response;
-import de.otto.flummi.RequestBuilderUtil;
 import de.otto.flummi.response.AnalyzeResponse;
 import de.otto.flummi.response.Token;
-import de.otto.flummi.util.HttpClientWrapper;
+import org.elasticsearch.client.Response;
+import org.elasticsearch.client.RestClient;
 import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -20,7 +17,7 @@ import static de.otto.flummi.RequestBuilderUtil.toHttpServerErrorException;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class AnalyzeRequestBuilder implements RequestBuilder<AnalyzeResponse> {
-    private HttpClientWrapper httpClient;
+    private RestClient httpClient;
     private final Gson gson;
     private String indexName;
     private final String text;
@@ -32,7 +29,7 @@ public class AnalyzeRequestBuilder implements RequestBuilder<AnalyzeResponse> {
 
     public static final Logger LOG = getLogger(AnalyzeRequestBuilder.class);
 
-    public AnalyzeRequestBuilder(HttpClientWrapper httpClient, String text) {
+    public AnalyzeRequestBuilder(RestClient httpClient, String text) {
         this.httpClient = httpClient;
         this.text = text;
         this.gson = new Gson();

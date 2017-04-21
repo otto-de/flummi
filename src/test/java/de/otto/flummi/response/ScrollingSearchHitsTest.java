@@ -3,7 +3,8 @@ package de.otto.flummi.response;
 import com.ning.http.client.AsyncHttpClient;
 import de.otto.flummi.CompletedFuture;
 import de.otto.flummi.MockResponse;
-import de.otto.flummi.util.HttpClientWrapper;
+ import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestClient;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -38,12 +39,12 @@ public class ScrollingSearchHitsTest {
             "\"hits\":{\"total\":10,\"max_score\":1.0,\"hits\":[]}}";
 
     private AsyncHttpClient.BoundRequestBuilder requestBuilder;
-    private HttpClientWrapper httpClient;
+    private RestClient httpClient;
 
     @BeforeMethod
     public void setUp() throws Exception {
         requestBuilder = mock(AsyncHttpClient.BoundRequestBuilder.class);
-        httpClient = mock(HttpClientWrapper.class);
+        httpClient = mock(RestClient.class);
         when(requestBuilder.setBody(anyString())).thenReturn(requestBuilder);
     }
 

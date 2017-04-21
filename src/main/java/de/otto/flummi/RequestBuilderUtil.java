@@ -1,7 +1,8 @@
 package de.otto.flummi;
 
-import com.ning.http.client.Response;
 import de.otto.flummi.response.HttpServerErrorException;
+import org.apache.http.util.EntityUtils;
+import org.elasticsearch.client.Response;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -27,7 +28,8 @@ public class RequestBuilderUtil {
 
     public static HttpServerErrorException toHttpServerErrorException(Response response) {
         try {
-            return new HttpServerErrorException(response.getStatusCode(), response.getStatusText() , new String(response.getResponseBodyAsBytes()));
+            return new HttpServerErrorException(response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase() ,
+                    EntityUtils.toString(response.getEntity()));
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }

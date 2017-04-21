@@ -1,7 +1,7 @@
 package de.otto.flummi;
 
 import com.ning.http.client.FluentCaseInsensitiveStringsMap;
-import com.ning.http.client.Response;
+import org.elasticsearch.client.Response;
 import com.ning.http.client.cookie.Cookie;
 import com.ning.http.client.uri.Uri;
 

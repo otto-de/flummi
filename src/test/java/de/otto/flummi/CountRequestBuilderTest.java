@@ -3,7 +3,7 @@ package de.otto.flummi;
 import com.ning.http.client.AsyncHttpClient;
 import de.otto.flummi.request.CountRequestBuilder;
 import de.otto.flummi.response.HttpServerErrorException;
-import de.otto.flummi.util.HttpClientWrapper;
+ import org.elasticsearch.client.RestClient;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -14,13 +14,13 @@ import static org.mockito.Mockito.*;
 public class CountRequestBuilderTest {
 
     private static final String INDEX_NAME = "product-index";
-    private HttpClientWrapper httpClient;
+    private RestClient httpClient;
 
     CountRequestBuilder testee;
 
     @BeforeMethod
     public void setUp() throws Exception {
-        httpClient = mock(HttpClientWrapper.class);
+        httpClient = mock(RestClient.class);
         testee = new CountRequestBuilder(httpClient, INDEX_NAME);
     }
 

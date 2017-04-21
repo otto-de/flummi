@@ -2,9 +2,9 @@ package de.otto.flummi.request;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.ning.http.client.Response;
+import org.elasticsearch.client.Response;
 import de.otto.flummi.RequestBuilderUtil;
-import de.otto.flummi.util.HttpClientWrapper;
+ import org.elasticsearch.client.RestClient;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -21,9 +21,9 @@ public class CountRequestBuilder implements RequestBuilder<Long> {
     private String[] types;
 
     public static final Logger LOG = getLogger(CountRequestBuilder.class);
-    private HttpClientWrapper httpClient;
+    private RestClient httpClient;
 
-    public CountRequestBuilder(HttpClientWrapper httpClient, String... indices) {
+    public CountRequestBuilder(RestClient httpClient, String... indices) {
         this.httpClient = httpClient;
         this.indices = indices;
         this.gson = new Gson();

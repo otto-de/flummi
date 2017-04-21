@@ -1,19 +1,20 @@
 package de.otto.flummi;
 
 import com.google.gson.JsonObject;
-import com.ning.http.client.AsyncHttpClient;
 import de.otto.flummi.request.*;
-import de.otto.flummi.util.HttpClientWrapper;
+ import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestClientBuilder;
 
 import java.util.List;
 import java.util.Optional;
 
 
 public class Flummi {
-    private final HttpClientWrapper httpClient;
+    private final RestClient restClient;
 
-    public Flummi(AsyncHttpClient asyncHttpClient, String baseUrl) {
-        this.httpClient = new HttpClientWrapper(asyncHttpClient, baseUrl);
+    public Flummi(RestClient restClient) {
+        this.restClient = restClient;
     }
 
     @Deprecated
@@ -51,7 +52,7 @@ public class Flummi {
     }
 
     public SearchRequestBuilder prepareSearch(String... indices) {
-        return new SearchRequestBuilder(httpClient, indices);
+        return new SearchRequestBuilder(restClient, indices);
     }
 
     public CountRequestBuilder prepareCount(String... indices) {

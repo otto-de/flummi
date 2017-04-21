@@ -1,12 +1,10 @@
 package de.otto.flummi;
 
-
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.ning.http.client.Response;
 import de.otto.flummi.request.*;
-import de.otto.flummi.util.HttpClientWrapper;
+import org.elasticsearch.client.RestClient;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -21,40 +19,40 @@ import static java.util.stream.Collectors.toList;
 
 public class IndicesAdminClient {
 
-    private HttpClientWrapper httpClient;
-    private Gson gson = new Gson();
+    private final RestClient restClient;
+    private final Gson gson = new Gson();
 
-    public IndicesAdminClient(HttpClientWrapper httpClient) {
-        this.httpClient = httpClient;
+    public IndicesAdminClient(RestClient restClient) {
+        this.restClient = restClient;
     }
 
     public CreateIndexRequestBuilder prepareCreate(String indexName) {
-        return new CreateIndexRequestBuilder(httpClient, indexName);
+        return new CreateIndexRequestBuilder(restClient, indexName);
     }
 
     public IndicesExistsRequestBuilder prepareExists(String indexName) {
-        return new IndicesExistsRequestBuilder(httpClient, indexName);
+        return new IndicesExistsRequestBuilder(restClient, indexName);
     }
 
     public DeleteIndexRequestBuilder prepareDelete(Stream<String> indexNameSupplier) {
-        return new DeleteIndexRequestBuilder(httpClient, indexNameSupplier);
+        return new DeleteIndexRequestBuilder(restClient, indexNameSupplier);
     }
 
     public DeleteIndexRequestBuilder prepareDelete(String... indexNames) {
-        return new DeleteIndexRequestBuilder(httpClient, Stream.of(indexNames));
+        return new DeleteIndexRequestBuilder(restClient, Stream.of(indexNames));
     }
 
     public RefreshRequestBuilder prepareRefresh(String indexName) {
-        return new RefreshRequestBuilder(httpClient, indexName);
+        return new RefreshRequestBuilder(restClient, indexName);
     }
 
     public ForceMergeRequestBuilder forceMerge(String indexName) {
-        return new ForceMergeRequestBuilder(httpClient, indexName);
+        return new ForceMergeRequestBuilder(restClient, indexName);
     }
 
     public JsonObject getIndexSettings() {
         try {
-            Response response = httpClient.prepareGet("/_all/_settings").execute().get();
+            Response response = restClient.prepareGet("/_all/_settings").execute().get();
             if (response.getStatusCode() != 200) {
                 throw RequestBuilderUtil.toHttpServerErrorException(response);
             }
@@ -72,7 +70,7 @@ public class IndicesAdminClient {
 
     public List<String> getAllIndexNames() {
         try {
-            Response response = httpClient.prepareGet("/_all").execute().get();
+            Response response = restClient.prepareGet("/_all").execute().get();
             if (response.getStatusCode() != 200) {
                 throw RequestBuilderUtil.toHttpServerErrorException(response);
             }
@@ -91,7 +89,7 @@ public class IndicesAdminClient {
 
     public Optional<String> getIndexNameForAlias(String aliasName) {
         try {
-            Response response = httpClient.prepareGet("/_aliases").execute().get();
+            Response response = restClient.prepareGet("/_aliases").execute().get();
             if (response.getStatusCode() != 200) {
                 throw RequestBuilderUtil.toHttpServerErrorException(response);
             }
@@ -119,7 +117,7 @@ public class IndicesAdminClient {
             actions.add(object("add", object("index", indexName, "alias", aliasName)));
             JsonObject jsonObject = object("actions", actions);
 
-            Response response = httpClient
+            Response response = restClient
                     .preparePost("/_aliases")
                     .setBody(gson.toJson(jsonObject))
                     .execute().get();
@@ -146,7 +144,7 @@ public class IndicesAdminClient {
 
     public boolean aliasExists(String aliasName) {
         try {
-            Response response = httpClient.prepareGet("/_aliases").execute().get();
+            Response response = restClient.prepareGet("/_aliases").execute().get();
             if (response.getStatusCode() != 200) {
                 throw RequestBuilderUtil.toHttpServerErrorException(response);
             }

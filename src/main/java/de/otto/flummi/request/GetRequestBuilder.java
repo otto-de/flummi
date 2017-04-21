@@ -2,10 +2,10 @@ package de.otto.flummi.request;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.ning.http.client.Response;
+import org.elasticsearch.client.Response;
 import de.otto.flummi.RequestBuilderUtil;
 import de.otto.flummi.response.GetResponse;
-import de.otto.flummi.util.HttpClientWrapper;
+ import org.elasticsearch.client.RestClient;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -17,7 +17,7 @@ import static de.otto.flummi.RequestBuilderUtil.toHttpServerErrorException;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class GetRequestBuilder implements RequestBuilder<GetResponse> {
-    private HttpClientWrapper httpClient;
+    private RestClient httpClient;
     private final String indexName;
     private final String documentType;
     private final String id;
@@ -25,7 +25,7 @@ public class GetRequestBuilder implements RequestBuilder<GetResponse> {
 
     public static final Logger LOG = getLogger(GetRequestBuilder.class);
 
-    public GetRequestBuilder(HttpClientWrapper httpClient, String indexName, String documentType, String id) {
+    public GetRequestBuilder(RestClient httpClient, String indexName, String documentType, String id) {
         this.httpClient = httpClient;
         this.indexName = indexName;
         this.documentType = documentType;

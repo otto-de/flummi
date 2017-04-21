@@ -3,7 +3,7 @@ package de.otto.flummi.request;
 import com.ning.http.client.AsyncHttpClient;
 import de.otto.flummi.CompletedFuture;
 import de.otto.flummi.MockResponse;
-import de.otto.flummi.util.HttpClientWrapper;
+ import org.elasticsearch.client.RestClient;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -12,13 +12,13 @@ import static org.mockito.Mockito.*;
 
 public class ForceMergeRequestBuilderTest {
 
-    private HttpClientWrapper httpClient;
+    private RestClient httpClient;
 
     private AsyncHttpClient.BoundRequestBuilder boundRequestBuilder;
 
     @BeforeMethod
     public void setup() {
-        httpClient = mock(HttpClientWrapper.class);
+        httpClient = mock(RestClient.class);
         boundRequestBuilder = mock(AsyncHttpClient.BoundRequestBuilder.class);
     }
 

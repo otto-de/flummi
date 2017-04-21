@@ -1,7 +1,7 @@
 package de.otto.flummi;
 
 import de.otto.flummi.ClusterAdminClient;
-import de.otto.flummi.util.HttpClientWrapper;
+ import org.elasticsearch.client.RestClient;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -12,11 +12,11 @@ import static org.mockito.Mockito.mock;
 public class ClusterAdminClientTest {
 
     private ClusterAdminClient clusterAdminClient;
-    private HttpClientWrapper httpClient;
+    private RestClient httpClient;
 
     @BeforeMethod
     public void setup() {
-        httpClient = mock(HttpClientWrapper.class);
+        httpClient = mock(RestClient.class);
         clusterAdminClient = new ClusterAdminClient(httpClient);
     }
 

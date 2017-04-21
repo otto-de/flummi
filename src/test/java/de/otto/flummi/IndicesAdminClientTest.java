@@ -3,12 +3,12 @@ package de.otto.flummi;
 import com.google.gson.JsonObject;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.ListenableFuture;
-import com.ning.http.client.Response;
+import org.elasticsearch.client.Response;
 import de.otto.flummi.request.CreateIndexRequestBuilder;
 import de.otto.flummi.request.DeleteIndexRequestBuilder;
 import de.otto.flummi.request.IndicesExistsRequestBuilder;
 import de.otto.flummi.response.HttpServerErrorException;
-import de.otto.flummi.util.HttpClientWrapper;
+ import org.elasticsearch.client.RestClient;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -24,12 +24,12 @@ import static org.mockito.Mockito.*;
 
 public class IndicesAdminClientTest {
     private IndicesAdminClient indicesAdminClient;
-    private HttpClientWrapper httpClient;
+    private RestClient httpClient;
     private AsyncHttpClient.BoundRequestBuilder boundRequestBuilder;
 
     @BeforeMethod
     public void setup() {
-        httpClient = mock(HttpClientWrapper.class);
+        httpClient = mock(RestClient.class);
         indicesAdminClient = new IndicesAdminClient(httpClient);
         boundRequestBuilder = mock(AsyncHttpClient.BoundRequestBuilder.class);
         when(httpClient.prepareGet(anyString())).thenReturn(boundRequestBuilder);

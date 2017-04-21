@@ -5,7 +5,7 @@ import de.otto.flummi.CompletedFuture;
 import de.otto.flummi.InvalidElasticsearchResponseException;
 import de.otto.flummi.MockResponse;
 import de.otto.flummi.response.HttpServerErrorException;
-import de.otto.flummi.util.HttpClientWrapper;
+ import org.elasticsearch.client.RestClient;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -22,7 +22,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class CreateIndexRequestBuilderTest {
 
     @Mock
-    HttpClientWrapper httpClient;
+    RestClient httpClient;
 
     @Mock
     AsyncHttpClient.BoundRequestBuilder boundRequestBuilder;

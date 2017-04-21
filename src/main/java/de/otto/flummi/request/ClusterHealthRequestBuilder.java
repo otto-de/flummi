@@ -3,11 +3,11 @@ package de.otto.flummi.request;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.ning.http.client.AsyncHttpClient;
-import com.ning.http.client.Response;
+import org.elasticsearch.client.Response;
 import de.otto.flummi.ClusterHealthResponse;
 import de.otto.flummi.ClusterHealthStatus;
 import de.otto.flummi.InvalidElasticsearchResponseException;
-import de.otto.flummi.util.HttpClientWrapper;
+ import org.elasticsearch.client.RestClient;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -23,10 +23,10 @@ public class ClusterHealthRequestBuilder implements RequestBuilder<ClusterHealth
     private Long timeout;
 
     public static final Logger LOG = getLogger(ClusterHealthRequestBuilder.class);
-    private HttpClientWrapper httpClient;
+    private RestClient httpClient;
 
 
-    public ClusterHealthRequestBuilder(HttpClientWrapper httpClient, String... indexNames) {
+    public ClusterHealthRequestBuilder(RestClient httpClient, String... indexNames) {
         this.httpClient = httpClient;
         this.indexNames = indexNames;
         this.gson = new Gson();

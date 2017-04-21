@@ -5,10 +5,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.ning.http.client.AsyncHttpClient;
-import com.ning.http.client.Response;
+import org.elasticsearch.client.Response;
 import de.otto.flummi.InvalidElasticsearchResponseException;
 import de.otto.flummi.bulkactions.BulkActionBuilder;
-import de.otto.flummi.util.HttpClientWrapper;
+ import org.elasticsearch.client.RestClient;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -26,9 +26,9 @@ public class BulkRequestBuilder implements RequestBuilder<Void> {
     private List<BulkActionBuilder> actions = new ArrayList();
 
     public static final Logger LOG = getLogger(BulkRequestBuilder.class);
-    private HttpClientWrapper httpClient;
+    private RestClient httpClient;
 
-    public BulkRequestBuilder(HttpClientWrapper httpClient) {
+    public BulkRequestBuilder(RestClient httpClient) {
         this.httpClient = httpClient;
         this.gson = new Gson();
 

@@ -2,10 +2,10 @@ package de.otto.flummi.request;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.ning.http.client.Response;
+import org.elasticsearch.client.Response;
 import de.otto.flummi.InvalidElasticsearchResponseException;
 import de.otto.flummi.RequestBuilderUtil;
-import de.otto.flummi.util.HttpClientWrapper;
+ import org.elasticsearch.client.RestClient;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -19,11 +19,11 @@ public class CreateIndexRequestBuilder implements RequestBuilder<Void> {
     private final String indexName;
     private JsonObject settings;
     private JsonObject mappings;
-    private final HttpClientWrapper httpClient;
+    private final RestClient httpClient;
 
     public static final Logger LOG = getLogger(CreateIndexRequestBuilder.class);
 
-    public CreateIndexRequestBuilder(HttpClientWrapper httpClient, String indexName) {
+    public CreateIndexRequestBuilder(RestClient httpClient, String indexName) {
         this.httpClient = httpClient;
         this.indexName = indexName;
         this.gson = new Gson();

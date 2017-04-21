@@ -2,9 +2,6 @@ package de.otto.flummi;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.ning.http.client.AsyncHttpClient;
-import com.ning.http.client.ListenableFuture;
-import com.ning.http.client.Response;
 import de.otto.flummi.aggregations.NestedAggregationBuilder;
 import de.otto.flummi.aggregations.TermsBuilder;
 import de.otto.flummi.query.QueryBuilders;
@@ -13,11 +10,10 @@ import de.otto.flummi.response.AggregationResult;
 import de.otto.flummi.response.ScrollingSearchHits;
 import de.otto.flummi.response.SearchHit;
 import de.otto.flummi.response.SearchResponse;
-import de.otto.flummi.util.HttpClientWrapper;
+import org.elasticsearch.client.RestClient;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
 import static de.otto.flummi.SortOrder.ASC;
@@ -66,11 +62,11 @@ public class SearchRequestBuilderTest {
             "}" +
             "]}}";
     SearchRequestBuilder searchRequestBuilder;
-    HttpClientWrapper httpClient;
+    RestClient httpClient;
 
     @BeforeMethod
     public void setUp() throws Exception {
-        httpClient = mock(HttpClientWrapper.class);
+        httpClient = mock(RestClient.class);
         searchRequestBuilder = new SearchRequestBuilder(httpClient, "some-index");
     }
 

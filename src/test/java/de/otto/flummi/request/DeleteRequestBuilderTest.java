@@ -4,7 +4,7 @@ import com.ning.http.client.AsyncHttpClient;
 import de.otto.flummi.CompletedFuture;
 import de.otto.flummi.MockResponse;
 import de.otto.flummi.response.HttpServerErrorException;
-import de.otto.flummi.util.HttpClientWrapper;
+ import org.elasticsearch.client.RestClient;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -14,12 +14,12 @@ import static org.mockito.Mockito.*;
 
 public class DeleteRequestBuilderTest {
 
-    private HttpClientWrapper httpClient;
+    private RestClient httpClient;
     private DeleteRequestBuilder testee;
 
     @BeforeMethod
     private void setup() {
-        httpClient = mock(HttpClientWrapper.class);
+        httpClient = mock(RestClient.class);
         testee = new DeleteRequestBuilder(httpClient);
     }
 

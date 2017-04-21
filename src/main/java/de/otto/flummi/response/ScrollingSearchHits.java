@@ -1,7 +1,8 @@
 package de.otto.flummi.response;
 
 import de.otto.flummi.request.SearchScrollRequestBuilder;
-import de.otto.flummi.util.HttpClientWrapper;
+ import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestClient;
 import org.slf4j.Logger;
 
 import java.util.Iterator;
@@ -22,13 +23,13 @@ public class ScrollingSearchHits implements SearchHits {
     private final Float maxScore;
     private final String scrollId;
     private final String scroll;
-    private final HttpClientWrapper client;
+    private final RestClient client;
     private List<SearchHit> hitsCurrentPage;
     private boolean dirty;
     public static final Logger LOG = getLogger(ScrollingSearchHits.class);
 
 
-    public ScrollingSearchHits(long totalHits, Float maxScore, String scrollId, String scroll, List<SearchHit> hitsCurrentPage, HttpClientWrapper client) {
+    public ScrollingSearchHits(long totalHits, Float maxScore, String scrollId, String scroll, List<SearchHit> hitsCurrentPage, RestClient client) {
         this.totalHits = totalHits;
         this.maxScore = maxScore;
         this.scrollId = scrollId;

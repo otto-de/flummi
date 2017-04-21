@@ -1,8 +1,6 @@
 package de.otto.flummi.request;
 
 import com.google.gson.*;
-import com.ning.http.client.AsyncHttpClient;
-import com.ning.http.client.Response;
 import de.otto.flummi.RequestBuilderUtil;
 import de.otto.flummi.SortOrder;
 import de.otto.flummi.aggregations.AggregationBuilder;
@@ -10,15 +8,19 @@ import de.otto.flummi.query.QueryBuilder;
 import de.otto.flummi.query.sort.FieldSortBuilder;
 import de.otto.flummi.query.sort.SortBuilder;
 import de.otto.flummi.response.*;
-import de.otto.flummi.util.HttpClientWrapper;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.util.EntityUtils;
+import org.elasticsearch.client.Response;
+import org.elasticsearch.client.RestClient;
 import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeoutException;
 import java.util.stream.Collector;
 
 import static de.otto.flummi.RequestBuilderUtil.toHttpServerErrorException;
@@ -28,7 +30,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
     private static final JsonObject EMPTY_JSON_OBJECT = new JsonObject();
 
-    private HttpClientWrapper httpClient;
+    private RestClient restClient;
     private final String[] indices;
     private final Gson gson;
     private String[] types;
@@ -45,8 +47,8 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
 
     public static final Logger LOG = getLogger(SearchRequestBuilder.class);
 
-    public SearchRequestBuilder(HttpClientWrapper httpClient, String... indices) {
-        this.httpClient = httpClient;
+    public SearchRequestBuilder(RestClient restClient, String... indices) {
+        this.restClient = restClient;
         this.indices = indices;
         this.gson = new Gson();
     }
@@ -150,32 +152,29 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
 
                 body.add("aggregations", jsonObject);
             }
-            AsyncHttpClient.BoundRequestBuilder boundRequestBuilder = httpClient
-                    .preparePost(url)
-                    .setBodyEncoding("UTF-8");
             if (timeoutMillis != null) {
                 boundRequestBuilder.setRequestTimeout(timeoutMillis);
             }
+            Map<String, String> params = Collections.emptyMap();
             if (scroll != null) {
-                boundRequestBuilder.addQueryParam("scroll", scroll);
+                params = Collections.singletonMap("scroll", scroll);
             }
-
-            Response response = boundRequestBuilder.setBody(gson.toJson(body))
-                    .execute()
-                    .get();
+            Response response = restClient.performRequest("POST", url, params,
+                    new StringEntity(gson.toJson(body), "UTF-8"));
 
             //Did not find an entry
-            if (response.getStatusCode() == 404) {
+            int statusCode = response.getStatusLine().getStatusCode();
+            if (statusCode == 404) {
                 return emptyResponse();
             }
 
             //Server Error
-            if (response.getStatusCode() >= 300) {
+            if (statusCode >= 300) {
                 throw toHttpServerErrorException(response);
             }
 
-            JsonObject jsonResponse = gson.fromJson(response.getResponseBody(), JsonObject.class);
-            SearchResponse.Builder searchResponse = parseResponse(jsonResponse, scroll, httpClient);
+            JsonObject jsonResponse = gson.fromJson(EntityUtils.toString(response.getEntity()), JsonObject.class);
+            SearchResponse.Builder searchResponse = parseResponse(jsonResponse, scroll, restClient);
 
             JsonElement aggregationsJsonElement = jsonResponse.get("aggregations");
             if (aggregationsJsonElement != null) {
@@ -203,7 +202,7 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
                 (left, right) -> left);
     }
 
-    public static SearchResponse.Builder parseResponse(JsonObject jsonObject, String scroll, HttpClientWrapper client) {
+    public static SearchResponse.Builder parseResponse(JsonObject jsonObject, String scroll, RestClient client) {
         SearchResponse.Builder searchResponse = SearchResponse.builder();
         searchResponse.setTookInMillis(jsonObject.get("took").getAsLong());
         JsonObject hits = jsonObject.get("hits").getAsJsonObject();

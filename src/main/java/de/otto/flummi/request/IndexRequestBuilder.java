@@ -4,9 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.ning.http.client.AsyncHttpClient;
-import com.ning.http.client.Response;
+import org.elasticsearch.client.Response;
 import de.otto.flummi.domain.index.Index;
-import de.otto.flummi.util.HttpClientWrapper;
+ import org.elasticsearch.client.RestClient;
 import org.slf4j.Logger;
 
 import java.io.UnsupportedEncodingException;
@@ -27,10 +27,10 @@ public class IndexRequestBuilder implements RequestBuilder<Void> {
     private String parent;
 
     public static final Logger LOG = getLogger(IndexRequestBuilder.class);
-    private HttpClientWrapper httpClient;
+    private RestClient httpClient;
     private Index index;
 
-    public IndexRequestBuilder(HttpClientWrapper httpClient) {
+    public IndexRequestBuilder(RestClient httpClient) {
         this.httpClient = httpClient;
         this.gson = new Gson();
     }

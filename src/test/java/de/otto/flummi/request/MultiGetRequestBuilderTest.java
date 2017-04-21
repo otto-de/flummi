@@ -7,7 +7,7 @@ import de.otto.flummi.CompletedFuture;
 import de.otto.flummi.MockResponse;
 import de.otto.flummi.response.MultiGetResponse;
 import de.otto.flummi.response.MultiGetResponseDocument;
-import de.otto.flummi.util.HttpClientWrapper;
+ import org.elasticsearch.client.RestClient;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.*;
 
 public class MultiGetRequestBuilderTest {
 
-    private HttpClientWrapper httpClient;
+    private RestClient httpClient;
     private MultiGetRequestBuilder requestBuilder;
 
     public static final String ONE_DOC_FOUND_RESPONSE = "{\n" +
@@ -84,7 +84,7 @@ public class MultiGetRequestBuilderTest {
 
     @BeforeMethod
     public void setUp() throws Exception {
-        httpClient = mock(HttpClientWrapper.class);
+        httpClient = mock(RestClient.class);
         requestBuilder = new MultiGetRequestBuilder(httpClient, "some-index");
     }
 

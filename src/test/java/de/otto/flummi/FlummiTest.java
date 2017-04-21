@@ -3,7 +3,7 @@ package de.otto.flummi;
 import com.google.gson.JsonObject;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.ListenableFuture;
-import com.ning.http.client.Response;
+import org.elasticsearch.client.Response;
 import de.otto.flummi.bulkactions.DeleteActionBuilder;
 import de.otto.flummi.request.*;
 import de.otto.flummi.response.HttpServerErrorException;

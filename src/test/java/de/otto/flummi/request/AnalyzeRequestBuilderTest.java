@@ -8,7 +8,7 @@ import de.otto.flummi.MockResponse;
 import de.otto.flummi.response.AnalyzeResponse;
 import de.otto.flummi.response.HttpServerErrorException;
 import de.otto.flummi.response.Token;
-import de.otto.flummi.util.HttpClientWrapper;
+ import org.elasticsearch.client.RestClient;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -26,7 +26,7 @@ import static org.hamcrest.Matchers.is;
 
 public class AnalyzeRequestBuilderTest {
     @Mock
-    HttpClientWrapper httpClient;
+    RestClient httpClient;
 
     @Mock
     AsyncHttpClient.BoundRequestBuilder boundRequestBuilder;

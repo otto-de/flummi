@@ -1,7 +1,7 @@
 package de.otto.flummi.request;
 
-import com.ning.http.client.Response;
-import de.otto.flummi.util.HttpClientWrapper;
+ import org.elasticsearch.client.Response;
+ import org.elasticsearch.client.RestClient;
 import org.slf4j.Logger;
 
 import java.util.concurrent.ExecutionException;
@@ -10,12 +10,12 @@ import static de.otto.flummi.RequestBuilderUtil.toHttpServerErrorException;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class RefreshRequestBuilder {
-    private HttpClientWrapper httpClient;
+    private RestClient httpClient;
     private final String indexName;
 
     public static final Logger LOG = getLogger(RefreshRequestBuilder.class);
 
-    public RefreshRequestBuilder(HttpClientWrapper httpClient, String indexName) {
+    public RefreshRequestBuilder(RestClient httpClient, String indexName) {
         this.httpClient = httpClient;
         this.indexName = indexName;
     }

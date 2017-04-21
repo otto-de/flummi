@@ -2,12 +2,12 @@ package de.otto.flummi.request;
 
 import com.google.gson.*;
 import com.ning.http.client.AsyncHttpClient;
-import com.ning.http.client.Response;
+import org.elasticsearch.client.Response;
 import de.otto.flummi.RequestBuilderUtil;
 import de.otto.flummi.response.MultiGetRequestDocument;
 import de.otto.flummi.response.MultiGetResponse;
 import de.otto.flummi.response.MultiGetResponseDocument;
-import de.otto.flummi.util.HttpClientWrapper;
+ import org.elasticsearch.client.RestClient;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -25,14 +25,14 @@ public class MultiGetRequestBuilder implements RequestBuilder<MultiGetResponse> 
 
     private final String[] indices;
     private final Gson gson;
-    private final HttpClientWrapper httpClient;
+    private final RestClient httpClient;
     private String[] types;
     private Integer timeoutMillis;
     private List<MultiGetRequestDocument> documents;
 
     public static final Logger LOG = getLogger(MultiGetRequestBuilder.class);
 
-    public MultiGetRequestBuilder(HttpClientWrapper httpClient, String... indices) {
+    public MultiGetRequestBuilder(RestClient httpClient, String... indices) {
         this.gson = new Gson();
 
         this.httpClient = httpClient;

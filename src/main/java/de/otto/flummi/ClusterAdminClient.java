@@ -1,12 +1,12 @@
 package de.otto.flummi;
 
 import de.otto.flummi.request.ClusterHealthRequestBuilder;
-import de.otto.flummi.util.HttpClientWrapper;
+ import org.elasticsearch.client.RestClient;
 
 public class ClusterAdminClient {
-    private HttpClientWrapper httpClient;
+    private RestClient httpClient;
 
-    public ClusterAdminClient(HttpClientWrapper httpClient) {
+    public ClusterAdminClient(RestClient httpClient) {
         this.httpClient = httpClient;
     }
 
