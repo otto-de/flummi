@@ -22,7 +22,6 @@ public class IndexRequestBuilder implements RequestBuilder<Void> {
     private JsonPrimitive id;
     private String indexName;
     private String documentType;
-    @Deprecated
     private JsonObject source;
     private String parent;
 
@@ -55,7 +54,6 @@ public class IndexRequestBuilder implements RequestBuilder<Void> {
         return this;
     }
 
-    @Deprecated
     public IndexRequestBuilder setSource(JsonObject source) {
         this.source = source;
         return this;
