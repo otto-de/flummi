@@ -1,5 +1,8 @@
 # Release History
 
+## release 5.0.28.1
+* remove deprecated in IndexRequestBuilder
+
 ## release 5.0.28.0
 * Add support for geo_distance queries
 * don't perform http request when no indices are given for deletion, throw Exception instead
