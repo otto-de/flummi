@@ -11,9 +11,6 @@ import de.otto.flummi.response.BucketAggregationResult;
 import de.otto.flummi.util.Pair;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.stream.Collector;
 
 public class TermsBuilder extends SubAggregationBuilder<TermsBuilder> {
@@ -89,14 +86,9 @@ public class TermsBuilder extends SubAggregationBuilder<TermsBuilder> {
             for (JsonElement elem : bucketsArray) {
                 JsonObject elemObject = elem.getAsJsonObject();
 
-                Map<String, AggregationResult> aggregations = new HashMap<>();
+                AggregationResult subAggregationResult = AggregationResultParser.parseSubAggregations(elemObject, subAggregations);
 
-                if (subAggregations != null) {
-                    subAggregations.stream().forEach(t ->
-                            aggregations.put(t.getName(), t.parseResponse(elemObject.get(t.getName()).getAsJsonObject())));
-                }
-
-                Bucket bucket = new Bucket(elemObject.get("key").getAsString(), elemObject.get("doc_count").getAsLong(), aggregations);
+                Bucket bucket = new Bucket(elemObject.get("key").getAsString(), elemObject.get("doc_count").getAsLong(), subAggregationResult.getNestedAggregations());
 
                 bucketList.add(bucket);
 
@@ -106,20 +98,4 @@ public class TermsBuilder extends SubAggregationBuilder<TermsBuilder> {
         return aggregation;
     }
 
-    public JsonElement buildValue() {
-        if (fieldName==null || fieldName.isEmpty()) {
-            throw new RuntimeException("missing property 'field'");
-        }
-        JsonObject fields = new JsonObject();
-        fields.add("field", new JsonPrimitive(fieldName));
-        if (size != null) {
-            fields.add("size", new JsonPrimitive(size));
-        }
-        if (orders != null) {
-            JsonObject orderObject = new JsonObject();
-            orders.forEach(e -> orderObject.add(e.getKey(), new JsonPrimitive(e.getValue().toString())));
-            fields.add("order", orderObject);
-        }
-        return fields;
-    }
 }
