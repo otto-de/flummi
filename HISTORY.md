@@ -1,5 +1,8 @@
 # Release History
 
+## release 5.0.29.0
+* add support for nested aggregations
+
 ## release 5.0.28.1
 * remove deprecated in IndexRequestBuilder
 
