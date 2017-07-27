@@ -1,5 +1,8 @@
 # Release History
 
+## release 5.0.30.0
+* add support for index mapping
+
 ## release 5.0.29.0
 * add support for nested aggregations
 
