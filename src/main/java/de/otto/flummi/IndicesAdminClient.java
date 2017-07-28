@@ -68,6 +68,24 @@ public class IndicesAdminClient {
             throw new RuntimeException(e);
         }
     }
+    
+    public JsonObject getIndexMapping(String indexName){
+      try {
+        Response response = httpClient.prepareGet("/" + indexName+"/_mapping").execute().get();
+        if (response.getStatusCode() != 200) {
+            throw RequestBuilderUtil.toHttpServerErrorException(response);
+        }
+        String jsonString = null;
+        try {
+            jsonString = response.getResponseBody();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return gson.fromJson(jsonString, JsonObject.class);
+	    } catch (InterruptedException | ExecutionException e) {
+	        throw new RuntimeException(e);
+	    }
+    }
 
     public List<String> getAllIndexNames() {
         try {

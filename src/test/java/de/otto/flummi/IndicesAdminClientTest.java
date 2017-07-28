@@ -233,6 +233,35 @@ public class IndicesAdminClientTest {
         //Then
         assertThat(indexSettings.entrySet().size(), is(0));
     }
+    
+    @Test
+    public void shouldGetIndexMapping() throws ExecutionException, InterruptedException, IOException {
+        //Given
+        when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", ""+
+            "{\"mapping-test\" : {\n" +
+            "   \"mappings\" : {\n" +
+            "     \"default\" : {\n" +
+            "       \"properties\" : {\n" +
+            "         \"test-string\" : {\n" +
+            "           \"type\" : \"string\"\n" +
+            "         }\n" +    
+            "       }\n" +
+            "     }\n" +
+            "   }\n" +
+            " }}")));
+
+        //When
+        final JsonObject indexSettings = indicesAdminClient.getIndexMapping("mapping-test");
+
+        //Then
+        final JsonObject indexJsonObject = indexSettings
+        		                                   .get("mapping-test").getAsJsonObject()
+        		                                   .get("mappings").getAsJsonObject()
+        		                                   .get("default").getAsJsonObject()
+        		                                   .get("properties").getAsJsonObject();
+        assertThat(indexJsonObject.get("test-string").getAsJsonObject().get("type").getAsString(), is("string"));
+        verify(httpClient).prepareGet("/mapping-test/_mapping");
+    }
 
     @Test
     public void shouldRefreshIndex() throws ExecutionException, InterruptedException {
