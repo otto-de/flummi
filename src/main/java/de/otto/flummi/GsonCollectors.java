@@ -5,7 +5,6 @@ import com.google.gson.JsonElement;
 
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
-import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 
@@ -19,7 +18,6 @@ public class GsonCollectors {
             array1.addAll(array2);
             return array1;
         };
-        Function<JsonArray, JsonArray> f = identity();
-        return Collector.of(supplier, accumulator, combiner, (Function<JsonArray, JsonArray>) f);
+        return Collector.of(supplier, accumulator, combiner, identity());
     }
 }
