@@ -78,16 +78,16 @@ public class QueryBuilders {
     public static MatchQueryBuilder matchQuery(String name, JsonElement value) {
       return new MatchQueryBuilder(name, value);
     }
+    
+    public static MatchQueryBuilder matchQuery(String name, String value) {
+	      return new MatchQueryBuilder(name, new JsonPrimitive(value));
+	  }
 
-	  public static MatchQueryBuilder matchQuery(String name, String value) {
+    public static MatchQueryBuilder matchQuery(String name, Boolean value) {
 	      return new MatchQueryBuilder(name, new JsonPrimitive(value));
 	  }
-	
-	  public static MatchQueryBuilder matchQuery(String name, Boolean value) {
-	      return new MatchQueryBuilder(name, new JsonPrimitive(value));
-	  }
-	
-	  public static MatchQueryBuilder matchQuery(String name, Number value) {
+
+    public static MatchQueryBuilder matchQuery(String name, Number value) {
 	      return new MatchQueryBuilder(name, new JsonPrimitive(value));
 	  }
 
