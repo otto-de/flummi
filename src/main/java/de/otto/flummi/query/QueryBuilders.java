@@ -84,7 +84,7 @@ public class QueryBuilders {
     }
 
     public static MatchQueryBuilder matchQuery(String name, Boolean value) {
-  	    return new MatchQueryBuilder(name, new JsonPrimitive(value));
+        return new MatchQueryBuilder(name, new JsonPrimitive(value));
     }
 
     public static MatchQueryBuilder matchQuery(String name, Number value) {
