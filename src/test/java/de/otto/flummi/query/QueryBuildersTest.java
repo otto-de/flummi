@@ -98,7 +98,7 @@ public class QueryBuildersTest {
     @Test
     public void shouldCreateMatchQuery() {
         MatchQueryBuilder matchQueryBuilder = QueryBuilders.matchQuery("someName", "someValue");
-        assertThat(matchQueryBuilder.build(), is(object("term", object("someName", "someValue"))));
+        assertThat(matchQueryBuilder.build(), is(object("match", object("someName", "someValue"))));
     }
 
     @Test
