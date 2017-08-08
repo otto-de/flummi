@@ -18,7 +18,7 @@ public class MatchQueryBuilderTest {
     @Test
     public void shouldThrowExceptionIfNameIsMissing() throws Exception {
         try {
-            new TermQueryBuilder(null, new JsonPrimitive(42)).build();
+            new MatchQueryBuilder(null, new JsonPrimitive(42)).build();
         } catch (RuntimeException e) {
             assertThat(e.getMessage(), is("missing property 'name'"));
         }
