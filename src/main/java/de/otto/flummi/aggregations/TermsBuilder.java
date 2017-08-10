@@ -16,6 +16,7 @@ import java.util.stream.Collector;
 public class TermsBuilder extends SubAggregationBuilder<TermsBuilder> {
     private String fieldName;
     private Integer size;
+    private Integer minDocCount;
     private ArrayList<Pair<String, SortOrder>> orders;
 
     public TermsBuilder(String name) {
@@ -29,6 +30,11 @@ public class TermsBuilder extends SubAggregationBuilder<TermsBuilder> {
 
     public TermsBuilder size(int size) {
         this.size = size;
+        return this;
+    }
+
+    public TermsBuilder minDocCount(int minDocCount) {
+        this.minDocCount = minDocCount;
         return this;
     }
 
@@ -51,6 +57,9 @@ public class TermsBuilder extends SubAggregationBuilder<TermsBuilder> {
         fields.add("field", new JsonPrimitive(fieldName));
         if (size != null) {
             fields.add("size", new JsonPrimitive(size));
+        }
+        if (minDocCount != null) {
+            fields.add("min_doc_count", new JsonPrimitive(minDocCount));
         }
         if (orders != null) {
             JsonObject orderObject = new JsonObject();

@@ -39,6 +39,18 @@ public class TermsBuilderTest {
     }
 
     @Test
+    public void shouldAddMinDocCountToTermsQuery() throws Exception {
+        // given
+        // when
+        TermsBuilder termsBuilder = new TermsBuilder("bla").field("someField").minDocCount(5);
+        //then
+        JsonObject termsObject = new JsonObject();
+        termsObject.add("field", new JsonPrimitive("someField"));
+        termsObject.add("min_doc_count", new JsonPrimitive(5));
+        assertThat(termsBuilder.build(), is(object("terms", termsObject)));
+    }
+
+    @Test
     public void shouldAddOneOrderToTermsQuery() throws Exception {
         // given
         // when
