@@ -94,10 +94,15 @@ public class QueryBuildersTest {
         TermQueryBuilder termQueryBuilder = QueryBuilders.termQuery("someName", new JsonPrimitive(2));
         assertThat(termQueryBuilder.build(), is(object("term", object("someName", 2))));
     }
+    
+    @Test
+    public void shouldCreateMatchQuery() {
+        MatchQueryBuilder matchQueryBuilder = QueryBuilders.matchQuery("someName", "someValue");
+        assertThat(matchQueryBuilder.build(), is(object("match", object("someName", "someValue"))));
+    }
 
     @Test
     public void shouldCreateNestedQuery() {
-        LocalDate now = LocalDate.now();
         JsonObject jsonObject = QueryBuilders.nestedQuery("somePath", QueryBuilders.prefixFilter("someName", "somePrefix")).build();
         JsonObject nestedObject = new JsonObject();
         nestedObject.add("path", new JsonPrimitive("somePath"));

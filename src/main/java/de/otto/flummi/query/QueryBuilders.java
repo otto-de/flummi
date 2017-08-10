@@ -74,6 +74,22 @@ public class QueryBuilders {
     public static TermQueryBuilder termQuery(String name, Number value) {
         return new TermQueryBuilder(name, new JsonPrimitive(value));
     }
+    
+    public static MatchQueryBuilder matchQuery(String name, JsonElement value) {
+    	  return new MatchQueryBuilder(name, value);
+    }
+    
+    public static MatchQueryBuilder matchQuery(String name, String value) {
+    	  return new MatchQueryBuilder(name, new JsonPrimitive(value));
+    }
+
+    public static MatchQueryBuilder matchQuery(String name, Boolean value) {
+        return new MatchQueryBuilder(name, new JsonPrimitive(value));
+    }
+
+    public static MatchQueryBuilder matchQuery(String name, Number value) {
+        return new MatchQueryBuilder(name, new JsonPrimitive(value));
+    }
 
     public static WildcardQueryBuilder wildcardQuery(String name, String value) {
         return wildcardQuery(name, new JsonPrimitive(value));
