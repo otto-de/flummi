@@ -1,8 +1,10 @@
 # Release History
 
-## Release 2.0.26.0
-* Add support for retrieving index mapping. 
+## release 2.0.27.0
+* Add support for match queries
 
+## release 2.0.26.0
+* Add support for retrieving index mapping. 
 
 ## release 2.0.25.0
 * Add support for geo_distance queries
