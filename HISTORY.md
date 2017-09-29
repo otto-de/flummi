@@ -1,5 +1,14 @@
 # Release History
 
+## release 5.0.31.0
+* add support for min_doc_count
+
+## release 5.0.30.0
+* add support for index mapping
+
+## release 5.0.29.0
+* add support for nested aggregations
+
 ## release 5.0.28.1
 * remove deprecated in IndexRequestBuilder
 

@@ -67,6 +67,7 @@ public class BulkRequestBuilder implements RequestBuilder<Void> {
             String errors = responseObject.get("errors").getAsString();
 
             if (("true").equals(errors)) {
+                LOG.error("Error in bulk request detected {}", jsonString);
                 boolean foundError = false;
                 JsonArray items = responseObject.get("items") != null ? responseObject.get("items").getAsJsonArray() : new JsonArray();
                 for (JsonElement jsonElement : items) {
@@ -74,14 +75,14 @@ public class BulkRequestBuilder implements RequestBuilder<Void> {
                     if (updateField != null) {
                         final JsonElement status = updateField.getAsJsonObject().get("status");
                         final JsonElement error = updateField.getAsJsonObject().get("error");
-                        if (status != null && status.getAsInt() != 404 && error != null && !error.getAsString().isEmpty()) {
+                        if (status != null && status.getAsInt() != 404 && error != null && error.isJsonPrimitive() && !error.getAsString().isEmpty()) {
                             foundError = true;
                         }
                     } else {
                         for (Map.Entry<String, JsonElement> opElement : jsonElement.getAsJsonObject().entrySet()) {
                             JsonObject opObject = opElement.getValue().getAsJsonObject();
                             JsonElement errorObj = opObject.get("error");
-                            if (opObject != null && errorObj != null && !errorObj.getAsString().isEmpty()) {
+                            if (errorObj != null && errorObj.isJsonPrimitive() && !errorObj.getAsString().isEmpty()) {
                                 foundError = true;
                             }
                         }
