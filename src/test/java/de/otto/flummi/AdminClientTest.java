@@ -1,16 +1,19 @@
 package de.otto.flummi;
 
-import com.ning.http.client.AsyncHttpClient;
-import com.ning.http.client.ListenableFuture;
-import com.ning.http.client.Response;
 import de.otto.flummi.request.ClusterHealthRequestBuilder;
 import de.otto.flummi.request.CreateIndexRequestBuilder;
 import de.otto.flummi.util.HttpClientWrapper;
+
+import org.asynchttpclient.AsyncHttpClient;
+import org.asynchttpclient.BoundRequestBuilder;
+import org.asynchttpclient.ListenableFuture;
+import org.asynchttpclient.Response;
 import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.concurrent.ExecutionException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -33,7 +36,7 @@ public class AdminClientTest {
     @Test
     public void shouldCreateClusterAdminClient() throws ExecutionException, InterruptedException, IOException {
         // Given
-        final AsyncHttpClient.BoundRequestBuilder boundRequestBuilder = mock(AsyncHttpClient.BoundRequestBuilder.class);
+        final BoundRequestBuilder boundRequestBuilder = mock(BoundRequestBuilder.class);
         final ListenableFuture<Response> listenableFuture = mock(ListenableFuture.class);
         final Response response = mock(Response.class);
         when(response.getStatusCode()).thenReturn(200);
@@ -55,10 +58,10 @@ public class AdminClientTest {
     @Test
     public void shouldCreateIndicesAdminClient() throws ExecutionException, InterruptedException, IOException {
         //Given
-        final AsyncHttpClient.BoundRequestBuilder boundRequestBuilder = mock(AsyncHttpClient.BoundRequestBuilder.class);
+        final BoundRequestBuilder boundRequestBuilder = mock(BoundRequestBuilder.class);
         when(httpClient.preparePut(anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setBody(anyString())).thenReturn(boundRequestBuilder);
-        when(boundRequestBuilder.setBodyEncoding(anyString())).thenReturn(boundRequestBuilder);
+        when(boundRequestBuilder.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilder);
         final ListenableFuture<Response> listenableFuture = mock(ListenableFuture.class);
         when(boundRequestBuilder.execute()).thenReturn(listenableFuture);
         final Response response = mock(Response.class);

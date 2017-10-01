@@ -1,6 +1,7 @@
 package de.otto.flummi.util;
 
-import com.ning.http.client.AsyncHttpClient;
+import org.asynchttpclient.AsyncHttpClient;
+import org.asynchttpclient.BoundRequestBuilder;
 
 public class HttpClientWrapper {
 
@@ -12,23 +13,23 @@ public class HttpClientWrapper {
         this.baseUrl = baseUrl;
     }
 
-    public AsyncHttpClient.BoundRequestBuilder prepareGet(String url) {
+    public BoundRequestBuilder prepareGet(String url) {
         return asyncHttpClient.prepareGet(baseUrl + url);
     }
 
-    public AsyncHttpClient.BoundRequestBuilder preparePost(String url) {
+    public BoundRequestBuilder preparePost(String url) {
         return asyncHttpClient.preparePost(baseUrl + url);
     }
 
-    public AsyncHttpClient.BoundRequestBuilder preparePut(String url) {
+    public BoundRequestBuilder preparePut(String url) {
         return asyncHttpClient.preparePut(baseUrl + url);
     }
 
-    public AsyncHttpClient.BoundRequestBuilder prepareDelete(String url) {
+    public BoundRequestBuilder prepareDelete(String url) {
         return asyncHttpClient.prepareDelete(baseUrl + url);
     }
 
-    public AsyncHttpClient.BoundRequestBuilder prepareHead(String url) {
+    public BoundRequestBuilder prepareHead(String url) {
         return asyncHttpClient.prepareHead(baseUrl + url);
     }
 }

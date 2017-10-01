@@ -2,17 +2,19 @@ package de.otto.flummi.request;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.ning.http.client.AsyncHttpClient;
 import de.otto.flummi.CompletedFuture;
 import de.otto.flummi.MockResponse;
 import de.otto.flummi.response.AnalyzeResponse;
 import de.otto.flummi.response.HttpServerErrorException;
 import de.otto.flummi.response.Token;
 import de.otto.flummi.util.HttpClientWrapper;
+
+import org.asynchttpclient.BoundRequestBuilder;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 import static de.otto.flummi.request.GsonHelper.object;
@@ -29,7 +31,7 @@ public class AnalyzeRequestBuilderTest {
     HttpClientWrapper httpClient;
 
     @Mock
-    AsyncHttpClient.BoundRequestBuilder boundRequestBuilder;
+    BoundRequestBuilder boundRequestBuilder;
 
     AnalyzeRequestBuilder helloWorldAnalyzeRequestBuilder;
 
@@ -37,7 +39,7 @@ public class AnalyzeRequestBuilderTest {
     public void setUp() throws Exception {
         initMocks(this);
         when(httpClient.prepareGet(anyString())).thenReturn(boundRequestBuilder);
-        when(boundRequestBuilder.setBodyEncoding(anyString())).thenReturn(boundRequestBuilder);
+        when(boundRequestBuilder.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setBody(anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(
                 new CompletedFuture<>(new MockResponse(200, "ok", helloWorldResponse.toString()))

@@ -1,16 +1,17 @@
 package de.otto.flummi.request;
 
 import com.google.gson.*;
-import com.ning.http.client.AsyncHttpClient;
-import com.ning.http.client.Response;
 import de.otto.flummi.RequestBuilderUtil;
 import de.otto.flummi.response.MultiGetRequestDocument;
 import de.otto.flummi.response.MultiGetResponse;
 import de.otto.flummi.response.MultiGetResponseDocument;
 import de.otto.flummi.util.HttpClientWrapper;
+
+import org.asynchttpclient.BoundRequestBuilder;
+import org.asynchttpclient.Response;
 import org.slf4j.Logger;
 
-import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -62,9 +63,9 @@ public class MultiGetRequestBuilder implements RequestBuilder<MultiGetResponse> 
             if (documents != null) {
                 body.add("docs", array(documents.stream().map(d -> create(d)).collect(toList())));
             }
-            AsyncHttpClient.BoundRequestBuilder boundRequestBuilder = httpClient
+            BoundRequestBuilder boundRequestBuilder = httpClient
                     .preparePost(url)
-                    .setBodyEncoding("UTF-8");
+                    .setCharset(Charset.forName("UTF-8"));
             if (timeoutMillis != null) {
                 boundRequestBuilder.setRequestTimeout(timeoutMillis);
             }
@@ -100,7 +101,7 @@ public class MultiGetRequestBuilder implements RequestBuilder<MultiGetResponse> 
             }
 
             return new MultiGetResponse(documents, tookInMillis);
-        } catch (InterruptedException | IOException e) {
+        } catch (InterruptedException e) {
             throw new RuntimeException(e);
         } catch (ExecutionException e) {
             throw new RuntimeException(e);

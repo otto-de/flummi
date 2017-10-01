@@ -1,6 +1,5 @@
 package de.otto.flummi.request;
 
-import com.ning.http.client.AsyncHttpClient;
 import de.otto.flummi.CompletedFuture;
 import de.otto.flummi.MockResponse;
 import de.otto.flummi.response.HttpServerErrorException;
@@ -15,6 +14,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+import org.asynchttpclient.BoundRequestBuilder;
+
 public class IndicesExistsRequestBuilderTest {
 
     public static final String INDEX_NAME = "someIndexName";
@@ -25,7 +26,7 @@ public class IndicesExistsRequestBuilderTest {
     HttpClientWrapper httpClient;
 
     @Mock
-    AsyncHttpClient.BoundRequestBuilder boundRequestBuilder;
+    BoundRequestBuilder boundRequestBuilder;
 
     @BeforeMethod
     public void setUp() throws Exception {

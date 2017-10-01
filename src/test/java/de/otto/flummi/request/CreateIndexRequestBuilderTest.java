@@ -1,6 +1,5 @@
 package de.otto.flummi.request;
 
-import com.ning.http.client.AsyncHttpClient;
 import de.otto.flummi.CompletedFuture;
 import de.otto.flummi.InvalidElasticsearchResponseException;
 import de.otto.flummi.MockResponse;
@@ -19,13 +18,17 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+import java.nio.charset.Charset;
+
+import org.asynchttpclient.BoundRequestBuilder;
+
 public class CreateIndexRequestBuilderTest {
 
     @Mock
     HttpClientWrapper httpClient;
 
     @Mock
-    AsyncHttpClient.BoundRequestBuilder boundRequestBuilder;
+    BoundRequestBuilder boundRequestBuilder;
 
     CreateIndexRequestBuilder testee;
 
@@ -40,7 +43,7 @@ public class CreateIndexRequestBuilderTest {
         // given
         when(httpClient.preparePut("/someIndex")).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setBody(any(String.class))).thenReturn(boundRequestBuilder);
-        when(boundRequestBuilder.setBodyEncoding(anyString())).thenReturn(boundRequestBuilder);
+        when(boundRequestBuilder.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok", "{\"acknowledged\": true}")));
         testee
                 .setMappings(object("someType", object("someField", object("someSetting", "someValue"))));
@@ -58,7 +61,7 @@ public class CreateIndexRequestBuilderTest {
         // given
         when(httpClient.preparePut("/someIndex")).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setBody(any(String.class))).thenReturn(boundRequestBuilder);
-        when(boundRequestBuilder.setBodyEncoding(anyString())).thenReturn(boundRequestBuilder);
+        when(boundRequestBuilder.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok", "{\"acknowledged\": true}")));
         testee
                 .setSettings(object("someSetting", "someValue"));
@@ -76,7 +79,7 @@ public class CreateIndexRequestBuilderTest {
         // given
         when(httpClient.preparePut("/someIndex")).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setBody(any(String.class))).thenReturn(boundRequestBuilder);
-        when(boundRequestBuilder.setBodyEncoding(anyString())).thenReturn(boundRequestBuilder);
+        when(boundRequestBuilder.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(400, "Bad Request", "someBadBody")));
         testee
                 .setSettings(object("someSetting", "someValue"));
@@ -98,7 +101,7 @@ public class CreateIndexRequestBuilderTest {
         // given
         when(httpClient.preparePut("/someIndex")).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setBody(any(String.class))).thenReturn(boundRequestBuilder);
-        when(boundRequestBuilder.setBodyEncoding(anyString())).thenReturn(boundRequestBuilder);
+        when(boundRequestBuilder.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", "{\"acknowledged\": false}")));
         testee
                 .setSettings(object("someSetting", "someValue"));

@@ -4,17 +4,16 @@ package de.otto.flummi;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.ning.http.client.Response;
 import de.otto.flummi.request.*;
 import de.otto.flummi.util.HttpClientWrapper;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Stream;
+
+import org.asynchttpclient.Response;
 
 import static de.otto.flummi.request.GsonHelper.object;
 import static java.util.stream.Collectors.toList;
@@ -59,11 +58,7 @@ public class IndicesAdminClient {
                 throw RequestBuilderUtil.toHttpServerErrorException(response);
             }
             String jsonString = null;
-            try {
-                jsonString = response.getResponseBody();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            jsonString = response.getResponseBody();
             return gson.fromJson(jsonString, JsonObject.class);
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
@@ -77,11 +72,7 @@ public class IndicesAdminClient {
             throw RequestBuilderUtil.toHttpServerErrorException(response);
         }
         String jsonString = null;
-        try {
-            jsonString = response.getResponseBody();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        jsonString = response.getResponseBody();
         return gson.fromJson(jsonString, JsonObject.class);
 	    } catch (InterruptedException | ExecutionException e) {
 	        throw new RuntimeException(e);
@@ -100,8 +91,6 @@ public class IndicesAdminClient {
             return responseObject.entrySet().stream()
                     .map(Map.Entry::getKey)
                     .collect(toList());
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
@@ -123,8 +112,6 @@ public class IndicesAdminClient {
                             && e.getValue().getAsJsonObject().get("aliases").getAsJsonObject().has(aliasName)))
                     .map(e -> e.getKey())
                     .findFirst();
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
@@ -153,8 +140,6 @@ public class IndicesAdminClient {
                 }
             }
             return;
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         } catch (ExecutionException e) {
@@ -178,8 +163,6 @@ public class IndicesAdminClient {
                             && e.getValue().getAsJsonObject().get("aliases").isJsonObject()
                             && e.getValue().getAsJsonObject().get("aliases").getAsJsonObject().has(aliasName)))
                     .count() > 0;
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         } catch (ExecutionException e) {

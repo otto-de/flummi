@@ -1,11 +1,12 @@
 package de.otto.flummi;
 
-import com.ning.http.client.ListenableFuture;
-
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+
+import org.asynchttpclient.ListenableFuture;
 
 public final class CompletedFuture<T> implements ListenableFuture<T> {
     private T result;
@@ -58,4 +59,9 @@ public final class CompletedFuture<T> implements ListenableFuture<T> {
     public T get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
         return result;
     }
+
+	@Override
+	public CompletableFuture<T> toCompletableFuture() {
+		return null;
+	}
 }

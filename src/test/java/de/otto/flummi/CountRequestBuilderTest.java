@@ -1,6 +1,5 @@
 package de.otto.flummi;
 
-import com.ning.http.client.AsyncHttpClient;
 import de.otto.flummi.request.CountRequestBuilder;
 import de.otto.flummi.response.HttpServerErrorException;
 import de.otto.flummi.util.HttpClientWrapper;
@@ -10,6 +9,8 @@ import org.testng.annotations.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.*;
+
+import org.asynchttpclient.BoundRequestBuilder;
 
 public class CountRequestBuilderTest {
 
@@ -26,7 +27,7 @@ public class CountRequestBuilderTest {
 
     @Test
     public void shouldBuildCorrectCountQueryWithoutTypes() throws Exception {
-        AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
+        BoundRequestBuilder boundRequestBuilderMock = mock(BoundRequestBuilder.class);
         when(httpClient.prepareGet("/product-index/_count")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", "{\"count\" : 42}")));
 
@@ -40,7 +41,7 @@ public class CountRequestBuilderTest {
 
     @Test
     public void shouldBuildCorrectCountQueryWithTwoTypes() throws Exception {
-        AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
+        BoundRequestBuilder boundRequestBuilderMock = mock(BoundRequestBuilder.class);
         when(httpClient.prepareGet("/product-index/bla,blupp/_count")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", "{\"count\" : 42}")));
 
@@ -54,7 +55,7 @@ public class CountRequestBuilderTest {
 
     @Test
     public void shouldBuildCorrectCountQueryWithOneType() throws Exception {
-        AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
+        BoundRequestBuilder boundRequestBuilderMock = mock(BoundRequestBuilder.class);
         when(httpClient.prepareGet("/product-index/bla/_count")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", "{\"count\" : 23}")));
         // when
@@ -67,7 +68,7 @@ public class CountRequestBuilderTest {
 
     @Test(expectedExceptions = HttpServerErrorException.class)
     public void shouldThrowWhenServerFails() throws Exception {
-        AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
+        BoundRequestBuilder boundRequestBuilderMock = mock(BoundRequestBuilder.class);
         when(httpClient.prepareGet("/product-index/bla/_count")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(500, "Internal Server Error", "{\"error\" : \"miserable failure\" }")));
         // when

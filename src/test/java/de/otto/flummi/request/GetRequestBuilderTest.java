@@ -2,7 +2,6 @@ package de.otto.flummi.request;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.ning.http.client.AsyncHttpClient;
 import de.otto.flummi.CompletedFuture;
 import de.otto.flummi.MockResponse;
 import de.otto.flummi.response.GetResponse;
@@ -18,13 +17,15 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+import org.asynchttpclient.BoundRequestBuilder;
+
 public class GetRequestBuilderTest {
 
     @Mock
     HttpClientWrapper httpClient;
 
     @Mock
-    AsyncHttpClient.BoundRequestBuilder boundRequestBuilder;
+    BoundRequestBuilder boundRequestBuilder;
 
     @BeforeMethod
     public void setUp() throws Exception {

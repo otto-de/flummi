@@ -2,7 +2,6 @@ package de.otto.flummi.request;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.ning.http.client.AsyncHttpClient;
 import de.otto.flummi.CompletedFuture;
 import de.otto.flummi.MockResponse;
 import de.otto.flummi.response.MultiGetResponse;
@@ -21,6 +20,10 @@ import static org.hamcrest.core.Is.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
+
+import java.nio.charset.Charset;
+
+import org.asynchttpclient.BoundRequestBuilder;
 
 public class MultiGetRequestBuilderTest {
 
@@ -91,10 +94,10 @@ public class MultiGetRequestBuilderTest {
     @Test
     public void shouldReturnOneMatchedDocument() throws Exception {
         // given
-        AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
+        BoundRequestBuilder boundRequestBuilderMock = mock(BoundRequestBuilder.class);
         when(httpClient.preparePost("/some-index/_mget")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
-        when(boundRequestBuilderMock.setBodyEncoding(anyString())).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", ONE_DOC_FOUND_RESPONSE)));
 
         // when
@@ -110,10 +113,10 @@ public class MultiGetRequestBuilderTest {
     @Test
     public void shouldReturnMultipleMatchedDocument() throws Exception {
         // given
-        AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
+        BoundRequestBuilder boundRequestBuilderMock = mock(BoundRequestBuilder.class);
         when(httpClient.preparePost("/some-index/_mget")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
-        when(boundRequestBuilderMock.setBodyEncoding(anyString())).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", TWO_DOC_FOUND_RESPONSE)));
 
         // when
@@ -130,10 +133,10 @@ public class MultiGetRequestBuilderTest {
     @Test
     public void shouldBuildAndReturnDocumentWithTypeAndIndex() throws Exception {
         // given
-        AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
+        BoundRequestBuilder boundRequestBuilderMock = mock(BoundRequestBuilder.class);
         when(httpClient.preparePost("/some-index/_mget")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
-        when(boundRequestBuilderMock.setBodyEncoding(anyString())).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", ONE_DOC_FOUND_RESPONSE)));
 
         // when
@@ -146,10 +149,10 @@ public class MultiGetRequestBuilderTest {
     @Test
     public void shouldReturnAnEmptyResultFor404Response() throws Exception {
         // given
-        AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
+        BoundRequestBuilder boundRequestBuilderMock = mock(BoundRequestBuilder.class);
         when(httpClient.preparePost("/some-index/_mget")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
-        when(boundRequestBuilderMock.setBodyEncoding(anyString())).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(404, "not found", "")));
 
         // when
@@ -162,10 +165,10 @@ public class MultiGetRequestBuilderTest {
     @Test
     public void shouldParseNotFoundDocument() throws Exception {
         // given
-        AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
+        BoundRequestBuilder boundRequestBuilderMock = mock(BoundRequestBuilder.class);
         when(httpClient.preparePost("/some-index/_mget")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
-        when(boundRequestBuilderMock.setBodyEncoding(anyString())).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", NOT_FOUND_RESPONSE)));
 
         // when

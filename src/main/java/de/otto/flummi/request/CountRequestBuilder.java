@@ -2,13 +2,12 @@ package de.otto.flummi.request;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.ning.http.client.Response;
 import de.otto.flummi.RequestBuilderUtil;
 import de.otto.flummi.util.HttpClientWrapper;
+
+import org.asynchttpclient.Response;
 import org.slf4j.Logger;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.util.concurrent.ExecutionException;
 
 import static de.otto.flummi.RequestBuilderUtil.toHttpServerErrorException;
@@ -45,8 +44,6 @@ public class CountRequestBuilder implements RequestBuilder<Long> {
             String jsonString = response.getResponseBody();
             JsonObject responseObject = gson.fromJson(jsonString, JsonObject.class);
             return responseObject.get("count").getAsLong();
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         } catch (ExecutionException e) {
