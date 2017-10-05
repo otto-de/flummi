@@ -1,4 +1,6 @@
 # Release History
+## release 5.0.32.0
+* use version of async-http-client 2.0.37
 
 ## release 5.0.31.0
 * add support for min_doc_count
