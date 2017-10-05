@@ -1,8 +1,6 @@
 package de.otto.flummi.request;
 
 import com.google.gson.*;
-import com.ning.http.client.AsyncHttpClient;
-import com.ning.http.client.Response;
 import de.otto.flummi.RequestBuilderUtil;
 import de.otto.flummi.SortOrder;
 import de.otto.flummi.aggregations.AggregationBuilder;
@@ -11,14 +9,15 @@ import de.otto.flummi.query.sort.FieldSortBuilder;
 import de.otto.flummi.query.sort.SortBuilder;
 import de.otto.flummi.response.*;
 import de.otto.flummi.util.HttpClientWrapper;
+
+import org.asynchttpclient.BoundRequestBuilder;
+import org.asynchttpclient.Response;
 import org.slf4j.Logger;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeoutException;
 import java.util.stream.Collector;
 
 import static de.otto.flummi.RequestBuilderUtil.toHttpServerErrorException;
@@ -150,9 +149,9 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
 
                 body.add("aggregations", jsonObject);
             }
-            AsyncHttpClient.BoundRequestBuilder boundRequestBuilder = httpClient
+            BoundRequestBuilder boundRequestBuilder = httpClient
                     .preparePost(url)
-                    .setBodyEncoding("UTF-8");
+                    .setCharset(Charset.forName("UTF-8"));
             if (timeoutMillis != null) {
                 boundRequestBuilder.setRequestTimeout(timeoutMillis);
             }
@@ -190,8 +189,6 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
                 });
             }
             return searchResponse.build();
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(body.toString(), e);
         }

@@ -1,14 +1,17 @@
 package de.otto.flummi;
 
-import com.ning.http.client.FluentCaseInsensitiveStringsMap;
-import com.ning.http.client.Response;
-import com.ning.http.client.cookie.Cookie;
-import com.ning.http.client.uri.Uri;
-
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.SocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.util.List;
+
+import org.asynchttpclient.Response;
+import org.asynchttpclient.cookie.Cookie;
+import org.asynchttpclient.uri.Uri;
+
+import io.netty.handler.codec.http.HttpHeaders;
 
 import static java.util.Collections.emptyList;
 
@@ -43,37 +46,22 @@ public class MockResponse implements Response {
     }
 
     @Override
-    public byte[] getResponseBodyAsBytes() throws IOException {
+    public byte[] getResponseBodyAsBytes() {
         return responseBody.getBytes();
     }
 
     @Override
-    public ByteBuffer getResponseBodyAsByteBuffer() throws IOException {
+    public ByteBuffer getResponseBodyAsByteBuffer() {
         throw new IllegalStateException("ByteBuffer not implemented");
     }
 
     @Override
-    public InputStream getResponseBodyAsStream() throws IOException {
+    public InputStream getResponseBodyAsStream() {
         throw new IllegalStateException("Stream not implemented");
     }
 
     @Override
-    public String getResponseBodyExcerpt(int maxLength, String charset) throws IOException {
-        return responseBody.substring(0, maxLength-1);
-    }
-
-    @Override
-    public String getResponseBody(String charset) throws IOException {
-        return responseBody;
-    }
-
-    @Override
-    public String getResponseBodyExcerpt(int maxLength) throws IOException {
-        return responseBody.substring(0, maxLength-1);
-    }
-
-    @Override
-    public String getResponseBody() throws IOException {
+    public String getResponseBody() {
         return responseBody;
     }
 
@@ -95,11 +83,6 @@ public class MockResponse implements Response {
     @Override
     public List<String> getHeaders(String name) {
         return emptyList();
-    }
-
-    @Override
-    public FluentCaseInsensitiveStringsMap getHeaders() {
-        return null;
     }
 
     @Override
@@ -126,4 +109,24 @@ public class MockResponse implements Response {
     public boolean hasResponseBody() {
         return !responseBody.isEmpty();
     }
+
+	@Override
+	public String getResponseBody(Charset charset) {
+		return null;
+	}
+
+	@Override
+	public HttpHeaders getHeaders() {
+		return null;
+	}
+
+	@Override
+	public SocketAddress getRemoteAddress() {
+		return null;
+	}
+
+	@Override
+	public SocketAddress getLocalAddress() {
+		return null;
+	}
 }

@@ -1,6 +1,5 @@
 package de.otto.flummi.request;
 
-import com.ning.http.client.AsyncHttpClient;
 import de.otto.flummi.CompletedFuture;
 import de.otto.flummi.MockResponse;
 import de.otto.flummi.response.HttpServerErrorException;
@@ -11,6 +10,8 @@ import org.testng.annotations.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
+
+import org.asynchttpclient.BoundRequestBuilder;
 
 public class DeleteRequestBuilderTest {
 
@@ -25,7 +26,7 @@ public class DeleteRequestBuilderTest {
 
     @Test
     public void shouldDeleteDocument() {
-        AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
+        BoundRequestBuilder boundRequestBuilderMock = mock(BoundRequestBuilder.class);
 
         when(httpClient.prepareDelete("/someIndexName/someType/someId")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok", "")));
@@ -71,7 +72,7 @@ public class DeleteRequestBuilderTest {
 
     @Test(expectedExceptions = HttpServerErrorException.class)
     public void shouldThrowExceptionIfStatusIsNot200() {
-        AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
+        BoundRequestBuilder boundRequestBuilderMock = mock(BoundRequestBuilder.class);
 
         when(httpClient.prepareDelete("/someIndexName/someType/someId")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(400, "not ok", "errorResponse")));

@@ -1,17 +1,14 @@
 package de.otto.flummi.request;
 
 import com.google.gson.*;
-import com.ning.http.client.AsyncHttpClient;
-import com.ning.http.client.Response;
-import de.otto.flummi.RequestBuilderUtil;
 import de.otto.flummi.response.AnalyzeResponse;
 import de.otto.flummi.response.Token;
 import de.otto.flummi.util.HttpClientWrapper;
+
+import org.asynchttpclient.Response;
 import org.slf4j.Logger;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -70,7 +67,7 @@ public class AnalyzeRequestBuilder implements RequestBuilder<AnalyzeResponse> {
 
             Response response = httpClient
                     .prepareGet(url)
-                    .setBodyEncoding("UTF-8")
+                    .setCharset(Charset.forName("UTF-8"))
                     .setBody(gson.toJson(body))
                     .execute()
                     .get();
@@ -83,8 +80,6 @@ public class AnalyzeRequestBuilder implements RequestBuilder<AnalyzeResponse> {
             AnalyzeResponse.Builder analyzeResponse = parseResponse(jsonResponse);
 
             return analyzeResponse.build();
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         } catch (ExecutionException e) {

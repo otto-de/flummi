@@ -1,8 +1,9 @@
 package de.otto.flummi.request;
 
-import com.ning.http.client.Response;
 import de.otto.flummi.RequestBuilderUtil;
 import de.otto.flummi.util.HttpClientWrapper;
+
+import org.asynchttpclient.Response;
 import org.slf4j.Logger;
 
 import java.io.UnsupportedEncodingException;

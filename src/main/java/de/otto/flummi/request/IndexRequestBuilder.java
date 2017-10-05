@@ -3,14 +3,16 @@ package de.otto.flummi.request;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.ning.http.client.AsyncHttpClient;
-import com.ning.http.client.Response;
 import de.otto.flummi.domain.index.Index;
 import de.otto.flummi.util.HttpClientWrapper;
+
+import org.asynchttpclient.BoundRequestBuilder;
+import org.asynchttpclient.Response;
 import org.slf4j.Logger;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.concurrent.ExecutionException;
 
 import static de.otto.flummi.RequestBuilderUtil.buildUrl;
@@ -81,7 +83,7 @@ public class IndexRequestBuilder implements RequestBuilder<Void> {
             }
         }
         try {
-            AsyncHttpClient.BoundRequestBuilder reqBuilder;
+            BoundRequestBuilder reqBuilder;
             if (id != null) {
                 String url = buildUrl(indexName, documentType, URLEncoder.encode(id.getAsString(), "UTF-8"));
                 reqBuilder = httpClient.preparePut(url);
@@ -94,7 +96,7 @@ public class IndexRequestBuilder implements RequestBuilder<Void> {
             }
 
             String body = createBody();
-            Response response = reqBuilder.setBody(body).setBodyEncoding("UTF-8").execute().get();
+            Response response = reqBuilder.setBody(body).setCharset(Charset.forName("UTF-8")).execute().get();
             if (response.getStatusCode() >= 300) {
                 throw toHttpServerErrorException(response);
             }

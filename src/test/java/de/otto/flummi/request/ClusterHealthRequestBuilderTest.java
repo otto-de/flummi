@@ -1,6 +1,5 @@
 package de.otto.flummi.request;
 
-import com.ning.http.client.AsyncHttpClient;
 import de.otto.flummi.*;
 import de.otto.flummi.CompletedFuture;
 import de.otto.flummi.MockResponse;
@@ -14,6 +13,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
+
+import org.asynchttpclient.BoundRequestBuilder;
 
 public class ClusterHealthRequestBuilderTest {
 
@@ -29,7 +30,7 @@ public class ClusterHealthRequestBuilderTest {
     @Test
     public void shouldExecuteSimpleRequest() throws Exception {
         // given
-        AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
+        BoundRequestBuilder boundRequestBuilderMock = mock(BoundRequestBuilder.class);
 
         Mockito.when(asyncHttpClient.prepareGet("/_cluster/health/someIndex,someOtherIndex")).thenReturn(boundRequestBuilderMock);
         Mockito.when(boundRequestBuilderMock.addQueryParam(anyString(), anyString())).thenReturn(boundRequestBuilderMock);
@@ -52,7 +53,7 @@ public class ClusterHealthRequestBuilderTest {
     @Test
     public void shouldExecuteRequestWithTimeout() throws Exception {
         // given
-        AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
+        BoundRequestBuilder boundRequestBuilderMock = mock(BoundRequestBuilder.class);
 
         Mockito.when(asyncHttpClient.prepareGet("/_cluster/health/someIndex,someOtherIndex")).thenReturn(boundRequestBuilderMock);
         Mockito.when(boundRequestBuilderMock.addQueryParam(anyString(), anyString())).thenReturn(boundRequestBuilderMock);
@@ -76,7 +77,7 @@ public class ClusterHealthRequestBuilderTest {
     @Test
     public void shouldExecuteRequestWithWaitForYellowStatus() throws Exception {
         // given
-        AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
+        BoundRequestBuilder boundRequestBuilderMock = mock(BoundRequestBuilder.class);
 
         Mockito.when(asyncHttpClient.prepareGet("/_cluster/health/someIndex,someOtherIndex")).thenReturn(boundRequestBuilderMock);
         Mockito.when(boundRequestBuilderMock.addQueryParam(anyString(), anyString())).thenReturn(boundRequestBuilderMock);
@@ -100,7 +101,7 @@ public class ClusterHealthRequestBuilderTest {
     @Test
     public void shouldThrowExceptionIfStatusIsMissingInResponse() throws Exception {
         // given
-        AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
+        BoundRequestBuilder boundRequestBuilderMock = mock(BoundRequestBuilder.class);
 
         Mockito.when(asyncHttpClient.prepareGet("/_cluster/health/someIndex,someOtherIndex")).thenReturn(boundRequestBuilderMock);
         Mockito.when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok",
@@ -122,7 +123,7 @@ public class ClusterHealthRequestBuilderTest {
     @Test
     public void shouldThrowExceptionIfTimedOutIsMissingInResponse() throws Exception {
         // given
-        AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
+        BoundRequestBuilder boundRequestBuilderMock = mock(BoundRequestBuilder.class);
 
         Mockito.when(asyncHttpClient.prepareGet("/_cluster/health/someIndex,someOtherIndex")).thenReturn(boundRequestBuilderMock);
         Mockito.when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok",
@@ -144,7 +145,7 @@ public class ClusterHealthRequestBuilderTest {
     @Test
     public void shouldThrowExceptionIfClusterNameIsMissingInResponse() throws Exception {
         // given
-        AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
+        BoundRequestBuilder boundRequestBuilderMock = mock(BoundRequestBuilder.class);
 
         Mockito.when(asyncHttpClient.prepareGet("/_cluster/health/someIndex,someOtherIndex")).thenReturn(boundRequestBuilderMock);
         Mockito.when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok",
@@ -166,7 +167,7 @@ public class ClusterHealthRequestBuilderTest {
     @Test
     public void shouldThrowExceptionIfTimedOutIsTrue() throws Exception {
         // given
-        AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
+        BoundRequestBuilder boundRequestBuilderMock = mock(BoundRequestBuilder.class);
 
         Mockito.when(asyncHttpClient.prepareGet("/_cluster/health/someIndex,someOtherIndex")).thenReturn(boundRequestBuilderMock);
         Mockito.when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok",
@@ -189,7 +190,7 @@ public class ClusterHealthRequestBuilderTest {
     @Test(expectedExceptions = HttpServerErrorException.class)
     public void shouldThrowExceptionIfStatusCodeNotOk() throws Exception {
         // given
-        AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
+        BoundRequestBuilder boundRequestBuilderMock = mock(BoundRequestBuilder.class);
 
         Mockito.when(asyncHttpClient.prepareGet("/_cluster/health/someIndex,someOtherIndex")).thenReturn(boundRequestBuilderMock);
         Mockito.when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(400, "not ok",

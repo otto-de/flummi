@@ -2,13 +2,14 @@ package de.otto.flummi.request;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.ning.http.client.Response;
 import de.otto.flummi.response.SearchResponse;
 import de.otto.flummi.util.HttpClientWrapper;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.concurrent.ExecutionException;
+
+import org.asynchttpclient.Response;
 
 import static de.otto.flummi.RequestBuilderUtil.toHttpServerErrorException;
 import static de.otto.flummi.request.GsonHelper.object;
@@ -64,8 +65,6 @@ public class SearchScrollRequestBuilder implements RequestBuilder<SearchResponse
             return searchResponse.build();
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         }
 
     }

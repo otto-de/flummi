@@ -2,15 +2,15 @@ package de.otto.flummi.request;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.ning.http.client.AsyncHttpClient;
-import com.ning.http.client.Response;
 import de.otto.flummi.ClusterHealthResponse;
 import de.otto.flummi.ClusterHealthStatus;
 import de.otto.flummi.InvalidElasticsearchResponseException;
 import de.otto.flummi.util.HttpClientWrapper;
+
+import org.asynchttpclient.BoundRequestBuilder;
+import org.asynchttpclient.Response;
 import org.slf4j.Logger;
 
-import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 import static de.otto.flummi.RequestBuilderUtil.toHttpServerErrorException;
@@ -43,7 +43,7 @@ public class ClusterHealthRequestBuilder implements RequestBuilder<ClusterHealth
             if (indexNames != null) {
                 url.append("/").append(String.join(",", indexNames));
             }
-            AsyncHttpClient.BoundRequestBuilder requestBuilder = httpClient.prepareGet(url.toString());
+            BoundRequestBuilder requestBuilder = httpClient.prepareGet(url.toString());
             if (waitForYellowStatus) {
                 requestBuilder.addQueryParam("wait_for_status", "yellow");
             }
@@ -71,8 +71,6 @@ public class ClusterHealthRequestBuilder implements RequestBuilder<ClusterHealth
                 throw new InvalidElasticsearchResponseException("Timed out waiting for yellow cluster status");
             }
             return clusterHealthResponse;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         } catch (ExecutionException e) {

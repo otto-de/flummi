@@ -1,11 +1,12 @@
 package de.otto.flummi.request;
 
-import com.ning.http.client.AsyncHttpClient;
 import de.otto.flummi.CompletedFuture;
 import de.otto.flummi.InvalidElasticsearchResponseException;
 import de.otto.flummi.MockResponse;
 import de.otto.flummi.response.HttpServerErrorException;
 import de.otto.flummi.util.HttpClientWrapper;
+
+import org.asynchttpclient.BoundRequestBuilder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -30,7 +31,7 @@ public class DeleteIndexRequestBuilderTest {
     @Test
     public void shouldDeleteIndex() {
         testee = new DeleteIndexRequestBuilder(httpClient, Stream.of("someIndexName"));
-        AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
+        BoundRequestBuilder boundRequestBuilderMock = mock(BoundRequestBuilder.class);
 
         when(httpClient.prepareDelete("/someIndexName")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok", "")));
@@ -41,7 +42,7 @@ public class DeleteIndexRequestBuilderTest {
     @Test
     public void shouldDeleteMultipleIndices() throws Exception {
         testee = new DeleteIndexRequestBuilder(httpClient, Stream.of("someIndexName", "someOtherIndex"));
-        AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
+        BoundRequestBuilder boundRequestBuilderMock = mock(BoundRequestBuilder.class);
 
         when(httpClient.prepareDelete("/someIndexName,someOtherIndex")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok", "")));
@@ -52,7 +53,7 @@ public class DeleteIndexRequestBuilderTest {
     @Test(expectedExceptions = HttpServerErrorException.class)
     public void shouldThrowExceptionIfStatusCodeNotOk() {
         testee = new DeleteIndexRequestBuilder(httpClient, Stream.of("someIndexName"));
-        AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
+        BoundRequestBuilder boundRequestBuilderMock = mock(BoundRequestBuilder.class);
         when(httpClient.prepareDelete("/someIndexName")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(400, "not ok", "")));
         try {
@@ -66,7 +67,7 @@ public class DeleteIndexRequestBuilderTest {
 
     @Test
     public void shouldNotDeleteIndexForAcknowledgedFalse() throws ExecutionException, InterruptedException, IOException {
-        AsyncHttpClient.BoundRequestBuilder boundRequestBuilderMock = mock(AsyncHttpClient.BoundRequestBuilder.class);
+        BoundRequestBuilder boundRequestBuilderMock = mock(BoundRequestBuilder.class);
         when(httpClient.prepareDelete("/someIndexName")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", "{\"acknowledged\":\"false\"}")));
         try {

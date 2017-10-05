@@ -1,10 +1,8 @@
 package de.otto.flummi;
 
-import com.ning.http.client.Response;
 import de.otto.flummi.response.HttpServerErrorException;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
+import org.asynchttpclient.Response;
 
 public class RequestBuilderUtil {
 
@@ -26,11 +24,7 @@ public class RequestBuilderUtil {
     }
 
     public static HttpServerErrorException toHttpServerErrorException(Response response) {
-        try {
-            return new HttpServerErrorException(response.getStatusCode(), response.getStatusText() , new String(response.getResponseBodyAsBytes()));
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
+        return new HttpServerErrorException(response.getStatusCode(), response.getStatusText() , new String(response.getResponseBodyAsBytes()));
     }
 
     public static String buildUrl(String indexName, String type, String operationOrId) {

@@ -4,15 +4,15 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.ning.http.client.AsyncHttpClient;
-import com.ning.http.client.Response;
 import de.otto.flummi.InvalidElasticsearchResponseException;
 import de.otto.flummi.bulkactions.BulkActionBuilder;
 import de.otto.flummi.util.HttpClientWrapper;
+
+import org.asynchttpclient.BoundRequestBuilder;
+import org.asynchttpclient.Response;
 import org.slf4j.Logger;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -52,10 +52,10 @@ public class BulkRequestBuilder implements RequestBuilder<Void> {
                 postBody.append(action.toBulkRequestAction()).append("\n");
             }
 
-            final AsyncHttpClient.BoundRequestBuilder boundRequestBuilder = httpClient
-                    .preparePost("/_bulk")
-                    .setBody(postBody.toString())
-                    .setBodyEncoding("UTF-8");
+	        final BoundRequestBuilder boundRequestBuilder = httpClient
+	                .preparePost("/_bulk")
+	                .setBody(postBody.toString())
+	                .setCharset(Charset.forName("UTF-8"));
 
             Response response = boundRequestBuilder.execute().get();
             if (response.getStatusCode() >= 300) {
@@ -94,8 +94,6 @@ public class BulkRequestBuilder implements RequestBuilder<Void> {
                 }
             }
             return null;
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         } catch (ExecutionException e) {

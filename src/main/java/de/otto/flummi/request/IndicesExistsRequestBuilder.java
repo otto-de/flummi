@@ -1,13 +1,11 @@
 package de.otto.flummi.request;
 
-
-import com.ning.http.client.Response;
 import de.otto.flummi.response.HttpServerErrorException;
 import de.otto.flummi.util.HttpClientWrapper;
+
+import org.asynchttpclient.Response;
 import org.slf4j.Logger;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.util.concurrent.ExecutionException;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -31,8 +29,6 @@ public class IndicesExistsRequestBuilder implements RequestBuilder<Boolean> {
                 throw new HttpServerErrorException(response.getStatusCode(), response.getStatusText(), response.getResponseBody());
             }
             return statusCode < 300;
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         } catch (ExecutionException e) {
