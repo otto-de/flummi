@@ -5,22 +5,20 @@ import de.otto.flummi.InvalidElasticsearchResponseException;
 import de.otto.flummi.MockResponse;
 import de.otto.flummi.response.HttpServerErrorException;
 import de.otto.flummi.util.HttpClientWrapper;
+import org.asynchttpclient.BoundRequestBuilder;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.nio.charset.Charset;
 
 import static de.otto.flummi.request.GsonHelper.object;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-
-import java.nio.charset.Charset;
-
-import org.asynchttpclient.BoundRequestBuilder;
 
 public class CreateIndexRequestBuilderTest {
 

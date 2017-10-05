@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import de.otto.flummi.domain.index.Index;
 import de.otto.flummi.util.HttpClientWrapper;
-
 import org.asynchttpclient.BoundRequestBuilder;
 import org.asynchttpclient.Response;
 import org.slf4j.Logger;

@@ -7,6 +7,7 @@ import de.otto.flummi.MockResponse;
 import de.otto.flummi.response.GetResponse;
 import de.otto.flummi.response.HttpServerErrorException;
 import de.otto.flummi.util.HttpClientWrapper;
+import org.asynchttpclient.BoundRequestBuilder;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -16,8 +17,6 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-
-import org.asynchttpclient.BoundRequestBuilder;
 
 public class GetRequestBuilderTest {
 

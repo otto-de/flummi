@@ -11,14 +11,12 @@ import de.otto.flummi.response.ScrollingSearchHits;
 import de.otto.flummi.response.SearchHit;
 import de.otto.flummi.response.SearchResponse;
 import de.otto.flummi.util.HttpClientWrapper;
-
 import org.asynchttpclient.BoundRequestBuilder;
 import org.asynchttpclient.ListenableFuture;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.nio.charset.Charset;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
 import static de.otto.flummi.SortOrder.ASC;
@@ -27,7 +25,6 @@ import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
 public class SearchRequestBuilderTest {

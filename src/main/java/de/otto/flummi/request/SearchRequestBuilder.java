@@ -9,7 +9,6 @@ import de.otto.flummi.query.sort.FieldSortBuilder;
 import de.otto.flummi.query.sort.SortBuilder;
 import de.otto.flummi.response.*;
 import de.otto.flummi.util.HttpClientWrapper;
-
 import org.asynchttpclient.BoundRequestBuilder;
 import org.asynchttpclient.Response;
 import org.slf4j.Logger;

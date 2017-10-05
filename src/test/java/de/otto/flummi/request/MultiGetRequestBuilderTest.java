@@ -7,8 +7,11 @@ import de.otto.flummi.MockResponse;
 import de.otto.flummi.response.MultiGetResponse;
 import de.otto.flummi.response.MultiGetResponseDocument;
 import de.otto.flummi.util.HttpClientWrapper;
+import org.asynchttpclient.BoundRequestBuilder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.nio.charset.Charset;
 
 import static de.otto.flummi.request.GsonHelper.object;
 import static de.otto.flummi.response.MultiGetRequestDocument.multiGetRequestDocumentBuilder;
@@ -18,12 +21,7 @@ import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
-
-import java.nio.charset.Charset;
-
-import org.asynchttpclient.BoundRequestBuilder;
 
 public class MultiGetRequestBuilderTest {
 

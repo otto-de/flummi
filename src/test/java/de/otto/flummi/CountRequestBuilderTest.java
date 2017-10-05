@@ -3,14 +3,13 @@ package de.otto.flummi;
 import de.otto.flummi.request.CountRequestBuilder;
 import de.otto.flummi.response.HttpServerErrorException;
 import de.otto.flummi.util.HttpClientWrapper;
+import org.asynchttpclient.BoundRequestBuilder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.*;
-
-import org.asynchttpclient.BoundRequestBuilder;
 
 public class CountRequestBuilderTest {
 

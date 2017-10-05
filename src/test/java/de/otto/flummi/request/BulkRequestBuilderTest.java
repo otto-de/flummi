@@ -7,19 +7,18 @@ import de.otto.flummi.bulkactions.IndexActionBuilder;
 import de.otto.flummi.bulkactions.IndexOpType;
 import de.otto.flummi.response.HttpServerErrorException;
 import de.otto.flummi.util.HttpClientWrapper;
-
 import org.asynchttpclient.BoundRequestBuilder;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.nio.charset.Charset;
 
 import static de.otto.flummi.request.GsonHelper.object;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
-
-import java.nio.charset.Charset;
 
 public class BulkRequestBuilderTest {
 

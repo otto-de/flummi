@@ -1,6 +1,5 @@
 package de.otto.flummi;
 
-import de.otto.flummi.ClusterAdminClient;
 import de.otto.flummi.util.HttpClientWrapper;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

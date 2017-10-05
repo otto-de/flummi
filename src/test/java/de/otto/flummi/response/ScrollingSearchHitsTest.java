@@ -3,7 +3,6 @@ package de.otto.flummi.response;
 import de.otto.flummi.CompletedFuture;
 import de.otto.flummi.MockResponse;
 import de.otto.flummi.util.HttpClientWrapper;
-
 import org.asynchttpclient.BoundRequestBuilder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

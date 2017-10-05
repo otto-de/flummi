@@ -6,7 +6,6 @@ import de.otto.flummi.ClusterHealthResponse;
 import de.otto.flummi.ClusterHealthStatus;
 import de.otto.flummi.InvalidElasticsearchResponseException;
 import de.otto.flummi.util.HttpClientWrapper;
-
 import org.asynchttpclient.BoundRequestBuilder;
 import org.asynchttpclient.Response;
 import org.slf4j.Logger;

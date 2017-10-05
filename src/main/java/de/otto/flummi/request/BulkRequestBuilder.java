@@ -7,7 +7,6 @@ import com.google.gson.JsonObject;
 import de.otto.flummi.InvalidElasticsearchResponseException;
 import de.otto.flummi.bulkactions.BulkActionBuilder;
 import de.otto.flummi.util.HttpClientWrapper;
-
 import org.asynchttpclient.BoundRequestBuilder;
 import org.asynchttpclient.Response;
 import org.slf4j.Logger;

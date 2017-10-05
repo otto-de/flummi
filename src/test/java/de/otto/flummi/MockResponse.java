@@ -1,17 +1,15 @@
 package de.otto.flummi;
 
-import java.io.IOException;
+import io.netty.handler.codec.http.HttpHeaders;
+import org.asynchttpclient.Response;
+import org.asynchttpclient.cookie.Cookie;
+import org.asynchttpclient.uri.Uri;
+
 import java.io.InputStream;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.List;
-
-import org.asynchttpclient.Response;
-import org.asynchttpclient.cookie.Cookie;
-import org.asynchttpclient.uri.Uri;
-
-import io.netty.handler.codec.http.HttpHeaders;
 
 import static java.util.Collections.emptyList;
 

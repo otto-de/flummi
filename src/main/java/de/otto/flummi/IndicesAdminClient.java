@@ -6,14 +6,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import de.otto.flummi.request.*;
 import de.otto.flummi.util.HttpClientWrapper;
+import org.asynchttpclient.Response;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Stream;
-
-import org.asynchttpclient.Response;
 
 import static de.otto.flummi.request.GsonHelper.object;
 import static java.util.stream.Collectors.toList;

@@ -1,7 +1,6 @@
 package de.otto.flummi.aggregations;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import de.otto.flummi.response.AggregationResult;
 import de.otto.flummi.response.Bucket;
 import org.testng.annotations.Test;
@@ -14,7 +13,6 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 

@@ -4,12 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import de.otto.flummi.response.SearchResponse;
 import de.otto.flummi.util.HttpClientWrapper;
-
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.util.concurrent.ExecutionException;
-
 import org.asynchttpclient.Response;
+
+import java.util.concurrent.ExecutionException;
 
 import static de.otto.flummi.RequestBuilderUtil.toHttpServerErrorException;
 import static de.otto.flummi.request.GsonHelper.object;

@@ -9,8 +9,6 @@ import java.util.List;
 
 import static de.otto.flummi.GsonCollectors.toJsonArray;
 import static de.otto.flummi.request.GsonHelper.object;
-import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
 
 public class QueryBuilders {
 

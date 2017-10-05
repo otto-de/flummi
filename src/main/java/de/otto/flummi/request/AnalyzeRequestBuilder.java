@@ -4,7 +4,6 @@ import com.google.gson.*;
 import de.otto.flummi.response.AnalyzeResponse;
 import de.otto.flummi.response.Token;
 import de.otto.flummi.util.HttpClientWrapper;
-
 import org.asynchttpclient.Response;
 import org.slf4j.Logger;
 

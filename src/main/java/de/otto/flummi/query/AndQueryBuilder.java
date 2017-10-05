@@ -6,7 +6,6 @@ import de.otto.flummi.GsonCollectors;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static java.util.Arrays.stream;
 
 public class AndQueryBuilder implements QueryBuilder {
 

@@ -6,7 +6,6 @@ import de.otto.flummi.request.DeleteIndexRequestBuilder;
 import de.otto.flummi.request.IndicesExistsRequestBuilder;
 import de.otto.flummi.response.HttpServerErrorException;
 import de.otto.flummi.util.HttpClientWrapper;
-
 import org.asynchttpclient.BoundRequestBuilder;
 import org.asynchttpclient.ListenableFuture;
 import org.asynchttpclient.Response;

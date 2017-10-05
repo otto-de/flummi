@@ -5,7 +5,6 @@ import de.otto.flummi.InvalidElasticsearchResponseException;
 import de.otto.flummi.MockResponse;
 import de.otto.flummi.response.HttpServerErrorException;
 import de.otto.flummi.util.HttpClientWrapper;
-
 import org.asynchttpclient.BoundRequestBuilder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

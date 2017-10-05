@@ -6,7 +6,6 @@ import de.otto.flummi.response.MultiGetRequestDocument;
 import de.otto.flummi.response.MultiGetResponse;
 import de.otto.flummi.response.MultiGetResponseDocument;
 import de.otto.flummi.util.HttpClientWrapper;
-
 import org.asynchttpclient.BoundRequestBuilder;
 import org.asynchttpclient.Response;
 import org.slf4j.Logger;

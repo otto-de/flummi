@@ -8,7 +8,6 @@ import de.otto.flummi.response.AnalyzeResponse;
 import de.otto.flummi.response.HttpServerErrorException;
 import de.otto.flummi.response.Token;
 import de.otto.flummi.util.HttpClientWrapper;
-
 import org.asynchttpclient.BoundRequestBuilder;
 import org.mockito.Mock;
 import org.testng.annotations.BeforeMethod;
@@ -17,14 +16,14 @@ import org.testng.annotations.Test;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
-import static de.otto.flummi.request.GsonHelper.object;
 import static de.otto.flummi.request.GsonHelper.array;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.MockitoAnnotations.initMocks;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
+import static de.otto.flummi.request.GsonHelper.object;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 public class AnalyzeRequestBuilderTest {
     @Mock

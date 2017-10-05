@@ -3,11 +3,10 @@ package de.otto.flummi;
 import com.google.gson.JsonObject;
 import de.otto.flummi.request.*;
 import de.otto.flummi.util.HttpClientWrapper;
+import org.asynchttpclient.AsyncHttpClient;
 
 import java.util.List;
 import java.util.Optional;
-
-import org.asynchttpclient.AsyncHttpClient;
 
 
 public class Flummi {

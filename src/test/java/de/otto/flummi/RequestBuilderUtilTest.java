@@ -1,6 +1,5 @@
 package de.otto.flummi;
 
-import de.otto.flummi.RequestBuilderUtil;
 import org.testng.annotations.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;

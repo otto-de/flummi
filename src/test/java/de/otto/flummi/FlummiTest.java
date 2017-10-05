@@ -4,7 +4,6 @@ import com.google.gson.JsonObject;
 import de.otto.flummi.bulkactions.DeleteActionBuilder;
 import de.otto.flummi.request.*;
 import de.otto.flummi.response.HttpServerErrorException;
-
 import org.asynchttpclient.AsyncHttpClient;
 import org.asynchttpclient.BoundRequestBuilder;
 import org.asynchttpclient.ListenableFuture;

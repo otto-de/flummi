@@ -1,7 +1,6 @@
 package de.otto.flummi.query;
 
 import com.google.gson.JsonPrimitive;
-import de.otto.flummi.query.WildcardQueryBuilder;
 import org.testng.annotations.Test;
 
 import static de.otto.flummi.request.GsonHelper.object;

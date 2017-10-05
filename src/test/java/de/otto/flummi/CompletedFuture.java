@@ -1,12 +1,8 @@
 package de.otto.flummi;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
 import org.asynchttpclient.ListenableFuture;
+
+import java.util.concurrent.*;
 
 public final class CompletedFuture<T> implements ListenableFuture<T> {
     private T result;

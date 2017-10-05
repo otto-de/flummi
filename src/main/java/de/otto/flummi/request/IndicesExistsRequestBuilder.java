@@ -2,7 +2,6 @@ package de.otto.flummi.request;
 
 import de.otto.flummi.response.HttpServerErrorException;
 import de.otto.flummi.util.HttpClientWrapper;
-
 import org.asynchttpclient.Response;
 import org.slf4j.Logger;
 

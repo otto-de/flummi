@@ -1,7 +1,6 @@
 package de.otto.flummi;
 
 import de.otto.flummi.response.HttpServerErrorException;
-
 import org.asynchttpclient.Response;
 
 public class RequestBuilderUtil {

@@ -3,8 +3,6 @@ package de.otto.flummi;
 import de.otto.flummi.request.ClusterHealthRequestBuilder;
 import de.otto.flummi.request.CreateIndexRequestBuilder;
 import de.otto.flummi.util.HttpClientWrapper;
-
-import org.asynchttpclient.AsyncHttpClient;
 import org.asynchttpclient.BoundRequestBuilder;
 import org.asynchttpclient.ListenableFuture;
 import org.asynchttpclient.Response;

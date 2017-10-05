@@ -2,11 +2,10 @@ package de.otto.flummi.request;
 
 import de.otto.flummi.RequestBuilderUtil;
 import de.otto.flummi.util.HttpClientWrapper;
+import org.asynchttpclient.Response;
 
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Stream;
-
-import org.asynchttpclient.Response;
 
 import static java.util.stream.Collectors.toList;
 
