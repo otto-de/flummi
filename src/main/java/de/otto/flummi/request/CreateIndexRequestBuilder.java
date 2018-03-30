@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import java.nio.charset.Charset;
 import java.util.concurrent.ExecutionException;
 
+import static de.otto.flummi.request.RequestConstants.APPL_JSON;
+import static de.otto.flummi.request.RequestConstants.CONTENT_TYPE;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class CreateIndexRequestBuilder implements RequestBuilder<Void> {
@@ -48,7 +50,9 @@ public class CreateIndexRequestBuilder implements RequestBuilder<Void> {
             jsonObject.add("mappings", mappings);
         }
         try {
-            Response response = httpClient.preparePut("/" + indexName).setBody(jsonObject.toString()).setCharset(Charset.forName("UTF-8")).execute().get();
+            Response response = httpClient.preparePut("/" + indexName).setBody(jsonObject.toString()).setCharset(Charset.forName("UTF-8"))
+                    .addHeader(CONTENT_TYPE, APPL_JSON)
+                    .execute().get();
             if (response.getStatusCode() >= 300) {
                 throw RequestBuilderUtil.toHttpServerErrorException(response);
             }

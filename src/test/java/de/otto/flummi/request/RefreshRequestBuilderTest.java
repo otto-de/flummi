@@ -27,6 +27,7 @@ public class RefreshRequestBuilderTest {
         // given
         RefreshRequestBuilder refreshRequestBuilder = new RefreshRequestBuilder(httpClient, "someIndexName");
         when(httpClient.preparePost(any(String.class))).thenReturn(boundRequestBuilder);
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "OK", "")));
 
         // when

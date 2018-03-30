@@ -36,6 +36,7 @@ public class IndexRequestBuilderTest {
     public void shouldFireIndexRequestWithId() throws Exception {
         when(httpClient.preparePut(any(String.class))).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilder);
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "OK", "{\"allet tutti\":\"wa\"}")));
         testee
                 .setSource(object("some", object("friggin", "source")))
@@ -56,6 +57,7 @@ public class IndexRequestBuilderTest {
     public void shouldFireIndexRequestWithoutId() throws Exception {
         when(httpClient.preparePost(any(String.class))).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilder);
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "OK", "{\"allet tutti\":\"wa\"}")));
         testee
                 .setSource(object("some", object("friggin", "source")))
@@ -74,6 +76,7 @@ public class IndexRequestBuilderTest {
     public void shouldThrowWhenServerReturnsBadStatusCode() throws Exception {
         when(httpClient.preparePost(any(String.class))).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilder);
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture<>(new MockResponse(400, "Bad Request", "{\"query\":\"war kaputt\"}")));
         testee
                 .setSource(object("some", object("friggin", "source")))

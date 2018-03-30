@@ -42,6 +42,7 @@ public class BulkRequestBuilderTest {
         when(boundRequestBuilderMock.setBody("{\"index\":{\"_index\":\"someIndex\",\"_type\":\"Flutschfinger\"}}\n{\"Eis\":\"am Stiel\"}\n")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok", "{\"errors\":false}")));
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
 
         testee.add(new IndexActionBuilder("someIndex").setOpType(IndexOpType.INDEX).setType("Flutschfinger").setSource(object("Eis", "am Stiel")));
 
@@ -63,6 +64,7 @@ public class BulkRequestBuilderTest {
         when(boundRequestBuilderMock.setBody("{\"index\":{\"_index\":\"someIndex\",\"_type\":\"Flutschfinger\"}}\n{\"Eis\":\"am Stiel\"}\n")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(400, "not ok", "{\"errors\":false}")));
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
 
         testee.add(new IndexActionBuilder("someIndex").setOpType(IndexOpType.INDEX).setType("Flutschfinger").setSource(object("Eis", "am Stiel")));
 
@@ -87,6 +89,7 @@ public class BulkRequestBuilderTest {
         when(boundRequestBuilderMock.setBody("{\"index\":{\"_index\":\"someIndex\",\"_type\":\"Flutschfinger\"}}\n{\"Eis\":\"am Stiel\"}\n")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok", "{\"errors\":true,\"items\":[{\"index\":{\"status\":400,\"error\":\"someError\"}}]}")));
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
 
         testee.add(new IndexActionBuilder("someIndex").setOpType(IndexOpType.INDEX).setType("Flutschfinger").setSource(object("Eis", "am Stiel")));
 
@@ -108,6 +111,7 @@ public class BulkRequestBuilderTest {
         when(boundRequestBuilderMock.setBody("{\"index\":{\"_index\":\"someIndex\",\"_type\":\"Flutschfinger\"}}\n{\"Eis\":\"am Stiel\"}\n")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok", "{\"errors\":true,\"items\":[{\"update\":{\"status\":404,\"error\":\"someError\"}}]}")));
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
 
         testee.add(new IndexActionBuilder("someIndex").setOpType(IndexOpType.INDEX).setType("Flutschfinger").setSource(object("Eis", "am Stiel")));
 
@@ -125,6 +129,7 @@ public class BulkRequestBuilderTest {
         when(boundRequestBuilderMock.setBody("{\"index\":{\"_index\":\"someIndex\",\"_type\":\"Flutschfinger\"}}\n{\"Eis\":\"am Stiel\"}\n")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok", "{\"errors\":true,\"items\":[{\"index\":{\"status\":503,\"error\":\"someError\"}}]}")));
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
 
         testee.add(new IndexActionBuilder("someIndex").setOpType(IndexOpType.INDEX).setType("Flutschfinger").setSource(object("Eis", "am Stiel")));
 
@@ -146,6 +151,7 @@ public class BulkRequestBuilderTest {
         when(boundRequestBuilderMock.setBody("{\"index\":{\"_index\":\"someIndex\",\"_type\":\"Flutschfinger\"}}\n{\"Eis\":\"am Stiel\"}\n")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok", "{\"errors\":true,\"items\":[{\"create\":{\"status\":200}},{\"delete\":{\"status\":503,\"error\":\"someError\"}}]}")));
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
 
         testee.add(new IndexActionBuilder("someIndex").setOpType(IndexOpType.INDEX).setType("Flutschfinger").setSource(object("Eis", "am Stiel")));
 
@@ -167,6 +173,7 @@ public class BulkRequestBuilderTest {
         when(boundRequestBuilderMock.setBody("{\"index\":{\"_index\":\"someIndex\",\"_type\":\"Flutschfinger\"}}\n{\"Eis\":\"am Stiel\"}\n")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok", "{\"errors\":true,\"items\":[{\"create\":{\"status\":200}},{\"update\":{\"status\":404,\"error\":\"someError\"}}]}")));
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
 
         testee.add(new IndexActionBuilder("someIndex").setOpType(IndexOpType.INDEX).setType("Flutschfinger").setSource(object("Eis", "am Stiel")));
 
@@ -184,6 +191,7 @@ public class BulkRequestBuilderTest {
         when(boundRequestBuilderMock.setBody("{\"index\":{\"_index\":\"someIndex\",\"_type\":\"Flutschfinger\"}}\n{\"Eis\":\"am Stiel\"}\n")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok", "{\"errors\":true,\"items\":[{\"update\":{\"_index\":\"mytestindex\",\"_type\":\"product\",\"_id\":\"340891232\",\"status\":409}}]}")));
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
 
         testee.add(new IndexActionBuilder("someIndex").setOpType(IndexOpType.INDEX).setType("Flutschfinger").setSource(object("Eis", "am Stiel")));
 

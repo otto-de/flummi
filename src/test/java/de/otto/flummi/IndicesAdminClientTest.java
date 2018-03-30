@@ -46,6 +46,7 @@ public class IndicesAdminClientTest {
         when(httpClient.preparePut(anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setBody(anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilder);
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         final ListenableFuture<Response> listenableFuture = mock(ListenableFuture.class);
         when(boundRequestBuilder.execute()).thenReturn(listenableFuture);
         final Response response = mock(Response.class);
@@ -66,6 +67,7 @@ public class IndicesAdminClientTest {
         //Given
         when(httpClient.prepareHead(anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setBody(anyString())).thenReturn(boundRequestBuilder);
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         final ListenableFuture<Response> listenableFuture = mock(ListenableFuture.class);
         when(boundRequestBuilder.execute()).thenReturn(listenableFuture);
         final Response response = mock(Response.class);
@@ -85,6 +87,7 @@ public class IndicesAdminClientTest {
         //Given
         when(httpClient.prepareDelete(anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setBody(anyString())).thenReturn(boundRequestBuilder);
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         final ListenableFuture<Response> listenableFuture = mock(ListenableFuture.class);
         when(boundRequestBuilder.execute()).thenReturn(listenableFuture);
         final Response response = mock(Response.class);
@@ -102,6 +105,7 @@ public class IndicesAdminClientTest {
     @Test
     public void shouldReturnAliasExists() throws ExecutionException, InterruptedException, IOException {
         //Given
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", "{\"someIndexName\":{\"aliases\": {\"someAlias\": {}}}}")));
 
         //When
@@ -115,6 +119,7 @@ public class IndicesAdminClientTest {
     @Test
     public void shouldReturnAliasNotExists() throws ExecutionException, InterruptedException, IOException {
         //Given
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", "{\"someIndexName\":{\"aliases\": {\"someOtherAlias\": {}}}}")));
 
         //When
@@ -128,6 +133,7 @@ public class IndicesAdminClientTest {
     @Test(expectedExceptions = HttpServerErrorException.class)
     public void shouldReturnAliasNotExistsFor500() throws ExecutionException, InterruptedException, IOException {
         //Given
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(500, "Internal Server Error", "{\"someIndexName\":{\"aliases\": {\"someAlias\": {}}}}")));
 
         //When
@@ -137,6 +143,7 @@ public class IndicesAdminClientTest {
     @Test
     public void shouldGetAllIndexNames() throws ExecutionException, InterruptedException, IOException {
         //Given
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", "{\"someIndexName\":{}, \"someIndexName2\":{}, \"someIndexName3\":{}}")));
 
         //When
@@ -153,6 +160,7 @@ public class IndicesAdminClientTest {
     @Test
     public void shouldNotGetAllIndexNamesForEmptyResponse() throws ExecutionException, InterruptedException, IOException {
         //Given
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", "{}")));
 
         //When
@@ -166,6 +174,7 @@ public class IndicesAdminClientTest {
     @Test(expectedExceptions = HttpServerErrorException.class)
     public void shouldNotGetAllIndexNamesForErrorResponseCode() throws ExecutionException, InterruptedException, IOException {
         //Given
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(500, "OK", "{}")));
 
         //When
@@ -175,6 +184,7 @@ public class IndicesAdminClientTest {
     @Test
     public void shouldGetIndexSettings() throws ExecutionException, InterruptedException, IOException {
         //Given
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", "{\"jobs-test\": {\n" +
                 "    \"settings\": {\n" +
                 "      \"index\": {\n" +
@@ -205,6 +215,7 @@ public class IndicesAdminClientTest {
     @Test(expectedExceptions = HttpServerErrorException.class)
     public void shouldGetIndexSettingsForErrorResponseCode() throws ExecutionException, InterruptedException, IOException {
         //Given
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(500, "Internal Server Error", "{\"jobs-test\": {\n" +
                 "    \"settings\": {\n" +
                 "      \"index\": {\n" +
@@ -226,6 +237,7 @@ public class IndicesAdminClientTest {
     @Test
     public void shouldGetIndexSettingsForEmptyResponse() throws ExecutionException, InterruptedException, IOException {
         //Given
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", "{}")));
 
         //When
@@ -238,6 +250,7 @@ public class IndicesAdminClientTest {
     @Test
     public void shouldGetIndexMapping() throws ExecutionException, InterruptedException, IOException {
         //Given
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", ""+
             "{\"mapping-test\" : {\n" +
             "   \"mappings\" : {\n" +
@@ -267,6 +280,7 @@ public class IndicesAdminClientTest {
     @Test
     public void shouldRefreshIndex() throws ExecutionException, InterruptedException {
         when(httpClient.preparePost(anyString())).thenReturn(boundRequestBuilder);
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", "{}")));
 
         //When
@@ -279,6 +293,7 @@ public class IndicesAdminClientTest {
     @Test
     public void shouldForceMergeOfIndex() throws ExecutionException, InterruptedException {
         when(httpClient.preparePost(anyString())).thenReturn(boundRequestBuilder);
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", "{}")));
 
         //When
@@ -291,6 +306,7 @@ public class IndicesAdminClientTest {
     @Test(expectedExceptions = HttpServerErrorException.class)
     public void shouldFailToRefreshIndexForErrorResponse() throws ExecutionException, InterruptedException {
         when(httpClient.preparePost(anyString())).thenReturn(boundRequestBuilder);
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(500, "Internal Server Error", "{\"errors\":\"true\"}")));
 
         //When
@@ -302,6 +318,7 @@ public class IndicesAdminClientTest {
         //Given
         when(httpClient.preparePost(anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setBody(anyString())).thenReturn(boundRequestBuilder);
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", "{\"acknowledged\":true}")));
 
         //When
@@ -315,6 +332,7 @@ public class IndicesAdminClientTest {
     @Test(expectedExceptions = RuntimeException.class)
     public void shouldNotPointProductAliasToCurrentIndexForAcknowledgedFalse() throws ExecutionException, InterruptedException, IOException {
         //Given
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", "{\"acknowledged\":false}")));
 
         //When
@@ -326,6 +344,7 @@ public class IndicesAdminClientTest {
         //Given
         when(httpClient.preparePost(anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setBody(anyString())).thenReturn(boundRequestBuilder);
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(500, "Internal Server Error", "{\"errors\":\"true\"}")));
 
         //When

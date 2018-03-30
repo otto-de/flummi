@@ -68,6 +68,7 @@ public class ScrollingSearchHitsTest {
 
     @Test
     public void shouldFetchNextPage() throws Exception {
+        when(requestBuilder.addHeader(anyString(),anyString())).thenReturn(requestBuilder);
         when(requestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", NEXT_PAGE)));
         ScrollingSearchHits testee = new ScrollingSearchHits(100, 1F, "someScrollId", "1m", someSearchHits("P0", "P1"), httpClient);
         when(httpClient.preparePost(anyString())).thenReturn(requestBuilder);
@@ -85,6 +86,7 @@ public class ScrollingSearchHitsTest {
 
     @Test
     public void shouldSpliterate() throws Exception {
+        when(requestBuilder.addHeader(anyString(),anyString())).thenReturn(requestBuilder);
         when(requestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", NEXT_PAGE)));
         ScrollingSearchHits testee = new ScrollingSearchHits(100, 1F, "someScrollId", "1m", someSearchHits("P0", "P1"), httpClient);
         when(httpClient.preparePost(anyString())).thenReturn(requestBuilder);
@@ -99,6 +101,7 @@ public class ScrollingSearchHitsTest {
 
     @Test
     public void shouldFetchEmptyNextPage() throws Exception {
+        when(requestBuilder.addHeader(anyString(),anyString())).thenReturn(requestBuilder);
         when(requestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", EMPTY_PAGE)));
         ScrollingSearchHits testee = new ScrollingSearchHits(100, 1F, "someScrollId", "1m", someSearchHits("P0", "P1"), httpClient);
         when(httpClient.preparePost(anyString())).thenReturn(requestBuilder);

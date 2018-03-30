@@ -79,6 +79,7 @@ public class SearchRequestBuilderTest {
         when(httpClient.preparePost("/some-index/_search")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", EMPTY_SEARCH_RESPONSE)));
 
         // when
@@ -96,6 +97,7 @@ public class SearchRequestBuilderTest {
         when(httpClient.preparePost("/some-index/_search")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", EMPTY_SEARCH_RESPONSE)));
 
         // when
@@ -113,6 +115,7 @@ public class SearchRequestBuilderTest {
         when(httpClient.preparePost("/some-index/_search")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", SEARCH_RESPONSE_WITH_ONE_HIT)));
 
         // when
@@ -140,6 +143,7 @@ public class SearchRequestBuilderTest {
         when(httpClient.preparePost("/some-index/_search")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", SEARCH_RESPONSE_WITH_AGGREGATION)));
 
         // when
@@ -169,6 +173,7 @@ public class SearchRequestBuilderTest {
         when(httpClient.preparePost("/some-index/_search")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", EMPTY_SEARCH_RESPONSE)));
 
         // when
@@ -186,6 +191,7 @@ public class SearchRequestBuilderTest {
         when(httpClient.preparePost("/some-index/_search")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", EMPTY_SEARCH_RESPONSE)));
 
         // when
@@ -204,6 +210,7 @@ public class SearchRequestBuilderTest {
         when(httpClient.preparePost("/some-index/_search")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", EMPTY_SEARCH_RESPONSE)));
 
         // when
@@ -221,6 +228,7 @@ public class SearchRequestBuilderTest {
         when(httpClient.preparePost("/some-index/_search")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", EMPTY_SEARCH_RESPONSE)));
 
         // when
@@ -238,6 +246,7 @@ public class SearchRequestBuilderTest {
         when(httpClient.preparePost("/some-index/_search")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", EMPTY_SEARCH_RESPONSE)));
 
         // when
@@ -255,6 +264,7 @@ public class SearchRequestBuilderTest {
         when(httpClient.preparePost("/some-index/_search")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", EMPTY_SEARCH_RESPONSE)));
 
         // when
@@ -275,6 +285,7 @@ public class SearchRequestBuilderTest {
         when(httpClient.preparePost("/some-index/_search")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", SEARCH_RESPONSE_WITH_SCROLL_ID)));
 
         // when
@@ -296,6 +307,7 @@ public class SearchRequestBuilderTest {
         when(httpClient.preparePost("/some-index/_search")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", EMPTY_SEARCH_RESPONSE)));
 
         // when
@@ -331,6 +343,7 @@ public class SearchRequestBuilderTest {
         when(httpClient.preparePost("/some-index/_search")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", SEARCH_RESPONSE_WITH_SCROLL_ID)));
 
         // when
@@ -358,6 +371,7 @@ public class SearchRequestBuilderTest {
         when(httpClient.preparePost("/some-index/_search")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
         TimeoutException timeoutException = new TimeoutException();
         when(boundRequestBuilderMock.execute()).thenReturn(new ListenableFuture.CompletedFailure<>(timeoutException));
 

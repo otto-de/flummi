@@ -59,6 +59,7 @@ public class AnalyzeRequestBuilderTest {
         when(boundRequestBuilder.execute()).thenReturn(
                 new CompletedFuture<>(new MockResponse(200, "ok", helloWorldResponse.toString()))
         );
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
 
         // when
         AnalyzeResponse analyzerResponse = helloWorldAnalyzeRequestBuilder.execute();
@@ -74,6 +75,7 @@ public class AnalyzeRequestBuilderTest {
 
     @Test
     public void whenOnlyTextShouldTargetAnalyzeAndNotAddAdditionalParamsAndPreserveCase() throws Exception {
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         helloWorldAnalyzeRequestBuilder.execute();
 
         verify(httpClient).prepareGet("/_analyze");
@@ -83,6 +85,7 @@ public class AnalyzeRequestBuilderTest {
     @Test
     public void withSpecifiedAnalyzerShouldAddItAsParam() throws Exception {
         helloWorldAnalyzeRequestBuilder.setAnalyzer("custom_one");
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
 
         // when
         helloWorldAnalyzeRequestBuilder.execute();
@@ -98,6 +101,7 @@ public class AnalyzeRequestBuilderTest {
     @Test
     public void withSpecifiedTokenizerShouldAddItAsParam() throws Exception {
         helloWorldAnalyzeRequestBuilder.setTokenizer("keyword");
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
 
         // when
         helloWorldAnalyzeRequestBuilder.execute();
@@ -113,6 +117,7 @@ public class AnalyzeRequestBuilderTest {
     @Test
     public void withSpecifiedFieldShouldUseItAsParam() throws Exception {
         helloWorldAnalyzeRequestBuilder.setField("myField");
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
 
         // when
         helloWorldAnalyzeRequestBuilder.execute();
@@ -130,6 +135,7 @@ public class AnalyzeRequestBuilderTest {
         helloWorldAnalyzeRequestBuilder
                 .appendFilter("lowercase")
                 .appendFilter("unique");
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
 
         // when
         helloWorldAnalyzeRequestBuilder.execute();
@@ -147,6 +153,7 @@ public class AnalyzeRequestBuilderTest {
         helloWorldAnalyzeRequestBuilder
                 .appendCharacterFilter("html_strip")
                 .appendCharacterFilter("my_char_filter");
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
 
         // when
         helloWorldAnalyzeRequestBuilder.execute();
@@ -172,6 +179,7 @@ public class AnalyzeRequestBuilderTest {
                 .appendCharacterFilter("my_char_filter");
 
         // when
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         helloWorldAnalyzeRequestBuilder.execute();
 
         // then
@@ -190,6 +198,7 @@ public class AnalyzeRequestBuilderTest {
     public void withSpecifiedIndexNameShouldUseItInPath() throws Exception {
         helloWorldAnalyzeRequestBuilder
                 .setIndexName("my-index");
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
 
         // when
         helloWorldAnalyzeRequestBuilder.execute();
@@ -202,6 +211,7 @@ public class AnalyzeRequestBuilderTest {
     @Test(expectedExceptions = HttpServerErrorException.class)
     public void shouldThrowWhenServerReturnsNon200StatusCode() throws Exception {
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture<>(new MockResponse(404, "Not Found", object("status", new JsonPrimitive(404), "error", object()).toString())));
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
 
         // when
         try {

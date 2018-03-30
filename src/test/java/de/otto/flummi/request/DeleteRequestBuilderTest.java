@@ -29,6 +29,7 @@ public class DeleteRequestBuilderTest {
 
         when(httpClient.prepareDelete("/someIndexName/someType/someId")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok", "")));
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
         testee.setDocumentType("someType")
                 .setIndexName("someIndexName")
                 .setId("someId")
@@ -75,6 +76,7 @@ public class DeleteRequestBuilderTest {
 
         when(httpClient.prepareDelete("/someIndexName/someType/someId")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(400, "not ok", "errorResponse")));
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
         try {
             testee.setDocumentType("someType")
                     .setId("someId")

@@ -15,6 +15,7 @@ import java.nio.charset.Charset;
 import static de.otto.flummi.request.GsonHelper.object;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -43,6 +44,7 @@ public class CreateIndexRequestBuilderTest {
         when(boundRequestBuilder.setBody(any(String.class))).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok", "{\"acknowledged\": true}")));
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         testee
                 .setMappings(object("someType", object("someField", object("someSetting", "someValue"))));
         // when
@@ -61,6 +63,7 @@ public class CreateIndexRequestBuilderTest {
         when(boundRequestBuilder.setBody(any(String.class))).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok", "{\"acknowledged\": true}")));
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         testee
                 .setSettings(object("someSetting", "someValue"));
         // when
@@ -79,6 +82,7 @@ public class CreateIndexRequestBuilderTest {
         when(boundRequestBuilder.setBody(any(String.class))).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(400, "Bad Request", "someBadBody")));
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         testee
                 .setSettings(object("someSetting", "someValue"));
         // when
@@ -101,6 +105,7 @@ public class CreateIndexRequestBuilderTest {
         when(boundRequestBuilder.setBody(any(String.class))).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", "{\"acknowledged\": false}")));
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         testee
                 .setSettings(object("someSetting", "someValue"));
         // when

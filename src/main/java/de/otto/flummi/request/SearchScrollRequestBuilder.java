@@ -10,6 +10,8 @@ import java.util.concurrent.ExecutionException;
 
 import static de.otto.flummi.RequestBuilderUtil.toHttpServerErrorException;
 import static de.otto.flummi.request.GsonHelper.object;
+import static de.otto.flummi.request.RequestConstants.APPL_JSON;
+import static de.otto.flummi.request.RequestConstants.CONTENT_TYPE;
 import static de.otto.flummi.request.SearchRequestBuilder.parseResponse;
 import static de.otto.flummi.response.SearchResponse.emptyResponse;
 
@@ -43,6 +45,7 @@ public class SearchScrollRequestBuilder implements RequestBuilder<SearchResponse
         try {
             Response response = httpClient.preparePost("/_search/scroll")
                     .setBody(gson.toJson(requestBody))
+                    .addHeader(CONTENT_TYPE, APPL_JSON)
                     .execute()
                     .get();
 

@@ -14,6 +14,7 @@ import org.testng.annotations.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -35,6 +36,7 @@ public class GetRequestBuilderTest {
     public void shouldExecuteFlushIndex() throws Exception {
         // given
         when(httpClient.prepareGet("/someIndex/someType/someId")).thenReturn(boundRequestBuilder);
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok",
                 "{\n" +
                         "  \"_index\": \"product_1461747600019\",\n" +
@@ -67,6 +69,7 @@ public class GetRequestBuilderTest {
     public void shouldThrowExceptionIfHttpStatusIsNotEqual400() throws Exception {
         // given
         when(httpClient.prepareGet("/someIndex/someType/someId")).thenReturn(boundRequestBuilder);
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(400, "not ok",
                 "{}")));
         // when

@@ -96,6 +96,7 @@ public class MultiGetRequestBuilderTest {
         when(httpClient.preparePost("/some-index/_mget")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", ONE_DOC_FOUND_RESPONSE)));
 
         // when
@@ -115,6 +116,7 @@ public class MultiGetRequestBuilderTest {
         when(httpClient.preparePost("/some-index/_mget")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", TWO_DOC_FOUND_RESPONSE)));
 
         // when
@@ -135,6 +137,7 @@ public class MultiGetRequestBuilderTest {
         when(httpClient.preparePost("/some-index/_mget")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", ONE_DOC_FOUND_RESPONSE)));
 
         // when
@@ -151,6 +154,7 @@ public class MultiGetRequestBuilderTest {
         when(httpClient.preparePost("/some-index/_mget")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(404, "not found", "")));
 
         // when
@@ -167,6 +171,7 @@ public class MultiGetRequestBuilderTest {
         when(httpClient.preparePost("/some-index/_mget")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", NOT_FOUND_RESPONSE)));
 
         // when

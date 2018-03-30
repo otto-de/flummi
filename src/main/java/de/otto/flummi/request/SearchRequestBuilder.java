@@ -20,6 +20,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collector;
 
 import static de.otto.flummi.RequestBuilderUtil.toHttpServerErrorException;
+import static de.otto.flummi.request.RequestConstants.APPL_JSON;
+import static de.otto.flummi.request.RequestConstants.CONTENT_TYPE;
 import static de.otto.flummi.response.SearchResponse.emptyResponse;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -159,6 +161,7 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
             }
 
             Response response = boundRequestBuilder.setBody(gson.toJson(body))
+                    .addHeader(CONTENT_TYPE, APPL_JSON)
                     .execute()
                     .get();
 

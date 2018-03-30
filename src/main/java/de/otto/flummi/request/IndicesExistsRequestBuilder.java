@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 
 import java.util.concurrent.ExecutionException;
 
+import static de.otto.flummi.request.RequestConstants.APPL_JSON;
+import static de.otto.flummi.request.RequestConstants.CONTENT_TYPE;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class IndicesExistsRequestBuilder implements RequestBuilder<Boolean> {
@@ -22,7 +24,9 @@ public class IndicesExistsRequestBuilder implements RequestBuilder<Boolean> {
 
     public Boolean execute() {
         try {
-            Response response = httpClient.prepareHead("/" + indexName).execute().get();
+            Response response = httpClient.prepareHead("/" + indexName)
+                    .addHeader(CONTENT_TYPE, APPL_JSON)
+                    .execute().get();
             int statusCode = response.getStatusCode();
             if (statusCode >= 300 && response.getStatusCode() != 404) {
                 throw new HttpServerErrorException(response.getStatusCode(), response.getStatusText(), response.getResponseBody());
