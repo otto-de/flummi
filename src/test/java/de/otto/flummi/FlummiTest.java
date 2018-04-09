@@ -44,6 +44,7 @@ public class FlummiTest {
     public void shouldGetIndexNameForAlias() throws ExecutionException, InterruptedException, IOException {
         //Given
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", "{\"someIndexName\":{\"aliases\": {\"someAliasName\": {}}}}")));
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
 
         //When
         final Optional<String> indexNameForAlias = client.getIndexNameForAlias("someAliasName");
@@ -57,6 +58,7 @@ public class FlummiTest {
     public void shouldNotGetIndexNameForAliasIfAliasNotExists() throws ExecutionException, InterruptedException, IOException {
         //Given
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", "{\"someIndexName\":{\"aliases\": {\"someOtherAliasName\": {}}}}")));
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
 
         //When
         final Optional<String> indexNameForAlias = client.getIndexNameForAlias("someAliasName");
@@ -69,6 +71,7 @@ public class FlummiTest {
     public void shouldNotGetIndexNameForAliasForErrorResponseCode() throws ExecutionException, InterruptedException, IOException {
         //Given
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(500, "Internal Server Error", "{\"someIndexName\":{\"aliases\": {\"someAliasName\": {}}}}")));
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
 
         //When
         client.getIndexNameForAlias("someAliasName");
@@ -77,6 +80,7 @@ public class FlummiTest {
     @Test
     public void shouldPrepareSearch() throws ExecutionException, InterruptedException, IOException {
         //Given
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", "{\"took\":123, \"hits\": {\"total\": 3, \"max_score\":1, \"hits\": []}}")));
         when(boundRequestBuilder.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilder);
         //When
@@ -97,6 +101,7 @@ public class FlummiTest {
         final ListenableFuture listenableFuture = mock(ListenableFuture.class);
         when(boundRequestBuilder.execute()).thenReturn(listenableFuture);
         when(boundRequestBuilder.setBody(anyString())).thenReturn(boundRequestBuilder);
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         final Response response = mock(Response.class);
         when(listenableFuture.get()).thenReturn(response);
         when(response.getStatusCode()).thenReturn(200);
@@ -119,6 +124,7 @@ public class FlummiTest {
         when(boundRequestBuilder.execute()).thenReturn(listenableFuture);
         when(boundRequestBuilder.setBody(anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilder);
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         final Response response = mock(Response.class);
         when(listenableFuture.get()).thenReturn(response);
         when(response.getStatusCode()).thenReturn(200);
@@ -139,6 +145,7 @@ public class FlummiTest {
         final BoundRequestBuilder boundRequestBuilder = mock(BoundRequestBuilder.class);
         when(asyncHttpClient.prepareGet(anyString())).thenReturn(boundRequestBuilder);
         final ListenableFuture listenableFuture = mock(ListenableFuture.class);
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(listenableFuture);
         final Response response = mock(Response.class);
         when(listenableFuture.get()).thenReturn(response);
@@ -160,6 +167,7 @@ public class FlummiTest {
         when(asyncHttpClient.prepareDelete(anyString())).thenReturn(boundRequestBuilder);
         final ListenableFuture listenableFuture = mock(ListenableFuture.class);
         when(boundRequestBuilder.execute()).thenReturn(listenableFuture);
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         final Response response = mock(Response.class);
         when(listenableFuture.get()).thenReturn(response);
         when(response.getStatusCode()).thenReturn(200);
@@ -182,6 +190,7 @@ public class FlummiTest {
         final ListenableFuture listenableFuture = mock(ListenableFuture.class);
         when(boundRequestBuilder.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setBody(anyString())).thenReturn(boundRequestBuilder);
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(listenableFuture);
         final Response response = mock(Response.class);
         when(response.getStatusCode()).thenReturn(200);
@@ -203,6 +212,7 @@ public class FlummiTest {
         when(asyncHttpClient.preparePost(anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setBody(anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilder);
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         final ListenableFuture listenableFuture = mock(ListenableFuture.class);
         when(boundRequestBuilder.execute()).thenReturn(listenableFuture);
         final Response response = mock(Response.class);
@@ -228,6 +238,7 @@ public class FlummiTest {
         when(response.getResponseBody()).thenReturn("{\"status\":\"GREEN\", \"cluster_name\":\"someClusterName\", \"timed_out\":\"someTimedOut\"}");
         when(listenableFuture.get()).thenReturn(response);
         when(boundRequestBuilder.execute()).thenReturn(listenableFuture);
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         when(asyncHttpClient.prepareGet(anyString())).thenReturn(boundRequestBuilder);
         final ClusterAdminClient cluster = client.admin().cluster();
         final ClusterHealthRequestBuilder clusterHealthRequestBuilder = cluster.prepareHealth("someIndexName");
@@ -248,6 +259,7 @@ public class FlummiTest {
         when(boundRequestBuilder.setBody(anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilder);
         final ListenableFuture<Response> listenableFuture = mock(ListenableFuture.class);
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(listenableFuture);
         final Response response = mock(Response.class);
         when(listenableFuture.get()).thenReturn(response);

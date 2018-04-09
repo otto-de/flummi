@@ -14,6 +14,8 @@ import java.net.URLEncoder;
 import java.util.concurrent.ExecutionException;
 
 import static de.otto.flummi.RequestBuilderUtil.toHttpServerErrorException;
+import static de.otto.flummi.request.RequestConstants.APPL_JSON;
+import static de.otto.flummi.request.RequestConstants.CONTENT_TYPE;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class GetRequestBuilder implements RequestBuilder<GetResponse> {
@@ -37,7 +39,9 @@ public class GetRequestBuilder implements RequestBuilder<GetResponse> {
     public GetResponse execute() {
         try {
             String url = RequestBuilderUtil.buildUrl(indexName, documentType, URLEncoder.encode(id, "UTF-8"));
-            Response response = httpClient.prepareGet(url).execute().get();
+            Response response = httpClient.prepareGet(url)
+                    .addHeader(CONTENT_TYPE, APPL_JSON)
+                    .execute().get();
             if (response.getStatusCode() >= 300 && 404 != response.getStatusCode()) {
                 throw toHttpServerErrorException(response);
             }

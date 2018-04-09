@@ -41,6 +41,7 @@ public class AdminClientTest {
         when(response.getResponseBody()).thenReturn("{\"status\":\"GREEN\", \"cluster_name\":\"someClusterName\", \"timed_out\":\"someTimedOut\"}");
         when(listenableFuture.get()).thenReturn(response);
         when(boundRequestBuilder.execute()).thenReturn(listenableFuture);
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         when(httpClient.prepareGet(anyString())).thenReturn(boundRequestBuilder);
         final ClusterAdminClient cluster = adminClient.cluster();
         final ClusterHealthRequestBuilder clusterHealthRequestBuilder = cluster.prepareHealth("someIndexName");
@@ -62,6 +63,7 @@ public class AdminClientTest {
         when(boundRequestBuilder.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilder);
         final ListenableFuture<Response> listenableFuture = mock(ListenableFuture.class);
         when(boundRequestBuilder.execute()).thenReturn(listenableFuture);
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         final Response response = mock(Response.class);
         when(listenableFuture.get()).thenReturn(response);
         when(response.getStatusCode()).thenReturn(200);

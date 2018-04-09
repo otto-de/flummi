@@ -11,6 +11,7 @@ import org.testng.annotations.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -37,6 +38,7 @@ public class IndicesExistsRequestBuilderTest {
     public void shouldSendIndexExistsRequestForNotExistingIndex() throws Exception {
         // given
         when(httpClient.prepareHead("/" + INDEX_NAME)).thenReturn(boundRequestBuilder);
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(404, "ok", "someBody")));
 
         // when
@@ -52,6 +54,7 @@ public class IndicesExistsRequestBuilderTest {
     public void shouldSendIndexExistsRequestForExistingIndex() throws Exception {
         // given
         when(httpClient.prepareHead("/" + INDEX_NAME)).thenReturn(boundRequestBuilder);
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok", "someBody")));
 
         // when
@@ -67,6 +70,7 @@ public class IndicesExistsRequestBuilderTest {
     public void shouldThrowWhenServerReturnsBadStatusCode() throws Exception {
         // given
         when(httpClient.prepareHead("/" + INDEX_NAME)).thenReturn(boundRequestBuilder);
+        when(boundRequestBuilder.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilder);
         when(boundRequestBuilder.execute()).thenReturn(new CompletedFuture(new MockResponse(503, "Varnish ist ein guter Proxy", "someBodyDanceWithMe")));
 
         // when

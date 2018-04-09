@@ -1,8 +1,8 @@
 package de.otto.flummi;
 
 import io.netty.handler.codec.http.HttpHeaders;
+import io.netty.handler.codec.http.cookie.Cookie;
 import org.asynchttpclient.Response;
-import org.asynchttpclient.cookie.Cookie;
 import org.asynchttpclient.uri.Uri;
 
 import java.io.InputStream;
@@ -74,14 +74,15 @@ public class MockResponse implements Response {
     }
 
     @Override
-    public String getHeader(String name) {
-        return null;
+    public String getHeader(CharSequence name) {
+        return "";
     }
 
     @Override
-    public List<String> getHeaders(String name) {
-        return emptyList();
+    public List<String> getHeaders(CharSequence name) {
+        return null;
     }
+
 
     @Override
     public boolean isRedirected() {

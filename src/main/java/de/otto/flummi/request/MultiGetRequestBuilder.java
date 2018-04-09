@@ -17,6 +17,8 @@ import java.util.concurrent.ExecutionException;
 
 import static de.otto.flummi.RequestBuilderUtil.toHttpServerErrorException;
 import static de.otto.flummi.request.GsonHelper.array;
+import static de.otto.flummi.request.RequestConstants.APPL_JSON;
+import static de.otto.flummi.request.RequestConstants.CONTENT_TYPE;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -70,6 +72,7 @@ public class MultiGetRequestBuilder implements RequestBuilder<MultiGetResponse> 
             }
             long start = System.currentTimeMillis();
             Response response = boundRequestBuilder.setBody(gson.toJson(body))
+                    .addHeader(CONTENT_TYPE, APPL_JSON)
                     .execute()
                     .get();
 

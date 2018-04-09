@@ -34,6 +34,7 @@ public class DeleteIndexRequestBuilderTest {
 
         when(httpClient.prepareDelete("/someIndexName")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok", "")));
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
         testee.execute();
         verify(httpClient).prepareDelete("/someIndexName");
     }
@@ -45,6 +46,7 @@ public class DeleteIndexRequestBuilderTest {
 
         when(httpClient.prepareDelete("/someIndexName,someOtherIndex")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "ok", "")));
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
         testee.execute();
         verify(httpClient).prepareDelete("/someIndexName,someOtherIndex");
     }
@@ -55,6 +57,7 @@ public class DeleteIndexRequestBuilderTest {
         BoundRequestBuilder boundRequestBuilderMock = mock(BoundRequestBuilder.class);
         when(httpClient.prepareDelete("/someIndexName")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(400, "not ok", "")));
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
         try {
             testee.execute();
         } catch (HttpServerErrorException e) {
@@ -69,6 +72,7 @@ public class DeleteIndexRequestBuilderTest {
         BoundRequestBuilder boundRequestBuilderMock = mock(BoundRequestBuilder.class);
         when(httpClient.prepareDelete("/someIndexName")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", "{\"acknowledged\":\"false\"}")));
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
         try {
             testee.execute();
         } catch (InvalidElasticsearchResponseException e) {

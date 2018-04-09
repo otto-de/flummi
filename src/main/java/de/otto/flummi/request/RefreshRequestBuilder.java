@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import java.util.concurrent.ExecutionException;
 
 import static de.otto.flummi.RequestBuilderUtil.toHttpServerErrorException;
+import static de.otto.flummi.request.RequestConstants.APPL_JSON;
+import static de.otto.flummi.request.RequestConstants.CONTENT_TYPE;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class RefreshRequestBuilder {
@@ -22,7 +24,9 @@ public class RefreshRequestBuilder {
 
     public void execute() {
         try {
-            Response response = httpClient.preparePost("/" + indexName + "/_refresh").execute().get();
+            Response response = httpClient.preparePost("/" + indexName + "/_refresh")
+                    .addHeader(CONTENT_TYPE, APPL_JSON)
+                    .execute().get();
             if (response.getStatusCode() >= 300) {
                 throw toHttpServerErrorException(response);
             }

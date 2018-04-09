@@ -18,6 +18,8 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import static de.otto.flummi.RequestBuilderUtil.toHttpServerErrorException;
+import static de.otto.flummi.request.RequestConstants.APPL_JSON;
+import static de.otto.flummi.request.RequestConstants.CONTENT_TYPE;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class BulkRequestBuilder implements RequestBuilder<Void> {
@@ -53,7 +55,8 @@ public class BulkRequestBuilder implements RequestBuilder<Void> {
 
 	        final BoundRequestBuilder boundRequestBuilder = httpClient
 	                .preparePost("/_bulk")
-	                .setBody(postBody.toString())
+.addHeader(CONTENT_TYPE,APPL_JSON)
+                    .setBody(postBody.toString())
 	                .setCharset(Charset.forName("UTF-8"));
 
             Response response = boundRequestBuilder.execute().get();

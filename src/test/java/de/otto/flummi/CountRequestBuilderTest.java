@@ -29,6 +29,7 @@ public class CountRequestBuilderTest {
         BoundRequestBuilder boundRequestBuilderMock = mock(BoundRequestBuilder.class);
         when(httpClient.prepareGet("/product-index/_count")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", "{\"count\" : 42}")));
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
 
         // when
         long result = testee.execute();
@@ -43,6 +44,7 @@ public class CountRequestBuilderTest {
         BoundRequestBuilder boundRequestBuilderMock = mock(BoundRequestBuilder.class);
         when(httpClient.prepareGet("/product-index/bla,blupp/_count")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", "{\"count\" : 42}")));
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
 
         // when
         long result = testee.setTypes("bla", "blupp").execute();
@@ -57,6 +59,8 @@ public class CountRequestBuilderTest {
         BoundRequestBuilder boundRequestBuilderMock = mock(BoundRequestBuilder.class);
         when(httpClient.prepareGet("/product-index/bla/_count")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(200, "OK", "{\"count\" : 23}")));
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
+
         // when
         long result = testee.setTypes("bla").execute();
 
@@ -70,6 +74,8 @@ public class CountRequestBuilderTest {
         BoundRequestBuilder boundRequestBuilderMock = mock(BoundRequestBuilder.class);
         when(httpClient.prepareGet("/product-index/bla/_count")).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture(new MockResponse(500, "Internal Server Error", "{\"error\" : \"miserable failure\" }")));
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
+
         // when
         try {
             testee.setTypes("bla").execute();

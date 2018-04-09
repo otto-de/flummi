@@ -7,6 +7,8 @@ import org.asynchttpclient.Response;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Stream;
 
+import static de.otto.flummi.request.RequestConstants.APPL_JSON;
+import static de.otto.flummi.request.RequestConstants.CONTENT_TYPE;
 import static java.util.stream.Collectors.toList;
 
 public class DeleteIndexRequestBuilder implements RequestBuilder<Void> {
@@ -24,7 +26,9 @@ public class DeleteIndexRequestBuilder implements RequestBuilder<Void> {
         }
         try {
             String url = RequestBuilderUtil.buildUrl(indexNames, null, null);
-            Response response = httpClient.prepareDelete(url).execute().get();
+            Response response = httpClient.prepareDelete(url)
+.addHeader(CONTENT_TYPE,APPL_JSON)
+                    .execute().get();
             if (response.getStatusCode() >= 300 && response.getStatusCode() != 404) {
                 throw RequestBuilderUtil.toHttpServerErrorException(response);
             }

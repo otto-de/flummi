@@ -13,6 +13,8 @@ import org.slf4j.Logger;
 import java.util.concurrent.ExecutionException;
 
 import static de.otto.flummi.RequestBuilderUtil.toHttpServerErrorException;
+import static de.otto.flummi.request.RequestConstants.APPL_JSON;
+import static de.otto.flummi.request.RequestConstants.CONTENT_TYPE;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class ClusterHealthRequestBuilder implements RequestBuilder<ClusterHealthResponse> {
@@ -49,7 +51,8 @@ public class ClusterHealthRequestBuilder implements RequestBuilder<ClusterHealth
             if (timeout != null) {
                 requestBuilder.addQueryParam("timeout", timeout + "ms");
             }
-            Response response = requestBuilder.execute().get();
+            Response response = requestBuilder.addHeader(CONTENT_TYPE,APPL_JSON)
+                    .execute().get();
             if (response.getStatusCode() >= 300) {
                 throw toHttpServerErrorException(response);
             }

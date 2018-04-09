@@ -10,6 +10,8 @@ import java.net.URLEncoder;
 import java.util.concurrent.ExecutionException;
 
 import static de.otto.flummi.RequestBuilderUtil.buildUrl;
+import static de.otto.flummi.request.RequestConstants.APPL_JSON;
+import static de.otto.flummi.request.RequestConstants.CONTENT_TYPE;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class DeleteRequestBuilder implements RequestBuilder<Void> {
@@ -41,16 +43,17 @@ public class DeleteRequestBuilder implements RequestBuilder<Void> {
 
     public Void execute() {
         try {
-            if (indexName==null || indexName.isEmpty()) {
+            if (indexName == null || indexName.isEmpty()) {
                 throw new RuntimeException("missing property 'indexName'");
             }
-            if (documentType==null || documentType.isEmpty()) {
+            if (documentType == null || documentType.isEmpty()) {
                 throw new RuntimeException("missing property 'type'");
             }
-            if (id==null || id.isEmpty()) {
+            if (id == null || id.isEmpty()) {
                 throw new RuntimeException("missing property 'id'");
             }
             Response response = httpClient.prepareDelete(buildUrl(indexName, documentType, URLEncoder.encode(id, "UTF-8")))
+                    .addHeader(CONTENT_TYPE, APPL_JSON)
                     .execute().get();
             if (response.getStatusCode() >= 300) {
                 throw RequestBuilderUtil.toHttpServerErrorException(response);

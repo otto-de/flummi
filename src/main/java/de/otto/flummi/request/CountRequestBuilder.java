@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import java.util.concurrent.ExecutionException;
 
 import static de.otto.flummi.RequestBuilderUtil.toHttpServerErrorException;
+import static de.otto.flummi.request.RequestConstants.APPL_JSON;
+import static de.otto.flummi.request.RequestConstants.CONTENT_TYPE;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class CountRequestBuilder implements RequestBuilder<Long> {
@@ -36,7 +38,9 @@ public class CountRequestBuilder implements RequestBuilder<Long> {
     public Long execute() {
         try {
             String url = RequestBuilderUtil.buildUrl(indices, types, "_count");
-            Response response = httpClient.prepareGet(url).execute().get();
+            Response response = httpClient.prepareGet(url)
+                    .addHeader(CONTENT_TYPE, APPL_JSON)
+                    .execute().get();
             if (response.getStatusCode() >= 300) {
                 throw toHttpServerErrorException(response);
             }

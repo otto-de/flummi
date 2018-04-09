@@ -15,6 +15,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Stream;
 
 import static de.otto.flummi.request.GsonHelper.object;
+import static de.otto.flummi.request.RequestConstants.APPL_JSON;
+import static de.otto.flummi.request.RequestConstants.CONTENT_TYPE;
 import static java.util.stream.Collectors.toList;
 
 public class IndicesAdminClient {
@@ -52,7 +54,10 @@ public class IndicesAdminClient {
 
     public JsonObject getIndexSettings() {
         try {
-            Response response = httpClient.prepareGet("/_all/_settings").execute().get();
+
+            Response response = httpClient.prepareGet("/_all/_settings")
+                    .addHeader(CONTENT_TYPE, APPL_JSON)
+                    .execute().get();
             if (response.getStatusCode() != 200) {
                 throw RequestBuilderUtil.toHttpServerErrorException(response);
             }
@@ -63,24 +68,28 @@ public class IndicesAdminClient {
             throw new RuntimeException(e);
         }
     }
-    
-    public JsonObject getIndexMapping(String indexName){
-      try {
-        Response response = httpClient.prepareGet("/" + indexName+"/_mapping").execute().get();
-        if (response.getStatusCode() != 200) {
-            throw RequestBuilderUtil.toHttpServerErrorException(response);
+
+    public JsonObject getIndexMapping(String indexName) {
+        try {
+            Response response = httpClient.prepareGet("/" + indexName + "/_mapping")
+                    .addHeader("Content-Type", "application/json")
+                    .execute().get();
+            if (response.getStatusCode() != 200) {
+                throw RequestBuilderUtil.toHttpServerErrorException(response);
+            }
+            String jsonString = null;
+            jsonString = response.getResponseBody();
+            return gson.fromJson(jsonString, JsonObject.class);
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
         }
-        String jsonString = null;
-        jsonString = response.getResponseBody();
-        return gson.fromJson(jsonString, JsonObject.class);
-	    } catch (InterruptedException | ExecutionException e) {
-	        throw new RuntimeException(e);
-	    }
     }
 
     public List<String> getAllIndexNames() {
         try {
-            Response response = httpClient.prepareGet("/_all").execute().get();
+            Response response = httpClient.prepareGet("/_all")
+                    .addHeader(CONTENT_TYPE, APPL_JSON)
+                    .execute().get();
             if (response.getStatusCode() != 200) {
                 throw RequestBuilderUtil.toHttpServerErrorException(response);
             }
@@ -97,7 +106,9 @@ public class IndicesAdminClient {
 
     public Optional<String> getIndexNameForAlias(String aliasName) {
         try {
-            Response response = httpClient.prepareGet("/_aliases").execute().get();
+            Response response = httpClient.prepareGet("/_aliases")
+                    .addHeader(CONTENT_TYPE, APPL_JSON)
+                    .execute().get();
             if (response.getStatusCode() != 200) {
                 throw RequestBuilderUtil.toHttpServerErrorException(response);
             }
@@ -125,6 +136,7 @@ public class IndicesAdminClient {
 
             Response response = httpClient
                     .preparePost("/_aliases")
+                    .addHeader(CONTENT_TYPE, APPL_JSON)
                     .setBody(gson.toJson(jsonObject))
                     .execute().get();
             if (response.getStatusCode() >= 300) {
@@ -148,7 +160,9 @@ public class IndicesAdminClient {
 
     public boolean aliasExists(String aliasName) {
         try {
-            Response response = httpClient.prepareGet("/_aliases").execute().get();
+            Response response = httpClient.prepareGet("/_aliases")
+                    .addHeader(CONTENT_TYPE, APPL_JSON)
+                    .execute().get();
             if (response.getStatusCode() != 200) {
                 throw RequestBuilderUtil.toHttpServerErrorException(response);
             }
