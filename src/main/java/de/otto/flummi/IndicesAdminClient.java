@@ -72,7 +72,7 @@ public class IndicesAdminClient {
     public JsonObject getIndexMapping(String indexName) {
         try {
             Response response = httpClient.prepareGet("/" + indexName + "/_mapping")
-                    .addHeader("Content-Type", "application/json")
+                    .addHeader(CONTENT_TYPE, APPL_JSON)
                     .execute().get();
             if (response.getStatusCode() != 200) {
                 throw RequestBuilderUtil.toHttpServerErrorException(response);
