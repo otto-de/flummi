@@ -206,7 +206,13 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
         SearchResponse.Builder searchResponse = SearchResponse.builder();
         searchResponse.setTookInMillis(jsonObject.get("took").getAsLong());
         JsonObject hits = jsonObject.get("hits").getAsJsonObject();
-        long totalHits = hits.get("total").getAsLong();
+        JsonElement total = hits.get("total");
+        long totalHits = 0;
+        if (total.isJsonPrimitive()) {
+            totalHits = total.getAsLong();
+        } else if (total.isJsonObject() && "eq".equals(total.getAsJsonObject().get("relation").getAsString())) {
+            totalHits = total.getAsJsonObject().get("value").getAsLong();
+        }
         JsonElement max_score = hits.get("max_score");
         Float maxScore = max_score.isJsonPrimitive() ? max_score.getAsFloat() : null;
         JsonElement scroll_id = jsonObject.get("_scroll_id");
