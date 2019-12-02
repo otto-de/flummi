@@ -43,12 +43,12 @@ For Maven users:
     <dependency>
         <groupId>de.otto</groupId>
         <artifactId>flummi</artifactId>
-        <version>5.0.32.0</version>
+        <version>7.0.0.0</version>
     </dependency>
 
 For gradle users:
 
-    compile "de.otto:flummi:5.0.32.0"
+    compile "de.otto:flummi:7.0.0.0"
 
 
 ### Getting started
