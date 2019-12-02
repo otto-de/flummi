@@ -39,6 +39,14 @@ public class SearchRequestBuilderTest {
             PRODUCT_JSON +
             "}" +
             "]}}";
+    public static final String SEARCH_RESPONSE_WITH_ONE_HIT_VERSION_7 = "{\"took\":1," +
+            "\"timed_out\":false," +
+            "\"_shards\":{\"total\":5,\"successful\":5,\"failed\":0}," +
+            "\"hits\":{\"total\":{\"value\":1,\"relation\":\"eq\"},\"max_score\":1.0,\"hits\":[" +
+            "{\"_index\":\"product_1460618266743\",\"_type\":\"product\",\"_id\":\"P0\",\"_score\":1.0,\"_source\":" +
+            PRODUCT_JSON +
+            "}" +
+            "]}}";
     public static final String SEARCH_RESPONSE_WITH_AGGREGATION = "{\"took\":85," +
             "\"timed_out\":false," +
             "\"_shards\":{\"total\":1,\"successful\":1,\"failed\":0}," +
@@ -117,6 +125,34 @@ public class SearchRequestBuilderTest {
         when(boundRequestBuilderMock.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
         when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", SEARCH_RESPONSE_WITH_ONE_HIT)));
+
+        // when
+        SearchResponse response = searchRequestBuilder.setQuery(createSampleQuery()).execute();
+
+        //then
+        verify(boundRequestBuilderMock).setBody("{\"query\":{\"term\":{\"someField\":\"someValue\"}}}");
+        verify(httpClient).preparePost("/some-index/_search");
+
+        assertThat(response.getTookInMillis(), is(1L));
+        assertThat(response.getHits().getMaxScore(), is(1F));
+        assertThat(response.getAggregations().size(), is(0));
+        assertThat(response.getHits().getTotalHits(), is(1L));
+        SearchHit firstHit = response.getHits().iterator().next();
+        assertThat(firstHit.getFields().entrySet().size(), is(0));
+        assertThat(firstHit.getId(), is("P0"));
+        assertThat(firstHit.getScore(), is(1F));
+        assertThat(firstHit.getSource(), is(new Gson().fromJson(PRODUCT_JSON, JsonObject.class)));
+    }
+
+    @Test
+    public void shouldParseSearchResponseWithFullDocumentsForEsVersion7() throws Exception {
+        // given
+        BoundRequestBuilder boundRequestBuilderMock = mock(BoundRequestBuilder.class);
+        when(httpClient.preparePost("/some-index/_search")).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.setBody(any(String.class))).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.setCharset(Charset.forName("UTF-8"))).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.addHeader(anyString(),anyString())).thenReturn(boundRequestBuilderMock);
+        when(boundRequestBuilderMock.execute()).thenReturn(new CompletedFuture<>(new MockResponse(200, "ok", SEARCH_RESPONSE_WITH_ONE_HIT_VERSION_7)));
 
         // when
         SearchResponse response = searchRequestBuilder.setQuery(createSampleQuery()).execute();
