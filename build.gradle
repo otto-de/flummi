@@ -18,7 +18,7 @@ plugins {
 
 group = 'de.otto'
 archivesBaseName='flummi'
-version='6.0.0.0'
+version='7.0.0.0'
 
 if (project.hasProperty('isSnapshot')) {
     version += '-SNAPSHOT'
@@ -132,37 +132,6 @@ uploadArchives {
                     }
                 }
             }
-        }
-    }
-}
-
-artifactory {
-    contextUrl = project.properties["artifactoryUrl"]
-    //The base Artifactory URL if not overridden by the publisher/resolver
-    publish {
-        repository {
-            if (project.hasProperty('isSnapshot')) {
-                repoKey = 'maven-san-snapshots-local'
-            } else {
-                repoKey = 'maven-san-releases-local'
-            }
-            username = project.properties["artifactoryUsername"]
-            password = project.properties["artifactoryPassword"]
-        }
-        defaults {
-            // Reference to Gradle publications defined in the build script.
-            // This is how we tell the Artifactory Plugin which artifacts should be
-            // published to Artifactory.
-            publishConfigs('archives')
-            publishArtifacts = true
-            // Publish generated POM files to Artifactory (true by default)
-            publishPom = true
-            publishIvy = false
-        }
-    }
-    resolve {
-        repository {
-            repoKey = 'libs-release-virtual'
         }
     }
 }
