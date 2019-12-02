@@ -1,5 +1,8 @@
 # Release History
 
+## Release 7.0.0.0
+* Support for ElasticSearch 7
+
 ## release 6.0.0.0
 * Support for ElasticSearch 6
 * use async-http-client 2.4.4
