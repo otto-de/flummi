@@ -24,12 +24,6 @@ if (project.hasProperty('isSnapshot')) {
     version += '-SNAPSHOT'
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '3.2.1'
-    scriptFile = "${project.projectDir}/bin/gradlew"
-    jarFile = "${project.projectDir}/bin/gradle/wrapper/gradle-wrapper.jar"
-}
-
 repositories {
     mavenCentral()
     maven { url "https://oss.sonatype.org/content/repositories/releases/" }
