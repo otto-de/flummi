@@ -3,7 +3,7 @@ Flummi Elastic Search HTTP Client
 
 <a href="https://travis-ci.org/otto-de/flummi"><img src="https://travis-ci.org/otto-de/flummi.svg?branch=master"></img></a>
 
-Flummi is a client library for Elastic Search. It has been successfully tested with Elastic Search versions 2.3, 2.4 and 5.1.
+Flummi is a client library for Elastic Search. It has been successfully tested with Elastic Search versions 6 and 7.
 It provides a comprehensive Java query DSL API and communicates with
 the Elastic Search Cluster via HTTP/JSON. It is licensed under the [Apache 2 License](http://www.apache.org/licenses/LICENSE-2.0.html).
 
@@ -30,8 +30,7 @@ Limitations
 Which version should I use?
 ---------------------------
 
-Flummi versions starting with 5.x are intended for use with Elastic Search 5.x, flummi versions starting with 2.x should be used with elastic 2.x.
-
+Flummi versions starting with 7.x are intended for use with Elastic Search 6 and 7. Use older versions of the Library for older ES versions.
 
 How to use Flummi
 -----------------
@@ -236,8 +235,7 @@ The following example shows how to do simple terms bucket aggregations.
 Compatibility
 -------------
 
-Flummi version 2.x is compatible with Elastic Search 2.3 and 2.4.
-Flummi version 5.x is compatible with Elastic Search 5.x
+Flummi version 7.x is compatible with Elastic Search 6.x and 7.x
 
 
 Contribution Guide
