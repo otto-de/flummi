@@ -1,5 +1,8 @@
 # Release History
 
+## Release 7.0.0.1
+* Previous upload did accidentally not include the merge for ES7
+
 ## Release 7.0.0.0
 * Support for ElasticSearch 7
 
