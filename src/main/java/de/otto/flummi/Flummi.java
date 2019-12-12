@@ -16,6 +16,10 @@ public class Flummi {
         this.httpClient = new HttpClientWrapper(asyncHttpClient, baseUrl);
     }
 
+    public Flummi(AsyncHttpClient asyncHttpClient, String baseUrl, String username, String password) {
+        this.httpClient = new HttpClientWrapper(asyncHttpClient, baseUrl, username, password);
+    }
+
     @Deprecated
     public Optional<String> getIndexNameForAlias(String aliasName) {
         return this.admin().indices().getIndexNameForAlias(aliasName);

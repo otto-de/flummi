@@ -1,5 +1,8 @@
 # Release History
 
+## Release 7.0.0.3
+* add support for authorization header - previous upload did not include flummi authorization constructor
+
 ## Release 7.0.0.2
 * add support for authorization header
 
