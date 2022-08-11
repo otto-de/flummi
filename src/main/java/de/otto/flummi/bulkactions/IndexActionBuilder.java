@@ -10,7 +10,6 @@ public class IndexActionBuilder implements BulkActionBuilder {
 
     private final String index;
     private final Gson gson;
-    private String type;
     private String id;
     private JsonObject source;
     private IndexOpType opType;
@@ -36,11 +35,6 @@ public class IndexActionBuilder implements BulkActionBuilder {
         return this;
     }
 
-    public IndexActionBuilder setType(String type) {
-        this.type = type;
-        return this;
-    }
-
     public IndexActionBuilder setParent(String parent) {
         this.parent = parent;
         return this;
@@ -51,13 +45,10 @@ public class IndexActionBuilder implements BulkActionBuilder {
         if (index == null || index.isEmpty()) {
             throw new RuntimeException("missing property 'index'");
         }
-        if (type == null || type.isEmpty()) {
-            throw new RuntimeException("missing property 'type'");
-        }
         if (opType == null) {
             throw new RuntimeException("missing property 'opType'");
         }
-        JsonObject bulkObject = object("_index", index, "_type", type);
+        JsonObject bulkObject = object("_index", index);
         if (id != null && !id.isEmpty()) {
             bulkObject.add("_id", new JsonPrimitive(id));
         }
@@ -82,7 +73,6 @@ public class IndexActionBuilder implements BulkActionBuilder {
 
         if (index != null ? !index.equals(that.index) : that.index != null) return false;
         if (gson != null ? !gson.equals(that.gson) : that.gson != null) return false;
-        if (type != null ? !type.equals(that.type) : that.type != null) return false;
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (source != null ? !source.equals(that.source) : that.source != null) return false;
         return opType == that.opType;
@@ -93,7 +83,6 @@ public class IndexActionBuilder implements BulkActionBuilder {
     public int hashCode() {
         int result = index != null ? index.hashCode() : 0;
         result = 31 * result + (gson != null ? gson.hashCode() : 0);
-        result = 31 * result + (type != null ? type.hashCode() : 0);
         result = 31 * result + (id != null ? id.hashCode() : 0);
         result = 31 * result + (source != null ? source.hashCode() : 0);
         result = 31 * result + (opType != null ? opType.hashCode() : 0);
@@ -105,7 +94,6 @@ public class IndexActionBuilder implements BulkActionBuilder {
         return "IndexActionBuilder{" +
                 "index='" + index + '\'' +
                 ", gson=" + gson +
-                ", type='" + type + '\'' +
                 ", id='" + id + '\'' +
                 ", source=" + source +
                 ", opType=" + opType +

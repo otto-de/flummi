@@ -13,13 +13,12 @@ public class IndexActionBuilderTest {
         // given
         // when
         String result = new IndexActionBuilder("someIndex")
-                .setType("someType")
                 .setOpType(IndexOpType.CREATE)
                 .setSource(GsonHelper.object("Hello", "World"))
                 .toBulkRequestAction();
 
         // then
-        assertThat(result, is("{\"create\":{\"_index\":\"someIndex\",\"_type\":\"someType\"}}\n" +
+        assertThat(result, is("{\"create\":{\"_index\":\"someIndex\"}}\n" +
                 "{\"Hello\":\"World\"}"));
     }
 
@@ -29,14 +28,13 @@ public class IndexActionBuilderTest {
 
         // when
         String result = new IndexActionBuilder("someIndex")
-                .setType("someType")
                 .setOpType(IndexOpType.INDEX)
                 .setSource(GsonHelper.object("Hello", "World"))
                 .setId("someId")
                 .toBulkRequestAction();
 
         // then
-        assertThat(result, is("{\"index\":{\"_index\":\"someIndex\",\"_type\":\"someType\",\"_id\":\"someId\"}}\n" +
+        assertThat(result, is("{\"index\":{\"_index\":\"someIndex\",\"_id\":\"someId\"}}\n" +
                 "{\"Hello\":\"World\"}"));
     }
 
@@ -47,7 +45,6 @@ public class IndexActionBuilderTest {
         // when
         try {
             new IndexActionBuilder("")
-                    .setType("someType")
                     .setOpType(IndexOpType.INDEX)
                     .setSource(GsonHelper.object("Hello", "World"))
                     .toBulkRequestAction();
@@ -64,7 +61,6 @@ public class IndexActionBuilderTest {
         // when
         try {
             new IndexActionBuilder("someIndex")
-                    .setType("")
                     .setOpType(IndexOpType.INDEX)
                     .setSource(GsonHelper.object("Hello", "World"))
                     .toBulkRequestAction();
@@ -97,7 +93,6 @@ public class IndexActionBuilderTest {
         // when
         try {
             new IndexActionBuilder("someIndex")
-                    .setType("someType")
                     .setSource(GsonHelper.object("Hello", "World"))
                     .toBulkRequestAction();
         } catch (RuntimeException e) {

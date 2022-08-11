@@ -31,7 +31,9 @@ Limitations
 Which version should I use?
 ---------------------------
 
-Flummi versions starting with 7.x are intended for use with Elastic Search 6 and 7. Use older versions of the Library for older ES versions.
+Flummi versions starting with 7.x are intended for use with Elastic Search 6 and 7. Use older versions of the Library for older ES versions. 
+Flummi versions starting with 8.x are intended for use with Elastic Search 8, because the field _type is not supported in ES8. 
+https://www.elastic.co/guide/en/elasticsearch/reference/current/migrating-8.0.html#breaking-changes-8.0 
 
 How to use Flummi
 -----------------
@@ -43,12 +45,12 @@ For Maven users:
     <dependency>
         <groupId>de.otto</groupId>
         <artifactId>flummi</artifactId>
-        <version>7.0.0.3</version>
+        <version>8.0.0.0</version>
     </dependency>
 
 For gradle users:
 
-    compile "de.otto:flummi:7.0.0.3"
+    compile "de.otto:flummi:8.0.0.0"
 
 
 ### Getting started
@@ -170,13 +172,13 @@ product index using a Bulk Request
            new IndexActionBuilder("products")
                .setSource(bouncingBall1)
                .setId("bblsmly-4711")
-               .setType("product")
+               .setType("product") // type isn't supported in ES8
                )
         .add(
            new IndexActionBuilder("products")
                .setSource(bouncingBall2)
                .setId("bblxlxb-4712")
-               .setType("product")
+               .setType("product") // type isn't supported in ES8
                )
         .execute();
 
@@ -237,7 +239,7 @@ Compatibility
 -------------
 
 Flummi version 7.x is compatible with Elastic Search 6.x and 7.x
-
+Flummi version 8.x is compatible with Elastic Search 8.x
 
 Contribution Guide
 ------------------
