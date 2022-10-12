@@ -18,7 +18,7 @@ plugins {
 
 group = 'de.otto'
 archivesBaseName='flummi'
-version='8.0.0.0'
+version='8.0.0.2'
 
 if (project.hasProperty('isSnapshot')) {
     version += '-SNAPSHOT'

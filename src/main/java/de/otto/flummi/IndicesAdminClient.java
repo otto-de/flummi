@@ -52,6 +52,9 @@ public class IndicesAdminClient {
         return new ForceMergeRequestBuilder(httpClient, indexName);
     }
 
+    public UpdateIndexSettingsRequestBuilder prepareUpdateSettings(String indexName) {
+        return new UpdateIndexSettingsRequestBuilder(httpClient, indexName);
+    }
     public JsonObject getIndexSettings() {
         try {
 

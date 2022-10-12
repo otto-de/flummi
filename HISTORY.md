@@ -1,4 +1,7 @@
 # Release History
+## Release 8.0.0.2
+* Add IndexSettingsBuilder
+* 
 ## Release 8.0.0.0
 * Support for ElasticSearch 8.x
 ** _type isn't supported in ES8, see https://www.elastic.co/guide/en/elasticsearch/reference/current/migrating-8.0.html#breaking-changes-8.0
