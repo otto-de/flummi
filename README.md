@@ -241,6 +241,8 @@ Compatibility
 Flummi version 7.x is compatible with Elastic Search 6.x and 7.x
 Flummi version 8.x is compatible with Elastic Search 8.x
 
+Flummi is build with JDK 8 
+
 Contribution Guide
 ------------------
 
