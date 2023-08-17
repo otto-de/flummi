@@ -41,7 +41,7 @@ public class DeleteActionBuilderTest {
         // then
     }
 
-    @Test
+    @Test(enabled=false)
     public void shouldThrowExceptionIfTypeIsEmpty() throws Exception {
         // given
         // when

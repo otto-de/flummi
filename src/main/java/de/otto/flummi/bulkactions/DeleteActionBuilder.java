@@ -29,9 +29,6 @@ public class DeleteActionBuilder implements BulkActionBuilder {
         if (id==null || id.isEmpty()) {
             throw new RuntimeException("missing property 'id'");
         }
-        if (type==null || type.isEmpty()) {
-            throw new RuntimeException("missing property 'type'");
-        }
         JsonObject bulkObject = object("_index", indexName);
         bulkObject.add("_id", new JsonPrimitive(id));
         bulkObject.add("_type", new JsonPrimitive(type));
