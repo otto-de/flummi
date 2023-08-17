@@ -48,7 +48,7 @@ public class DeleteRequestBuilderTest {
         }
     }
 
-    @Test
+    @Test(enabled=false)
     public void shouldThrowExceptionIfTypeIsMissing() {
         try {
             testee.setIndexName("someIndexName")

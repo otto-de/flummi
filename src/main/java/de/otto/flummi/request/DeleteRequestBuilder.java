@@ -46,9 +46,6 @@ public class DeleteRequestBuilder implements RequestBuilder<Void> {
             if (indexName == null || indexName.isEmpty()) {
                 throw new RuntimeException("missing property 'indexName'");
             }
-            if (documentType == null || documentType.isEmpty()) {
-                throw new RuntimeException("missing property 'type'");
-            }
             if (id == null || id.isEmpty()) {
                 throw new RuntimeException("missing property 'id'");
             }

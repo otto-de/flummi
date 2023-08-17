@@ -3,7 +3,8 @@ package de.otto.flummi.bulkactions;
 public enum IndexOpType {
     INDEX("index"),
     CREATE("create"),
-    UPDATE("update");
+    UPDATE("update"),
+    DELETE("delete");
 
     private String opCode;
 

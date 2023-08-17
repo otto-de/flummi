@@ -1,4 +1,7 @@
 # Release History
+## Release 8.0.0.4
+* Set type attribute optional in DeleteRequestBuilder
+
 ## Release 8.0.0.3
 * Rebuild with JDK8
 
