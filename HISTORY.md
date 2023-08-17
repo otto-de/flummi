@@ -1,5 +1,5 @@
 # Release History
-## Release 8.0.0.5
+## Release 8.0.0.6
 * Set type attribute optional in DeleteActionBuilder
 
 * ## Release 8.0.0.4

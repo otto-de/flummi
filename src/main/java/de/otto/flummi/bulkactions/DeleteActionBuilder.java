@@ -31,7 +31,9 @@ public class DeleteActionBuilder implements BulkActionBuilder {
         }
         JsonObject bulkObject = object("_index", indexName);
         bulkObject.add("_id", new JsonPrimitive(id));
-        bulkObject.add("_type", new JsonPrimitive(type));
+        if (type!=null) {
+            bulkObject.add("_type", new JsonPrimitive(type));
+        }
         if(routing!=null) {
             bulkObject.add("_routing", new JsonPrimitive(routing));
         }
