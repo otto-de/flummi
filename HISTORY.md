@@ -1,4 +1,7 @@
 # Release History
+## Release 8.0.0.7-SNAPSHOT
+* Use SynchronizedList in BulkRequestBuilder
+
 ## Release 8.0.0.6
 * Set type attribute optional in DeleteActionBuilder
 

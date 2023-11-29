@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -24,7 +25,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class BulkRequestBuilder implements RequestBuilder<Void> {
     private final Gson gson;
-    private List<BulkActionBuilder> actions = new ArrayList();
+    private List<BulkActionBuilder> actions = Collections.synchronizedList(new ArrayList());
 
     public static final Logger LOG = getLogger(BulkRequestBuilder.class);
     private HttpClientWrapper httpClient;
