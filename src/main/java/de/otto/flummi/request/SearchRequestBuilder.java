@@ -40,6 +40,7 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
     private JsonArray storedFields;
     private JsonArray sourceFilters;
     private String scroll;
+    private Boolean trackTotalHits;
     private QueryBuilder postFilter;
     private List<AggregationBuilder> aggregations;
 
@@ -96,6 +97,11 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
         return this;
     }
 
+    public SearchRequestBuilder setTrackTotalHits(Boolean trackTotalHits) {
+        this.trackTotalHits = trackTotalHits;
+        return this;
+    }
+
     public SearchRequestBuilder addStoredField(String fieldName) {
         if (storedFields == null) {
             storedFields = new JsonArray();
@@ -136,6 +142,9 @@ public class SearchRequestBuilder implements RequestBuilder<SearchResponse> {
             }
             if (size != null) {
                 body.add("size", new JsonPrimitive(size));
+            }
+            if (trackTotalHits != null) {
+                body.add("track_total_hits", new JsonPrimitive(trackTotalHits));
             }
             if (sorts != null) {
                 body.add("sort", sorts);

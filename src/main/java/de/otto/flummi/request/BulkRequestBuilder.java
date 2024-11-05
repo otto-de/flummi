@@ -23,7 +23,7 @@ import static de.otto.flummi.request.RequestConstants.APPL_JSON;
 import static de.otto.flummi.request.RequestConstants.CONTENT_TYPE;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class BulkRequestBuilder implements RequestBuilder<Void> {
+public class BulkRequestBuilder implements RequestBuilder<JsonObject> {
     private final Gson gson;
     private List<BulkActionBuilder> actions = Collections.synchronizedList(new ArrayList());
 
@@ -42,7 +42,7 @@ public class BulkRequestBuilder implements RequestBuilder<Void> {
     }
 
     @Override
-    public Void execute() {
+    public JsonObject execute() {
         try {
             if (actions.isEmpty()) {
                 return null;
@@ -96,7 +96,7 @@ public class BulkRequestBuilder implements RequestBuilder<Void> {
                     throw new InvalidElasticsearchResponseException("Response contains errors': " + jsonString);
                 }
             }
-            return null;
+            return responseObject;
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         } catch (ExecutionException e) {

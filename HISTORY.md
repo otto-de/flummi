@@ -1,6 +1,10 @@
 # Release History
-## Release 8.0.0.7-SNAPSHOT
+## Release 8.0.0.8
+* Use TrackTotalHits in SearchRequestBuilder
+
+## Release 8.0.0.7
 * Use SynchronizedList in BulkRequestBuilder
+* Return Response Json in BulkRequestBuilder for Logging
 
 ## Release 8.0.0.6
 * Set type attribute optional in DeleteActionBuilder
