@@ -3,6 +3,7 @@ Flummi Elastic Search HTTP Client
 
 <a href="https://travis-ci.org/otto-de/flummi"><img src="https://travis-ci.org/otto-de/flummi.svg?branch=master"></img></a>
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.otto/flummi/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.otto/flummi)
+![OSS Lifecycle](https://img.shields.io/osslifecycle?file_url=https%3A%2F%2Fgithub.com%2Fotto-de%2Fflummi%2Fblob%2Fmaster%2FOSSMETADATA)
 
 Flummi is a client library for Elastic Search. It has been successfully tested with Elastic Search versions 6 and 7.
 It provides a comprehensive Java query DSL API and communicates with
